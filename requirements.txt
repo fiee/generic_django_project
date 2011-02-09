@@ -3,7 +3,7 @@ gunicorn # not with fcgi
 #python-memcached # for memcached cache (you must install that separately)
 Django
 south
-#django-tagging
+#django-tagging-ng # original tagging works only up to Django 1.0
 #django-tinymce
 #django-mptt # necessary patch only in SVN! see http://code.google.com/p/django-mptt/ or http://github.com/matthiask/django-mptt
 #feincms # see http://github.com/matthiask/feincms
