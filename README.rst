@@ -51,27 +51,33 @@ How To
 
 local:
 ------
+
 * copy `generic_project`
 * replace all occurrences of "project_name" with your project name. this is also the webserver and database server username!
 * replace all occurrences of "fiee.net" with your domain name.
 * check the settings in fabfile.py_, gunicorn-settings.py_, settings.py_, settings_local.py_, supervisor.ini_ or service-run.sh_
-* if you use Nginx, change the internal port in nginx.conf_ (``fastcgi_pass 127.0.0.1:8001;``); I use "8 + last 3 numbers of UID" (UIDs start at 1000 on Debian)
+* set up an email account for your project’s error messages and configure it in settings.py_
+* if you use Nginx, change the internal port in nginx.conf_ (``fastcgi_pass 127.0.0.1:8001;``); I use "8 + last 3 numbers of UID" (UIDs start at 1000 on Debian): ``id -u project_name``
 * ``git init``, always commit all changes
 * ``manage syncdb`` (initialize south)
 * ``fab webserver setup`` (once)
-* ``fab webserver deploy`` (publish new release - always last commited version!)
+* ``fab webserver deploy`` (publish new release - always last committed version!)
 
 server:
 -------
+
+I suggest to use makeuser.sh_ to create system and database accounts. Otherwise:
+
 * create user and sudo-enable it (I suggest via a group like wheel, but you can also add the user to sudoers)::
   
     adduser project_name
     adduser project_name wheel
 
-* create database user and database (schema) - I suggest to use makeuser.sh_ ::
+* create database user and database (schema) ::
   
     mysql -u root -p
-    # we installed MySQL without user interaction, so there's no root password. Set it!
+    
+    # at first setup only: we installed MySQL without user interaction, so there's no root password. Set it!
     use mysql;
     update user set password=password('...') where user='root';
   
@@ -90,6 +96,7 @@ Links / Sources
 
 Setup:
 ------
+
 * Setup with Apache/mod_wsgi: http://morethanseven.net/2009/07/27/fabric-django-git-apache-mod_wsgi-virtualenv-and-p/
 * Setup with Nginx: http://djangoadvent.com/1.2/deploying-django-site-using-fastcgi/
 * Nginx configuration: http://wiki.nginx.org/NginxConfiguration
@@ -100,6 +107,7 @@ Setup:
 
 Modules:
 --------
+
 * Fabric: http://docs.fabfile.org
 * South: http://south.aeracode.org/ (Getting started: http://mitchfournier.com/?p=25)
 * MPTT: http://code.google.com/p/django-mptt/ or http://github.com/matthiask/django-mptt
