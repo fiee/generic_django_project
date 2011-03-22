@@ -108,7 +108,7 @@ USE_ETAGS = True
 # email and error-notify settings
 # ==============================================================================
 
-YOUR_DOMAIN = 'example.com' % since I'm getting error messages from stupid cloners...
+YOUR_DOMAIN = 'example.com' # since I'm getting error messages from stupid cloners...
 
 ADMINS = (
     #('Henning Hraban Ramm', 'hraban@fiee.net'), # don't send your errors to me!
