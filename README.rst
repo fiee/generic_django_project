@@ -110,7 +110,7 @@ Modules:
 
 * Fabric: http://docs.fabfile.org
 * South: http://south.aeracode.org/ (Getting started: http://mitchfournier.com/?p=25)
-* MPTT: http://code.google.com/p/django-mptt/ or http://github.com/matthiask/django-mptt
+* MPTT: http://code.google.com/p/django-mptt/ or http://github.com/django-mptt/django-mptt
 * FeinCMS: http://github.com/matthiask/feincms
 * Schedule: http://wiki.github.com/thauber/django-schedule/ or http://github.com/fiee/django-schedule
 
@@ -120,7 +120,7 @@ Modules:
 .. _Fabric: http://docs.fabfile.org
 .. _fabfile: http://docs.fabfile.org
 .. _South: http://south.aeracode.org/
-.. _MPTT: http://github.com/matthiask/django-mptt
+.. _MPTT: http://github.com/django-mptt/django-mptt
 .. _FeinCMS: http://github.com/matthiask/feincms
 .. _medialibrary: http://www.feinheit.ch/media/labs/feincms/medialibrary.html
 .. _Photologue: http://code.google.com/p/django-photologue/

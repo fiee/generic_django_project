@@ -5,7 +5,7 @@ Django
 south
 #django-tagging-ng # original tagging works only up to Django 1.0
 #django-tinymce
-#django-mptt # necessary patch only in SVN! see http://code.google.com/p/django-mptt/ or http://github.com/matthiask/django-mptt
+#django-mptt # working version only in SVN! see http://github.com/django-mptt/django-mptt
 #feincms # see http://github.com/matthiask/feincms
 #django-photologue
 #python-dateutil # for django-schedule
