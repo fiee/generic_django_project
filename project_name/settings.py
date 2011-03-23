@@ -137,14 +137,6 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 
 # ==============================================================================
-# auth settings
-# ==============================================================================
-
-LOGIN_URL = '/accounts/login/'
-LOGOUT_URL = '/accounts/logout/'
-LOGIN_REDIRECT_URL = '/'
-
-# ==============================================================================
 # database settings
 # ==============================================================================
 
@@ -170,13 +162,22 @@ LANGUAGES = (('en', _(u'English')),
 USE_I18N = True
 USE_L10N = True
 
+LOCALE_PATHS = (
+    rel('locale/'),
+)
+
 SITE_ID = 1
 
-MEDIA_ROOT = rel('static')
-MEDIA_URL = '/media/'
-ADMIN_MEDIA_PREFIX = '/django_admin_media/'
-
 ROOT_URLCONF = '%s.urls' % PROJECT_NAME
+
+MEDIA_ROOT = rel('media')
+MEDIA_URL = '/media/'
+
+# setup Django 1.3 staticfiles
+STATIC_URL = '/static/'
+STATIC_ROOT = rel('static_collection')
+STATICFILES_DIRS = (rel('static'), ) #'.../feincms/media',
+ADMIN_MEDIA_PREFIX = '%sadmin/' % STATIC_URL
 
 # ==============================================================================
 # application and middleware settings
@@ -191,6 +192,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     #'django.contrib.humanize',
     'django.contrib.sitemaps',
+    'django.contrib.staticfiles', # Django 1.3
     'gunicorn', # not with fcgi
     'mptt',
     'south',
@@ -208,7 +210,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.middleware.csrf.CsrfResponseMiddleware',
+    #'django.middleware.csrf.CsrfResponseMiddleware', # Deprecated in Django 1.3
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -218,11 +220,13 @@ MIDDLEWARE_CLASSES = [
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.auth',
+    #'django.core.context_processors.auth', # Django 1.2
+    'django.contrib.auth.context_processors.auth', # Django 1.3
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
+    'django.core.context_processors.static', # Django 1.3 staticfiles
     'django.contrib.messages.context_processors.messages',
 )
 
@@ -267,8 +271,14 @@ except NameError:
 
 # ..third party app settings here
 
+# auth/registration
+
+LOGIN_URL = '/accounts/login/'
+LOGOUT_URL = '/accounts/logout/'
+LOGIN_REDIRECT_URL = '/'
+
 # feincms
-FEINCMS_ADMIN_MEDIA = '/feincms_admin_media/'
+FEINCMS_ADMIN_MEDIA = '%sfeincms/' % STATIC_URL
 FEINCMS_ADMIN_MEDIA_HOTLINKING = True
 FEINCMS_MEDIALIBRARY_ROOT = rootrel('') #'/var/www/project_name/medialibrary/'
 #FEINCMS_MEDIALIBRARY_UPLOAD_TO
@@ -287,17 +297,17 @@ except ImportError:
     pass
 if DEBUG:
     INSTALLED_APPS.append('django.contrib.admindocs')
-    INSTALLED_APPS.append('debug_toolbar')
-    MIDDLEWARE_CLASSES.append('debug_toolbar.middleware.DebugToolbarMiddleware') # see also http://github.com/robhudson/django-debug-toolbar/blob/master/README.rst
+    #INSTALLED_APPS.append('debug_toolbar')
+    #MIDDLEWARE_CLASSES.append('debug_toolbar.middleware.DebugToolbarMiddleware') # see also http://github.com/robhudson/django-debug-toolbar/blob/master/README.rst
     LOGGING['handlers']['file'] = {
                 'level':'INFO',
-                'class':'FileHandler',
+                'class':'logging.FileHandler',
                 'formatter': 'verbose',
-                'args': [rel('logs/info.log'),],
+                'filename': rootrel('logs/info.log'),
             }
     LOGGING['handlers']['error_file'] = {
                 'level':'ERROR',
-                'class':'FileHandler',
+                'class':'logging.FileHandler',
                 'formatter': 'verbose',
-                'args': [rel('logs/error.log'),],
+                'filename': rootrel('logs/error.log'),
             }

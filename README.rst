@@ -17,7 +17,7 @@ Requirements
 * local OS: MacOS X (only some local settings are OSX specific)
 * web server: Apache/mod_wsgi or Nginx/gunicorn or Nginx/fcgi
 * Python version: 2.5+
-* Django_ version: 1.2
+* Django_ version: 1.3
 * version control: Git_
 * deployment tool: Fabric_
 * local development database: SQLite3_
@@ -53,8 +53,7 @@ local:
 ------
 
 * copy `generic_project`
-* replace all occurrences of "project_name" with your project name. this is also the webserver and database server username!
-* replace all occurrences of "fiee.net" with your domain name.
+* replace all occurrences of lowercase "project_name" with your project name. this is also the webserver and database server username!
 * check the settings in fabfile.py_, gunicorn-settings.py_, settings.py_, settings_local.py_, supervisor.ini_ or service-run.sh_
 * set up an email account for your project’s error messages and configure it in settings.py_
 * if you use Nginx, change the internal port in nginx.conf_ (``fastcgi_pass 127.0.0.1:8001;``); I use "8 + last 3 numbers of UID" (UIDs start at 1000 on Debian): ``id -u project_name``
