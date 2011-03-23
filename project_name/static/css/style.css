@@ -11,13 +11,28 @@ html[lang|="de"] {
     quotes: "\201E" "\201C" "\201A" "\2018";
 }
 
+/*
+html[lang|="de-DE"] {
+  quotes:"\00BB" "\00AB" "\203A" "\2039";
+}
+*/
+
+html[lang|="de-CH"] {
+  quotes:"\00AB" "\00BB" "\2039" "\203A";
+}
+
 html[lang|="en"] {
     quotes: "\201C" "\201D" "\2018" "\2019";
 }
 
 html[lang|="fr"] {
-    quotes: "\00AB" "\00BB" "\2039" "\203A";
+    quotes:"\00AB\00A0" "\00A0\00BB" "\2039\00A0" "\00A0\203A";
 }
+
+q:before { content:open-quote; }
+q:after { content:close-quote; }
+q q:before { content:open-quote; }
+q q:after { content:close-quote; }
 
 body {
 	margin: 0 0 0 0;
