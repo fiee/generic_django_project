@@ -5,6 +5,7 @@
 # modified for fabric 0.9/1.0
 from __future__ import with_statement # needed for python 2.5
 from fabric.api import *
+import time
 
 # globals
 env.prj_name = 'project_name' # no spaces!
@@ -119,7 +120,6 @@ def deploy(param=''):
     """
     require('hosts', provided_by=[localhost,webserver])
     require('path')
-    import time
     env.release = time.strftime('%Y%m%d%H%M%S')
     upload_tar_from_git()
     install_requirements()
@@ -195,10 +195,13 @@ def symlink_current_release():
     with cd(env.path):
         run('rm releases/previous; mv releases/current releases/previous;', pty=True)
         run('ln -s %(release)s releases/current' % env, pty=True)
-        if env.use_photologue:
-            run('cd releases/current/%(prj_name)s/static; rm -rf photologue; ln -s %(path)s/photologue;' % env, pty=True)
         # copy South migrations from previous release, if there are any
         run('cd releases/previous/%(prj_name)s; if [ -d migrations ]; then cp -r migrations ../../current/%(prj_name)s/; fi' % env, pty=True)
+        # collect static files
+        with cd('releases/current/%(prj_name)s' % env):
+            run('%(path)s/bin/python manage.py collectstatic -v0 --noinput' % env, pty=True)
+            if env.use_photologue:
+                run('cd static; rm -rf photologue; ln -s %(path)s/photologue photologue;' % env, pty=True)
     
 def migrate(param=''):
     "Update the database"
