@@ -10,4 +10,5 @@ dev.db
 build
 *.tar.gz
 *.bak
+*.log
 migrations/
