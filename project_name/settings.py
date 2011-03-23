@@ -62,13 +62,21 @@ LOGGING = {
             'level':'INFO',
             'class':'logging.handlers.TimedRotatingFileHandler',
             'formatter': 'verbose',
-            'args': [rootrel('logs/info.log'),'D',7,4], # rotate every 7 days, keep 4 old copies
+            'filename': rootrel('logs/info.log'),
+            'when': 'D',
+            'interval': 7,
+            'backupCount': 4,
+            # rotate every 7 days, keep 4 old copies
         },
         'error_file':{
             'level':'ERROR',
             'class':'logging.handlers.TimedRotatingFileHandler',
             'formatter': 'verbose',
-            'args': [rootrel('logs/error.log'),'D',7,4], # rotate every 7 days, keep 4 old copies
+            'filename': rootrel('logs/error.log'),
+            'when': 'D',
+            'interval': 7,
+            'backupCount': 4,
+            # rotate every 7 days, keep 4 old copies
         },
         'mail_admins': {
             'level': 'ERROR',
