@@ -66,8 +66,8 @@ def setup():
         sudo('mkdir -p /etc/service/%(prj_name)s' % env, pty=True)
     if env.use_supervisor:
         sudo('pip install supervisor')
-        sudo('if [ ! -f /etc/supervisord.conf ]; then echo_supervisord_conf > /etc/supervisord.conf; fi', pty=True) # configure that!
-        sudo('if [ ! -d /etc/supervisor ]; then mkdir /etc/supervisor; fi', pty=True)
+        sudo('echo; if [ ! -f /etc/supervisord.conf ]; then echo_supervisord_conf > /etc/supervisord.conf; fi', pty=True) # configure that!
+        sudo('echo; if [ ! -d /etc/supervisor ]; then mkdir /etc/supervisor; fi', pty=True)
     if env.use_celery:
         sudo('apt-get install -y rabbitmq-server') # needs additional deb-repository!
         if env.use_daemontools:
@@ -171,11 +171,11 @@ def install_site():
         if env.use_daemontools: # activate new service runner
             sudo('cp service-run.sh /etc/service/%(prj_name)s/run; chmod a+x /etc/service/%(prj_name)s/run;' % env, pty=True)
         else: # delete old service dir
-            sudo('if [ -d /etc/service/%(prj_name)s ]; then rm -rf /etc/service/%(prj_name)s; fi' % env, pty=True)
+            sudo('echo; if [ -d /etc/service/%(prj_name)s ]; then rm -rf /etc/service/%(prj_name)s; fi' % env, pty=True)
         if env.use_supervisor: # activate new supervisor.ini
             sudo('cp supervisor.ini /etc/supervisor/%(prj_name)s.ini' % env, pty=True)
         else: # delete old config file
-            sudo('if [ -f /etc/supervisor/%(prj_name)s.ini ]; then supervisorctl %(prj_name)s:appserver stop rm /etc/supervisor/%(prj_name)s.ini; fi' % env, pty=True)
+            sudo('echo; if [ -f /etc/supervisor/%(prj_name)s.ini ]; then supervisorctl %(prj_name)s:appserver stop rm /etc/supervisor/%(prj_name)s.ini; fi' % env, pty=True)
         if env.use_celery:
             sudo('cp service-run-celeryd.sh /etc/service/%(prj_name)s-celery/run; chmod a+x /etc/service/%(prj_name)s-celery/run;' % env, pty=True)
         # try logrotate
