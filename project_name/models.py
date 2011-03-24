@@ -7,10 +7,6 @@ from django.template.loader import render_to_string
 from feincms.module.page.models import Page
 from feincms.content.richtext.models import RichTextContent
 from feincms.content.medialibrary.models import MediaFileContent
-#import datetime
-#from schedule.models import Event, Calendar
-#from schedule.periods import weekday_names, Month, Week, Day
-
 
 Page.register_templates(
     {
@@ -22,39 +18,7 @@ Page.register_templates(
     ),
     },
     )
-Page.register_extensions('changedate')
-
-#class EventContent(models.Model):
-#    event = models.ForeignKey(Event)
-#
-#    class Meta:
-#        abstract = True
-#        verbose_name = _(u'Event')
-#        verbose_name_plural = _(u'Events')
-#
-#    def render(self, **kwargs):
-#        return render_to_string('content/schedule/event.html', { 'event':self.event })
-#
-#class CalendarContent(models.Model):
-#    calendar = models.ForeignKey(Calendar)
-#
-#    class Meta:
-#        abstract = True
-#        verbose_name = _(u'Calendar')
-#        verbose_name_plural = _(u'Calendars')
-#
-#    def render(self, **kwargs):
-#        date = datetime.datetime.now()
-#        event_list = self.calendar.event_set.all()
-#        periods = {'month':Month, 'week':Week, 'day':Day}
-#        period_objects = dict([(period.__name__.lower(), period(event_list, date)) for period in periods])
-#        return render_to_string('content/schedule/calendar.html', {
-#                'date': date,
-#                'periods': period_objects,
-#                'calendar': self.calendar,
-#                'weekday_names': weekday_names,
-#        })
-
+Page.register_extensions('changedate', 'translations', )
 
 #class ReSTContent(models.Model):
 #    content = models.TextField()
@@ -75,11 +39,3 @@ Page.create_content_type(MediaFileContent, POSITION_CHOICES=(
     ('right', _(u'right')),
     ('center', _(u'center')),
     ))
-
-#Page.create_content_type(EventContent, POSITION_CHOICES=(
-#    #('left', _(u'left')),
-#    ('right', _(u'right')),
-#    ('center', _(u'center')),
-#    ))
-#
-#Page.create_content_type(CalendarContent)

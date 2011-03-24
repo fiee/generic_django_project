@@ -200,7 +200,6 @@ INSTALLED_APPS = [
     'feincms',
     'feincms.module.page',
     'feincms.module.medialibrary',
-    #'schedule',
     PROJECT_NAME,
 ]
 

@@ -8,8 +8,5 @@ south
 #django-mptt # working version only in SVN! see http://github.com/django-mptt/django-mptt
 #feincms # see http://github.com/matthiask/feincms
 #django-photologue
-#python-dateutil # for django-schedule
-#vobject # for django-schedule
-#django-schedule # see http://wiki.github.com/thauber/django-schedule/ or http://github.com/fiee/django-schedule
 #django-guardian
-django-debug-toolbar
+#django-debug-toolbar

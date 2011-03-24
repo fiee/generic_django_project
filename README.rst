@@ -4,7 +4,7 @@ generic django project
 
 This is my starting point for a new Django_ site, mixed and stirred from several public sources and spiced with my own enhancements.
 
-I normally work with FeinCMS_ and its medialibrary_, but sometimes also with Photologue_ and Schedule_, this is reflected in my setups.
+I normally work with FeinCMS_ and its medialibrary_, but sometimes also with Photologue_, this is reflected in my setups.
 
 My webserver of choice is Nginx_ with gunicorn_, since my virtual server is always low on memory. Setup for Apache_ with mod_wsgi_ and Nginx_ with fcgi_ is also provided.
 
@@ -67,7 +67,7 @@ server:
 
 I suggest to use makeuser.sh_ to create system and database accounts. Otherwise:
 
-* create user and sudo-enable it (I suggest via a group like wheel, but you can also add the user to sudoers)::
+* create user and sudo-enable it (I suggest via a group like ``wheel``, but you can also add the user to sudoers)::
   
     adduser project_name
     adduser project_name wheel
@@ -92,9 +92,9 @@ I suggest to use makeuser.sh_ to create system and database accounts. Otherwise:
 FeinCMS
 -------
 
-If you use FeinCMS’ Page, consider *first*, which extensions you’ll need - 
-see the docs__ and the FAQ__ -
-afterwards you would need to change the database table `page_page` by hand, 
+If you use FeinCMS’ Page, consider *first*, which extensions you’ll need – 
+see the docs__ and the FAQ__ –
+afterwards you would need to change the database table ``page_page`` by hand, 
 since the changes aren’t detected by South!
 
 .. __: http://www.feinheit.ch/media/labs/feincms/page.html#module-feincms.module.page.extension
@@ -121,9 +121,9 @@ Modules:
 
 * Fabric: http://docs.fabfile.org
 * South: http://south.aeracode.org/ (Getting started: http://mitchfournier.com/?p=25)
-* MPTT: http://code.google.com/p/django-mptt/ or http://github.com/django-mptt/django-mptt
+* MPTT: http://github.com/django-mptt/django-mptt
 * FeinCMS: http://github.com/matthiask/feincms
-* Schedule: http://wiki.github.com/thauber/django-schedule/ or http://github.com/fiee/django-schedule
+.. * Schedule: http://wiki.github.com/thauber/django-schedule/ or http://github.com/fiee/django-schedule
 
 .. _Python: http://www.python.org
 .. _Git: http://git-scm.com/
