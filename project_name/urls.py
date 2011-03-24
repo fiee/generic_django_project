@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.sitemaps import GenericSitemap
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 #from feincms.module.page.models import Page
+#from feincms.module.page.sitemap import PageSitemap
 #from feincms.views.base import handler as feincmshandler
 import os
 from django.views.generic import TemplateView, ListView
@@ -17,6 +18,8 @@ admin.autodiscover()
 #        'date_field': 'modification_date',
 #    }, priority=0.6),
 #}
+## OR
+# mysitemaps = {'pages' : PageSitemap}
 
 urlpatterns = patterns('',
         (r'^/?$', TemplateView.as_view(template_name="root.html")),
@@ -43,6 +46,6 @@ if settings.DEBUG:
 
 urlpatterns += patterns('',
     (r'^admin/', include(admin.site.urls)),    
-    #(r'sitemap.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': mysitemaps}),
+    #(r'sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': mysitemaps}),
     #url(r'^(.*)/$', feincmshandler, name='feincms_handler'),
 )
