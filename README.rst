@@ -16,7 +16,7 @@ Requirements
 * server OS: Debian/Ubuntu based Linux
 * local OS: MacOS X (only some local settings are OSX specific)
 * web server: Apache/mod_wsgi or Nginx/gunicorn or Nginx/fcgi
-* Python version: 2.5+
+* Python_ version: 2.5+
 * Django_ version: 1.3
 * version control: Git_
 * deployment tool: Fabric_
@@ -89,6 +89,18 @@ I suggest to use makeuser.sh_ to create system and database accounts. Otherwise:
     quit;
 
 
+FeinCMS
+-------
+
+If you use FeinCMS’ Page, consider *first*, which extensions you’ll need - 
+see the docs__ and the FAQ__ -
+afterwards you would need to change the database table `page_page` by hand, 
+since the changes aren’t detected by South!
+
+.. __: http://www.feinheit.ch/media/labs/feincms/page.html#module-feincms.module.page.extension
+.. __: http://www.feinheit.ch/media/labs/feincms/faq.html#i-run-syncdb-and-get-a-message-about-missing-columns-in-the-page-table
+
+
 ---------------
 Links / Sources
 ---------------
@@ -113,6 +125,7 @@ Modules:
 * FeinCMS: http://github.com/matthiask/feincms
 * Schedule: http://wiki.github.com/thauber/django-schedule/ or http://github.com/fiee/django-schedule
 
+.. _Python: http://www.python.org
 .. _Git: http://git-scm.com/
 .. _Nginx: http://wiki.nginx.org
 .. _Django: http://www.djangoproject.com/
