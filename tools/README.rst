@@ -17,9 +17,9 @@ Server management helpers for my setup:
 
 Some of these functions will migrate to the fabfile sometime...
 
-.. _server-setup.rst: ../../../blob/master/tools/server-setup.rst
-.. _makeuser.sh: ../../../blob/master/tools/makeuser.sh
-.. _package.list: ../../../blob/master/tools/package.list
-.. _copysite.sh: ../../../blob/master/tools/copysite.sh
-.. _nginxsite.sh: ../../../blob/master/tools/nginxsite.sh
-.. _websites-init.sh: ../../../blob/master/tools/websites-init.sh
+.. _server-setup.rst: ../../blob/master/tools/server-setup.rst
+.. _makeuser.sh: ../../blob/master/tools/makeuser.sh
+.. _package.list: ../../blob/master/tools/package.list
+.. _copysite.sh: ../../blob/master/tools/copysite.sh
+.. _nginxsite.sh: ../../blob/master/tools/nginxsite.sh
+.. _websites-init.sh: ../../blob/master/tools/websites-init.sh
