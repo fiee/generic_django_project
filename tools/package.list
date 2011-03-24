@@ -35,6 +35,7 @@ cpp-4.3           install
 cracklib-runtime        install
 cron            install
 daemontools         install
+daemontools-run         install
 db4.6-util          install
 debconf           install
 debconf-i18n          install
@@ -76,6 +77,7 @@ gettext-base          install
 ghostscript         install
 git-core          install
 gitosis           install
+gitweb            install
 gnupg           install
 gpgv            install
 graphicsmagick          install
@@ -97,6 +99,7 @@ iptables          install
 iputils-arping          install
 iputils-ping          install
 iputils-tracepath       install
+ipython           install
 klogd           install
 krb5-config         install
 ldap-utils          install
@@ -139,11 +142,13 @@ libdbi-perl         install
 libdevel-symdump-perl       install
 libdigest-sha1-perl       install
 libdirectfb-1.0-0       install
-libdns55          install
+libdns55          deinstall
+libdns58          install
 libedit2          install
 libept0           install
 liberror-perl         install
 libexpat1         install
+libfcgi-perl          install
 libfontconfig1          install
 libfontenc1         install
 libfreetype6          install
@@ -173,7 +178,8 @@ libidn11          install
 libio-compress-base-perl      install
 libio-compress-zlib-perl      install
 libio-stringy-perl        install
-libisc52          install
+libisc50          install
+libisc52          deinstall
 libisccc50          install
 libisccfg50         install
 libjasper1          install
@@ -217,6 +223,7 @@ libpng3           install
 libpopt0          install
 libpq5            install
 libreadline5          install
+libruby1.8          deinstall
 libruby1.9          install
 libsasl2-2          install
 libsctp1          install
@@ -280,9 +287,11 @@ libxpm4           install
 libxrandr2          install
 libxrender1         install
 libxt6            install
+libyaml-0-1         install
 linux-libc-dev          install
 lksctp-tools          install
 locales           install
+locate            install
 login           install
 logrotate         install
 lprng           install
@@ -299,6 +308,8 @@ makedev           install
 man-db            install
 man2html          install
 manpages          install
+mercurial         install
+mercurial-common        install
 metamail          install
 mime-support          install
 mingetty          install
@@ -344,6 +355,7 @@ psmisc            install
 psutils           install
 pwgen           install
 python            install
+python-beaker         install
 python-central          install
 python-cheetah          install
 python-crypto         install
@@ -358,7 +370,9 @@ python-imaging          install
 python-markdown         install
 python-minimal          install
 python-mysqldb          install
+python-openssl          install
 python-pdftools         install
+python-pexpect          install
 python-pkg-resources        install
 python-pypdf          install
 python-pysqlite2        install
@@ -366,15 +380,17 @@ python-reportlab        install
 python-roman          install
 python-setuptools       install
 python-simplejson       install
+python-sqlalchemy       install
 python-support          install
 python-virtualenv       install
 python-webpy          install
-python-yaml          install
+python-yaml         install
 python2.5         install
 python2.5-dev         install
 python2.5-minimal       install
 quota           install
 rabbitmq-server         install
+rcs           install
 readline-common         install
 rsync           install
 sasl2-bin         install
@@ -386,6 +402,7 @@ sharutils         install
 snmp            install
 ssh           install
 ssl-cert          install
+strace            install
 stunnel           install
 stunnel4          install
 subversion          install
