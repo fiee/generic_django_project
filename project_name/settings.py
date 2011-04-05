@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os, sys
-from django.utils.translation import ugettext_lazy as _
+#from django.utils.translation import ugettext_lazy as _
 # docs say: don't import translation in settings, but it works...
+_ = lambda s: s
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 PROJECT_NAME = os.path.split(PROJECT_ROOT)[-1]
 
-#_ = lambda s: s
 rel = lambda p: os.path.join(PROJECT_ROOT, p) # this is release and virtualenv dependent
 rootrel = lambda p: os.path.join('/var/www', PROJECT_NAME, p) # this is not
 
@@ -206,13 +206,13 @@ INSTALLED_APPS = [
 MIDDLEWARE_CLASSES = [
     'django.middleware.cache.UpdateCacheMiddleware', # first
     'django.middleware.gzip.GZipMiddleware', # second after UpdateCache
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     #'django.middleware.csrf.CsrfResponseMiddleware', # Deprecated in Django 1.3
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
     'django.middleware.doc.XViewMiddleware', # for local IPs
     'django.middleware.cache.FetchFromCacheMiddleware', # last
@@ -271,7 +271,6 @@ except NameError:
 # ..third party app settings here
 
 # auth/registration
-
 LOGIN_URL = '/accounts/login/'
 LOGOUT_URL = '/accounts/logout/'
 LOGIN_REDIRECT_URL = '/'
