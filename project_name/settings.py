@@ -8,8 +8,8 @@ _ = lambda s: s
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 PROJECT_NAME = os.path.split(PROJECT_ROOT)[-1]
 
-rel = lambda p: os.path.join(PROJECT_ROOT, p) # this is release and virtualenv dependent
-rootrel = lambda p: os.path.join('/var/www', PROJECT_NAME, p) # this is not
+rel = lambda p: os.path.normpath(os.path.join(PROJECT_ROOT, p)) # this is release and virtualenv dependent
+rootrel = lambda p: os.path.normpath(os.path.join('/var/www', PROJECT_NAME, p)) # this is not
 
 sys.path += [PROJECT_ROOT, os.path.join(PROJECT_ROOT,'lib/python2.5/site-packages')]
 
