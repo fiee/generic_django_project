@@ -20,6 +20,10 @@ fi
 echo "Adding ${USER} to group wheel"
 adduser "${USER}" wheel
 
+echo "
+cd /var/www/${USER} && source bin/activate
+" >> /home/${USER}/.profile
+
 echo "Creating website directory ${WEBDIR}/${USER}"
 # already in fabfile
 mkdir "${WEBDIR}/${USER}"
