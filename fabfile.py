@@ -9,6 +9,7 @@ import time
 
 # globals
 env.prj_name = 'project_name' # no spaces!
+env.sudoers_group = 'wheel'
 env.use_photologue = False # django-photologue gallery module
 env.use_feincms = True
 env.use_medialibrary = True # feincms.medialibrary or similar
@@ -17,7 +18,6 @@ env.use_supervisor = True
 env.use_celery = False
 env.webserver = 'nginx' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'mysql' # mysql or postgresql
-# TODO: database and SSH setup, see tools/makeuser.sh
 
 # environments
 
@@ -110,7 +110,24 @@ def setup():
         with cd(env.pysp):
             run('git clone git://github.com/django-mptt/django-mptt.git; echo django-mptt > mptt.pth;', pty=True)
             run('git clone git://github.com/matthiask/feincms.git; echo feincms > feincms.pth;', pty=True)
+    setup_user()
     deploy('first')
+    
+def setup_user():
+    require('hosts', provided_by=[webserver])
+    sudo('adduser "%(prj_name)s"' % env, pty=True)
+    sudo('adduser "%(prj_name)s" %(sudoers_group)s' % env, pty=True)
+    # cd to web dir and activate virtualenv on login
+    #run('echo "\ncd %(path)s && source bin/activate\n" >> /home/%(prj_name)s/.profile\n' % env, pty=True)
+    if env.dbserver=='mysql':
+        env.dbuserscript = '/home/%(prj_name)s/userscript.sql' % env
+        run('''echo "\ncreate user '%(prj_name)s'@'localhost' identified by '${PASS}';
+create database %(prj_name)s character set 'utf8';\n
+grant all privileges on %(prj_name)s.* to '%(prj_name)s'@'localhost';\n
+flush privileges;\n" > %(dbuserscript)s''' % env, pty=True)
+        run('echo "Setting up %(prj_name)s in MySQL. Please enter password for root:"; mysql -u root -p -D mysql < %(dbuserscript)s' % env, pty=True)
+        run('rm %(dbuserscript)s' % env, pty=True)
+        del env.dbuserscript
     
 def deploy(param=''):
     """
