@@ -9,4 +9,5 @@ south
 #feincms # see http://github.com/matthiask/feincms
 #django-photologue
 #django-guardian
+#admin_tools
 #django-debug-toolbar

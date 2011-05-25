@@ -184,6 +184,10 @@ ADMIN_MEDIA_PREFIX = '%sadmin/' % STATIC_URL
 # ==============================================================================
 
 INSTALLED_APPS = [
+    #'admin_tools',
+    #'admin_tools.theming',
+    #'admin_tools.menu',
+    #'admin_tools.dashboard',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -284,6 +288,11 @@ FEINCMS_MEDIALIBRARY_URL = '/' #'/medialibrary/'
 
 # schedule
 FIRST_DAY_OF_WEEK = 1
+
+# admin_tools
+ADMIN_TOOLS_MENU = '%s.menu.CustomMenu' % PROJECT_NAME
+ADMIN_TOOLS_INDEX_DASHBOARD = '%s.dashboard.CustomIndexDashboard' % PROJECT_NAME
+ADMIN_TOOLS_APP_INDEX_DASHBOARD = '%s.dashboard.CustomAppIndexDashboard' % PROJECT_NAME
 
 # ==============================================================================
 # host specific settings
