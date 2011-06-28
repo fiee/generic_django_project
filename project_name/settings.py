@@ -107,9 +107,14 @@ LOGGING = {
 # cache settings
 # ==============================================================================
 
-CACHE_BACKEND = 'file:///var/tmp/django_cache/%s' % PROJECT_NAME
-CACHE_MIDDLEWARE_KEY_PREFIX = '' # %s_' % PROJECT_NAME
-CACHE_MIDDLEWARE_SECONDS = 600
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache/%s' % PROJECT_NAME,
+        'TIMEOUT': 600,
+    }
+}
+
 USE_ETAGS = True
 
 # ==============================================================================
