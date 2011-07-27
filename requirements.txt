@@ -6,7 +6,7 @@ south
 #django-tagging-ng # original tagging works only up to Django 1.0
 #django-tinymce
 #django-mptt # working version only in SVN! see http://github.com/django-mptt/django-mptt
-#feincms # see http://github.com/matthiask/feincms
+#feincms # see http://github.com/feincms/feincms
 #django-photologue
 #django-guardian
 #admin_tools

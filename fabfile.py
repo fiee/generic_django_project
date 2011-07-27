@@ -112,7 +112,7 @@ def setup():
     if env.use_feincms:
         with cd(env.pysp):
             run('git clone git://github.com/django-mptt/django-mptt.git; echo django-mptt > mptt.pth;', pty=True)
-            run('git clone git://github.com/matthiask/feincms.git; echo feincms > feincms.pth;', pty=True)
+            run('git clone git://github.com/feincms/feincms.git; echo feincms > feincms.pth;', pty=True)
     setup_user()
     deploy('first')
     
