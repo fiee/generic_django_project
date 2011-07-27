@@ -16,6 +16,7 @@ env.use_medialibrary = True # feincms.medialibrary or similar
 env.use_daemontools = False
 env.use_supervisor = True
 env.use_celery = False
+env.use_memcached = False
 env.webserver = 'nginx' # nginx or apache2 (directory name below /etc!)
 env.dbserver = 'mysql' # mysql or postgresql
 
@@ -74,6 +75,8 @@ def setup():
         if env.use_daemontools:
             sudo('mkdir -p /etc/service/%(prj_name)s-celery' % env, pty=True)
         # for supervisor, put celery's "program" block into supervisor.ini!
+    if env.use_memcached:
+        sudo('apt-get install -y memcached python-memcache', pty=True)
     
     # install webserver and database server
     sudo('apt-get remove -y apache2 apache2-mpm-prefork apache2-utils') # is mostly pre-installed
