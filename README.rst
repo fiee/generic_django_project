@@ -44,6 +44,13 @@ Issues
 * I could also support runit_, but I didn't want to replace init
 * South_ still doesn't work for me, must overcome problems with several releases and multiple projects accessing the same Django_ app outside of virtualenvs_
 
+-----
+Ideas
+-----
+
+* Learn more from http://djangopatterns.com and https://github.com/callowayproject/django-app-skeleton
+* Include Sphinx template and setup.py
+
 
 ------
 How To
