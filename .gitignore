@@ -12,3 +12,4 @@ build
 *.bak
 *.log
 migrations/
+static_collection/
