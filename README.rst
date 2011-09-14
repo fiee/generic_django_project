@@ -32,14 +32,13 @@ Rationale
 
 Django's startproject doesn't do enough. I'm a programmer, thus lazy, and try to reduce redundant work like repeating the same setup steps over and over. (DRY)
 
-Just copying this generic project to a new site isn't ideal either, since general changes don't affect all dependent sites, but I got no idea how to do that.
+Just copying/cloning this generic project to a new site isn't ideal either, since general changes don't affect all dependent sites, but I got no idea how to do that.
 
 
 ------
 Issues
 ------
 
-* User creation isn't integrated in fabfile_ setup.
 * Probably security holes - use at your own risk.
 * I could also support runit_, but I didn't want to replace init
 * South_ still doesn't work for me, must overcome problems with several releases and multiple projects accessing the same Django_ app outside of virtualenvs_
@@ -50,6 +49,7 @@ Ideas
 
 * Learn more from http://djangopatterns.com and https://github.com/callowayproject/django-app-skeleton
 * Include Sphinx template and setup.py
+* Optionally use Redis_ for sessions and cache, see http://unfoldthat.com/2011/09/14/try-redis-instead.html
 
 
 ------
@@ -156,6 +156,7 @@ Modules:
 .. _runit: http://smarden.org/runit/
 .. _logrotate: http://www.linux-praxis.de/lpic1/manpages/logrotate.html
 .. _virtualenvs: http://virtualenv.readthedocs.org/
+.. _Redis: http://redis.io
 
 .. _makeuser.sh: blob/master/tools/makeuser.sh
 .. _settings.py: blob/master/project_name/settings.py
