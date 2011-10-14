@@ -175,8 +175,9 @@ SITE_ID = 1
 
 ROOT_URLCONF = '%s.urls' % PROJECT_NAME
 
-MEDIA_ROOT = rel('media')
-MEDIA_URL = '/media/'
+# don’t use /media/! FeinCMS’ media library uses MEDIA_ROOT/medialibrary
+MEDIA_ROOT = rootrel('')
+MEDIA_URL = '/'
 
 # setup Django 1.3 staticfiles
 STATIC_URL = '/static/'
@@ -287,9 +288,10 @@ LOGIN_REDIRECT_URL = '/'
 # feincms
 FEINCMS_ADMIN_MEDIA = '%sfeincms/' % STATIC_URL
 FEINCMS_ADMIN_MEDIA_HOTLINKING = True
-FEINCMS_MEDIALIBRARY_ROOT = rootrel('') #'/var/www/project_name/medialibrary/'
 #FEINCMS_MEDIALIBRARY_UPLOAD_TO
-FEINCMS_MEDIALIBRARY_URL = '/' #'/medialibrary/'
+# obsolete with FeinCMS 1.4
+#FEINCMS_MEDIALIBRARY_ROOT = rootrel('') #'/var/www/project_name/medialibrary/'
+#FEINCMS_MEDIALIBRARY_URL = '/' #'/medialibrary/'
 
 # schedule
 FIRST_DAY_OF_WEEK = 1
