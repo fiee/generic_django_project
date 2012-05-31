@@ -105,7 +105,7 @@ def setup():
             run('mkdir -m a+w logs; mkdir releases; mkdir shared; mkdir packages; mkdir backup;', pty=True)
             if env.use_photologue:
                 run('mkdir photologue', pty=True)
-                #run('pip install -E . -U django-photologue' % env, pty=True)
+                #run('pip install -U django-photologue' % env, pty=True)
             if env.use_medialibrary:
                 run('mkdir medialibrary', pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
@@ -207,7 +207,7 @@ def install_site():
 def install_requirements():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
-    run('cd %(path)s; pip install -E . -r ./releases/%(release)s/requirements.txt' % env, pty=True)
+    run('cd %(path)s; pip install -r ./releases/%(release)s/requirements.txt' % env, pty=True)
     
 def symlink_current_release():
     "Symlink our current release"
