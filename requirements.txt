@@ -1,4 +1,5 @@
-gunicorn # not with fcgi
+setproctitle # for gunicorn
+gunicorn==0.13.4 # not with fcgi
 #flup # for fcgi
 #python-memcached # for memcached cache (you must install that separately)
 Django
@@ -6,7 +7,8 @@ south
 #django-tagging-ng # original tagging works only up to Django 1.0
 #django-tinymce
 #django-mptt # working version only in SVN! see http://github.com/django-mptt/django-mptt
-#feincms # see http://github.com/feincms/feincms
+#-e git://github.com/django-mptt/django-mptt.git#egg=django-mptt
+#feincms # see also http://github.com/feincms/feincms
 #django-photologue
 #django-guardian
 #django-admin-tools
