@@ -1,17 +1,17 @@
 {% load cache i18n %}{% get_current_language as LANGUAGE_CODE %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{ LANGUAGE_CODE|default:"en" }}" lang="{{ LANGUAGE_CODE|default:"en" }}">
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>project_name :: {% block title %}{% trans "Home" %}{% endblock %}</title>
   <link rel="stylesheet" type="text/css" media="all" href="http://yui.yahooapis.com/2.8.1/build/reset-fonts-grids/reset-fonts-grids.css">
   <link rel="stylesheet" type="text/css" media="all" href="http://yui.yahooapis.com/2.8.1/build/base/base.css">
-  <link rel="stylesheet" type="text/css" media="screen,projection" href="{{ MEDIA_URL }}css/style.css" />
-  <link rel="stylesheet" type="text/css" media="print" href="{{ MEDIA_URL }}css/print.css" />
-  <link rel="sitemap" href="/sitemap.xml" type="text/xml" />
+  <link rel="stylesheet" type="text/css" media="screen,projection" href="{{ STATIC_URL|default:"/static/" }}css/style.css" />
+  <link rel="stylesheet" type="text/css" media="print" href="{{ STATIC_URL|default:"/static/" }}css/print.css" />
+  <!-- <link rel="sitemap" href="/sitemap.xml" type="text/xml" /> -->
   <!-- <link rel="alternate" type="application/rss+xml" title="{% trans "project_name events" %}" href="/calendar/feed/calendar/upcoming/1/"> -->
-  <link rel="shortcut icon" href="{{ MEDIA_URL }}favicon.ico" type="image/x-icon" />
-  <link rel="icon" href="{{ MEDIA_URL }}favicon.ico" type="image/icon" />
+  <link rel="shortcut icon" href="{{ STATIC_URL|default:"/static/" }}favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="{{ STATIC_URL|default:"/static/" }}favicon.ico" type="image/icon" />
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">
   </script>
   {% block extra_head %}
