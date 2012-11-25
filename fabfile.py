@@ -218,10 +218,10 @@ def symlink_current_release():
         # copy South migrations from previous release, if there are any
         run('cd releases/previous/%(prj_name)s; if [ -d migrations ]; then cp -r migrations ../../current/%(prj_name)s/; fi' % env, pty=True)
         # collect static files
-        with cd('releases/current/%(prj_name)s' % env):
+        with cd('releases/current'):
             run('%(path)s/bin/python manage.py collectstatic -v0 --noinput' % env, pty=True)
             if env.use_photologue:
-                run('cd static; rm -rf photologue; ln -s %(path)s/photologue photologue;' % env, pty=True)
+                run('cd %(prj_name)s/static; rm -rf photologue; ln -s %(path)s/photologue photologue;' % env, pty=True)
     
 def migrate(param=''):
     "Update the database"
@@ -229,9 +229,9 @@ def migrate(param=''):
     require('path')
     env.southparam = '--auto'
     if param=='first':
-        run('cd %(path)s/releases/current/%(prj_name)s; %(path)s/bin/python manage.py syncdb --noinput' % env, pty=True)
+        run('cd %(path)s/releases/current; %(path)s/bin/python manage.py syncdb --noinput' % env, pty=True)
         env.southparam = '--initial'
-    #with cd('%(path)s/releases/current/%(prj_name)s' % env):
+    #with cd('%(path)s/releases/current' % env):
     #    run('%(path)s/bin/python manage.py schemamigration %(prj_name)s %(southparam)s && %(path)s/bin/python manage.py migrate %(prj_name)s' % env)
     #    # TODO: should also migrate other apps! get migrations from previous releases
     
@@ -249,5 +249,5 @@ def restart_webserver():
                 if env.use_celery:
                     sudo('supervisorctl restart %(prj_name)s:celery' % env, pty=True)
             #require('prj_name')
-            #run('cd %(path)s; bin/python releases/current/%(prj_name)s/manage.py runfcgi method=threaded maxchildren=6 maxspare=4 minspare=2 host=127.0.0.1 port=%(port)s pidfile=./logs/django.pid' % env)
+            #run('cd %(path)s; bin/python releases/current/manage.py runfcgi method=threaded maxchildren=6 maxspare=4 minspare=2 host=127.0.0.1 port=%(port)s pidfile=./logs/django.pid' % env)
         sudo('/etc/init.d/%(webserver)s reload' % env, pty=True)

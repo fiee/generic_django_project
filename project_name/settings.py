@@ -147,7 +147,7 @@ EMAIL_USE_TLS = False
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': PROJECT_NAME,                      # Or path to database file if using sqlite3.
         'USER': PROJECT_NAME,                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
@@ -160,12 +160,14 @@ DATABASES = {
 # i18n and url settings
 # ==============================================================================
 
-TIME_ZONE = 'Europe/Zurich'
-LANGUAGE_CODE = 'de'
+TIME_ZONE = 'Europe/Berlin'
+LANGUAGE_CODE = 'de' # 'en-us'
 LANGUAGES = (('en', _(u'English')),
              ('de', _(u'German')))
 USE_I18N = True
 USE_L10N = True
+# If you set this to False, Django will not use timezone-aware datetimes.
+USE_TZ = True
 
 LOCALE_PATHS = (
     rel('locale/'),
@@ -175,15 +177,38 @@ SITE_ID = 1
 
 ROOT_URLCONF = '%s.urls' % PROJECT_NAME
 
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = '%s.wsgi.application' % PROJECT_NAME
+
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Example: "/home/media/media.lawrence.com/media/"
 # don’t use /media/! FeinCMS’ media library uses MEDIA_ROOT/medialibrary
 MEDIA_ROOT = rootrel('')
+# URL that handles the media served from MEDIA_ROOT. Make sure to use a
+# trailing slash.
+# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = '/'
 
 # setup Django 1.3 staticfiles
+# URL prefix for static files.
+# Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 STATIC_ROOT = rel('static_collection')
-STATICFILES_DIRS = (rel('static'), ) #'.../feincms/media',
-ADMIN_MEDIA_PREFIX = '%sadmin/' % STATIC_URL
+STATICFILES_DIRS = (
+    rel('static'), 
+    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+) #'.../feincms/media',
+# List of finder classes that know how to find static files in
+# various locations.
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
+
+ADMIN_MEDIA_PREFIX = '%sadmin/' % STATIC_URL # Don’t know if that’s still used
 
 # ==============================================================================
 # application and middleware settings
@@ -220,11 +245,12 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    #'django.middleware.csrf.CsrfResponseMiddleware', # Deprecated in Django 1.3
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
     'django.middleware.doc.XViewMiddleware', # for local IPs
+    # Uncomment the next line for simple clickjacking protection:
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware', # last
 ]
 

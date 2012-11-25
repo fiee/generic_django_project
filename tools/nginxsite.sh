@@ -52,7 +52,7 @@ then
 else
 	export SERVER_PROTOCOL=http
 	echo "Starting $SITE on port $PORT..."
-	cd $DJANGODIR; $PYTHON $DJANGODIR/manage.py runfcgi method=threaded maxchildren=6 maxspare=4 minspare=2 host=127.0.0.1 port=$PORT pidfile=$PIDFILE $DEBUG
+	cd $DJANGODIR; $PYTHON $DJANGODIR/../manage.py runfcgi method=threaded maxchildren=6 maxspare=4 minspare=2 host=127.0.0.1 port=$PORT pidfile=$PIDFILE $DEBUG
 	/etc/init.d/nginx reload
 fi
 
