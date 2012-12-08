@@ -215,6 +215,7 @@ ADMIN_MEDIA_PREFIX = '%sadmin/' % STATIC_URL # Don’t know if that’s still us
 # ==============================================================================
 
 INSTALLED_APPS = [
+    'djangosecure',
     #'admin_tools',
     #'admin_tools.theming',
     #'admin_tools.menu',
@@ -241,6 +242,7 @@ INSTALLED_APPS = [
 MIDDLEWARE_CLASSES = [
     'django.middleware.cache.UpdateCacheMiddleware', # first
     'django.middleware.gzip.GZipMiddleware', # second after UpdateCache
+    'djangosecure.middleware.SecurityMiddleware', # as first as possible
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -326,6 +328,16 @@ FIRST_DAY_OF_WEEK = 1
 ADMIN_TOOLS_MENU = '%s.menu.CustomMenu' % PROJECT_NAME
 ADMIN_TOOLS_INDEX_DASHBOARD = '%s.dashboard.CustomIndexDashboard' % PROJECT_NAME
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = '%s.dashboard.CustomAppIndexDashboard' % PROJECT_NAME
+
+# django-secure
+SECURE_SSL_REDIRECT=True # if all non-SSL requests should be permanently redirected to SSL.
+SECURE_HSTS_SECONDS=10 # integer number of seconds, if you want to use HTTP Strict Transport Security
+SECURE_HSTS_INCLUDE_SUBDOMAINS=True # if you want to use HTTP Strict Transport Security
+SECURE_FRAME_DENY=True # if you want to prevent framing of your pages and protect them from clickjacking.
+SECURE_CONTENT_TYPE_NOSNIFF=True # if you want to prevent the browser from guessing asset content types.
+SECURE_BROWSER_XSS_FILTER=True # if you want to enable the browser's XSS filtering protections.
+SESSION_COOKIE_SECURE=True # if you are using django.contrib.sessions
+SESSION_COOKIE_HTTPONLY=True # if you are using django.contrib.sessions
 
 # ==============================================================================
 # host specific settings

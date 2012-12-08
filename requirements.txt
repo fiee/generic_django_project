@@ -4,6 +4,7 @@ gunicorn==0.13.4 # not with fcgi
 #python-memcached # for memcached cache (you must install that separately)
 Django
 south
+django-secure
 #django-tagging-ng # original tagging works only up to Django 1.0
 #django-tinymce
 #django-mptt # working version only in SVN! see http://github.com/django-mptt/django-mptt
@@ -13,3 +14,4 @@ south
 #django-guardian
 #django-admin-tools
 #django-debug-toolbar
+# see also http://procrastinatingdev.com/django/my-requirements-txt/
