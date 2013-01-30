@@ -5,6 +5,7 @@
 .svn
 secret.txt
 settings_local.py
+*/settings/local.py
 dev.db
 .tmp*
 build

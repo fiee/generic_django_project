@@ -61,8 +61,8 @@ local:
 
 * copy `generic_project`
 * replace all occurrences of lowercase "project_name" with your project name. this is also the webserver and database server username!
-* check the settings in manage.py_, fabfile.py_, gunicorn-settings.py_, settings.py_, settings_local.py_, supervisor.ini_ or service-run.sh_
-* set up an email account for your project’s error messages and configure it in settings.py_
+* check the settings in manage.py_, fabfile.py_, gunicorn-settings.py_, settings/base.py_, settings/local.py_, supervisor.ini_ or service-run.sh_
+* set up an email account for your project’s error messages and configure it in settings/base.py_
 * if you use Nginx, change the internal port in nginx.conf_ (``fastcgi_pass 127.0.0.1:8001;``); I use "8 + last 3 numbers of UID" (UIDs start at 1000 on Debian): ``id -u project_name``
 * ``git init``, always commit all changes
 * ``manage syncdb`` (initialize south)
@@ -160,8 +160,8 @@ Modules:
 
 .. _makeuser.sh: blob/master/tools/makeuser.sh
 .. _manage.py: blob/master/manage.py
-.. _settings.py: blob/master/project_name/settings.py
-.. _settings_local.py: blob/master/project_name/settings_local.py
+.. _settings/base.py: blob/master/project_name/settings/base.py
+.. _settings/local.py: blob/master/project_name/settings/local.py
 .. _gunicorn-settings.py: blob/master/gunicorn-settings.py
 .. _fabfile.py: blob/master/fabfile.py
 .. _supervisor.ini: blob/master/supervisor.ini

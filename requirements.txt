@@ -1,17 +1,29 @@
-setproctitle # for gunicorn
-gunicorn==0.13.4 # not with fcgi
-#flup # for fcgi
-#python-memcached # for memcached cache (you must install that separately)
 Django
-south
+Fabric
+PIL
+South
 django-secure
-#django-tagging-ng # original tagging works only up to Django 1.0
+#django-admin-tools
+#django-guardian
+#django-registration
+#django-tagging-ng
+gunicorn #==0.13.4 # not with fcgi
+#flup # for fcgi
+
+setproctitle # for gunicorn
+#python-memcached # for memcached cache (you must install that separately)
 #django-tinymce
-#django-mptt # working version only in SVN! see http://github.com/django-mptt/django-mptt
+#django-mptt # working version sometimes only in SVN! see http://github.com/django-mptt/django-mptt
 #-e git://github.com/django-mptt/django-mptt.git#egg=django-mptt
 #feincms # see also http://github.com/feincms/feincms
 #django-photologue
-#django-guardian
-#django-admin-tools
 #django-debug-toolbar
 # see also http://procrastinatingdev.com/django/my-requirements-txt/
+
+dj_database_url
+#psycopg2 # for PostgreSQL
+#pyOpenSSL
+#pycrypto
+#python-dateutil
+#pytz
+#reportlab

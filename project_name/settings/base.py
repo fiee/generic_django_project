@@ -156,6 +156,11 @@ DATABASES = {
     }
 }
 
+#import dj_database_url
+#DATABASES = {}
+#DATABASES['default'] = dj_database_url.config()
+
+
 # ==============================================================================
 # i18n and url settings
 # ==============================================================================
@@ -238,6 +243,40 @@ INSTALLED_APPS = [
     'feincms.module.medialibrary',
     PROJECT_NAME,
 ]
+
+DJANGO_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.admin',
+    'django.contrib.sitemaps',
+    #'django.contrib.humanize',
+)
+
+THIRD_PARTY_APPS = (
+    'djangosecure',
+    #'admin_tools',
+    #'admin_tools.theming',
+    #'admin_tools.menu',
+    #'admin_tools.dashboard',
+    'gunicorn', # not with fcgi
+    'mptt',
+    'south',
+    #'tagging',
+    'feincms',
+    'feincms.module.page',
+    'feincms.module.medialibrary',
+)
+
+LOCAL_APPS = (
+    PROJECT_NAME,
+)
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.cache.UpdateCacheMiddleware', # first
