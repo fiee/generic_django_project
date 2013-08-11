@@ -42,12 +42,11 @@ LOGGING = {
             'format': '%(levelname)s %(message)s'
         },
     },
-#    'filters': {
-#        'special': {
-#            '()': 'project.logging.SpecialFilter',
-#            'foo': 'bar',
-#        }
-#    },
+    'filters': {
+         'require_debug_false': {
+             '()': 'django.utils.log.RequireDebugFalse'
+         }
+     },
     'handlers': {
         'null': {
             'level':'DEBUG',
@@ -81,7 +80,7 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
-            #'filters': ['special']
+            'filters': ['require_debug_false'],
         }
     },
     'loggers': {
@@ -122,6 +121,10 @@ USE_ETAGS = True
 # ==============================================================================
 
 YOUR_DOMAIN = 'example.com' # since I'm getting error messages from stupid cloners...
+
+# Hosts/domain names that are valid for this site; required if DEBUG is False
+# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = [YOUR_DOMAIN, 'www.'+YOUR_DOMAIN,]
 
 ADMINS = (
     #('Henning Hraban Ramm', 'hraban@fiee.net'), # don't send your errors to me!
@@ -218,31 +221,6 @@ ADMIN_MEDIA_PREFIX = '%sadmin/' % STATIC_URL # Don’t know if that’s still us
 # ==============================================================================
 # application and middleware settings
 # ==============================================================================
-
-INSTALLED_APPS = [
-    'djangosecure',
-    #'admin_tools',
-    #'admin_tools.theming',
-    #'admin_tools.menu',
-    #'admin_tools.dashboard',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.admin',
-    #'django.contrib.humanize',
-    'django.contrib.sitemaps',
-    'django.contrib.staticfiles', # Django 1.3
-    'gunicorn', # not with fcgi
-    'mptt',
-    'south',
-    #'tagging',
-    'feincms',
-    'feincms.module.page',
-    'feincms.module.medialibrary',
-    PROJECT_NAME,
-]
 
 DJANGO_APPS = (
     'django.contrib.auth',
@@ -387,7 +365,7 @@ try:
 except ImportError:
     pass
 if DEBUG:
-    INSTALLED_APPS.append('django.contrib.admindocs')
+    #INSTALLED_APPS.append('django.contrib.admindocs')
     #INSTALLED_APPS.append('debug_toolbar')
     #MIDDLEWARE_CLASSES.append('debug_toolbar.middleware.DebugToolbarMiddleware') # see also http://github.com/robhudson/django-debug-toolbar/blob/master/README.rst
     LOGGING['handlers']['file'] = {
