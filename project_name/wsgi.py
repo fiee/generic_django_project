@@ -12,13 +12,12 @@ that later delegates to the Django one. For example, you could introduce WSGI
 middleware here, or combine a Django application with an application of another
 framework.
 
+For more information on this file, see
+https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 """
 import os
-#import sys
-## put the Django project on sys.path
-#sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project_name.settings")
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION

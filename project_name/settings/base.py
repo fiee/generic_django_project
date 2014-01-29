@@ -1,17 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+For the full list of settings and their values, see
+https://docs.djangoproject.com/en/1.6/ref/settings/
+"""
 import os, sys
 #from django.utils.translation import ugettext_lazy as _
 # docs say: don't import translation in settings, but it works...
 _ = lambda s: s
 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 PROJECT_NAME = os.path.split(PROJECT_ROOT)[-1]
 
 rel = lambda p: os.path.normpath(os.path.join(PROJECT_ROOT, p)) # this is release and virtualenv dependent
 rootrel = lambda p: os.path.normpath(os.path.join('/var/www', PROJECT_NAME, p)) # this is not
 
-sys.path += [PROJECT_ROOT, os.path.join(PROJECT_ROOT,'lib/python2.5/site-packages')]
+sys.path += [PROJECT_ROOT, os.path.join(PROJECT_ROOT,'lib/python2.7/site-packages')]
 
 # ==============================================================================
 # debug settings
@@ -123,7 +128,7 @@ USE_ETAGS = True
 YOUR_DOMAIN = 'example.com' # since I'm getting error messages from stupid cloners...
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
-# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
+# See https://docs.djangoproject.com/en/1.6/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [YOUR_DOMAIN, 'www.'+YOUR_DOMAIN,]
 
 ADMINS = (
@@ -197,7 +202,7 @@ MEDIA_ROOT = rootrel('')
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
 MEDIA_URL = '/'
 
-# setup Django 1.3 staticfiles
+# setup Django 1.3+ staticfiles
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
@@ -223,14 +228,14 @@ ADMIN_MEDIA_PREFIX = '%sadmin/' % STATIC_URL # Don’t know if that’s still us
 # ==============================================================================
 
 DJANGO_APPS = (
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
+    #'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.admin',
-    'django.contrib.sitemaps',
+    #'django.contrib.sitemaps',
     #'django.contrib.humanize',
 )
 
@@ -274,13 +279,12 @@ MIDDLEWARE_CLASSES = [
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    #'django.core.context_processors.auth', # Django 1.2
-    'django.contrib.auth.context_processors.auth', # Django 1.3
+    'django.contrib.auth.context_processors.auth', # Django 1.3+
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
-    'django.core.context_processors.static', # Django 1.3 staticfiles
+    'django.core.context_processors.static', # Django 1.3+ staticfiles
     'django.contrib.messages.context_processors.messages',
 )
 

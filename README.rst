@@ -17,7 +17,7 @@ Requirements
 * local OS: MacOS X (only some local settings are OSX specific)
 * web server: Apache/mod_wsgi or Nginx/gunicorn or Nginx/fcgi
 * Python_ version: 2.5+
-* Django_ version: 1.4
+* Django_ version: 1.6
 * version control: Git_
 * deployment tool: Fabric_
 * local development database: SQLite3_
