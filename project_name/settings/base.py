@@ -129,7 +129,11 @@ YOUR_DOMAIN = 'example.com' # since I'm getting error messages from stupid clone
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.6/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = [YOUR_DOMAIN, 'www.'+YOUR_DOMAIN,]
+ALLOWED_HOSTS = [
+                 '.'+YOUR_DOMAIN, # wildcard: all servers on your domain
+                 '.'+YOUR_DOMAIN+'.', # wildcard plus FQDN (see above doc link)
+                 #'www.'+YOUR_DOMAIN,
+                 ]
 
 ADMINS = (
     #('Henning Hraban Ramm', 'hraban@fiee.net'), # don't send your errors to me!
