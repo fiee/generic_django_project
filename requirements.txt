@@ -21,6 +21,7 @@ setproctitle # for gunicorn
 # see also http://procrastinatingdev.com/django/my-requirements-txt/
 
 dj_database_url
+#MySQL-python # for MySQL
 #psycopg2 # for PostgreSQL
 #pyOpenSSL
 #pycrypto
