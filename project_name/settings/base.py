@@ -133,7 +133,7 @@ ALLOWED_HOSTS = [
                  '.'+YOUR_DOMAIN, # wildcard: all servers on your domain
                  '.'+YOUR_DOMAIN+'.', # wildcard plus FQDN (see above doc link)
                  #'www.'+YOUR_DOMAIN,
-                 ]
+                 ] + list(INTERNAL_IPS)
 
 ADMINS = (
     #('Henning Hraban Ramm', 'hraban@fiee.net'), # don't send your errors to me!
