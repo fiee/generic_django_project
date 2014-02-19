@@ -18,7 +18,7 @@ Page.register_templates(
     ),
     },
     )
-Page.register_extensions('changedate', 'translations', )
+Page.register_extensions('feincms.module.extensions.changedate', 'feincms.module.extensions.translations', )
 
 #class ReSTContent(models.Model):
 #    content = models.TextField()
