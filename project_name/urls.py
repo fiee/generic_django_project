@@ -5,7 +5,6 @@ from django.contrib.sitemaps import GenericSitemap
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 #from feincms.module.page.models import Page
 #from feincms.module.page.sitemap import PageSitemap
-#from feincms.views.base import handler as feincmshandler
 import os
 from django.views.generic import TemplateView, ListView
 
@@ -48,5 +47,5 @@ urlpatterns += patterns('',
     #(r'^admin_tools/', include('admin_tools.urls')),
     (r'^admin/', include(admin.site.urls)),    
     #(r'sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': mysitemaps}),
-    #url(r'^(.*)/$', feincmshandler, name='feincms_handler'),
+    #url(r'', include('feincms.urls')),
 )
