@@ -141,7 +141,7 @@ def deploy(param=''):
     require('path')
     env.release = time.strftime('%Y%m%d%H%M%S')
     upload_tar_from_git()
-    install_requirements()
+    if param=='first': install_requirements()
     install_site()
     symlink_current_release()
     migrate(param)
@@ -177,7 +177,7 @@ def upload_tar_from_git():
     "Create an archive from the current Git master branch and upload it"
     require('release', provided_by=[deploy, setup])
     local('git archive --format=tar master | gzip > %(release)s.tar.gz' % env)
-    run('mkdir -p %(path)s/releases/%(release)s' % env, pty=True)
+    run('mkdir -p %(path)s/releases/%(release)s' % env) #, pty=True)
     put('%(release)s.tar.gz' % env, '%(path)s/packages/' % env)
     run('cd %(path)s/releases/%(release)s && tar zxf ../../packages/%(release)s.tar.gz' % env, pty=True)
     local('rm %(release)s.tar.gz' % env)
@@ -195,7 +195,7 @@ def install_site():
             sudo('cp supervisor.ini /etc/supervisor/%(prj_name)s.ini' % env, pty=True)
         else: # delete old config file
             sudo('echo; if [ -f /etc/supervisor/%(prj_name)s.ini ]; then supervisorctl %(prj_name)s:appserver stop rm /etc/supervisor/%(prj_name)s.ini; fi' % env, pty=True)
-        if env.use_celery:
+        if env.use_celery and env.use_daemontools:
             sudo('cp service-run-celeryd.sh /etc/service/%(prj_name)s-celery/run; chmod a+x /etc/service/%(prj_name)s-celery/run;' % env, pty=True)
         # try logrotate
         with settings(warn_only=True):        
@@ -206,7 +206,7 @@ def install_site():
 def install_requirements():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
-    run('cd %(path)s; pip install -r ./releases/%(release)s/requirements.txt' % env, pty=True)
+    run('cd %(path)s; pip install -U -r ./releases/%(release)s/requirements.txt' % env, pty=True)
     
 def symlink_current_release():
     "Symlink our current release"
@@ -237,7 +237,7 @@ def migrate(param=''):
 def restart_webserver():
     "Restart the web server"
     require('webserver')
-    env.port = '8'+run('id -u', pty=True)[1:]
+    env.webport = '8'+run('id -u', pty=True)[1:]
     with settings(warn_only=True):
         if env.webserver=='nginx':
             require('path')
@@ -247,6 +247,8 @@ def restart_webserver():
                 sudo('supervisorctl restart %(prj_name)s:appserver' % env, pty=True)
                 if env.use_celery:
                     sudo('supervisorctl restart %(prj_name)s:celery' % env, pty=True)
+                else:
+                    sudo('supervisorctl restart %(prj_name)s:appserver' % env, pty=True)
             #require('prj_name')
-            #run('cd %(path)s; bin/python releases/current/manage.py runfcgi method=threaded maxchildren=6 maxspare=4 minspare=2 host=127.0.0.1 port=%(port)s pidfile=./logs/django.pid' % env)
+            #run('cd %(path)s; bin/python releases/current/manage.py runfcgi method=threaded maxchildren=6 maxspare=4 minspare=2 host=127.0.0.1 port=%(webport)s pidfile=./logs/django.pid' % env)
         sudo('/etc/init.d/%(webserver)s reload' % env, pty=True)
