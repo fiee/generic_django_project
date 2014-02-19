@@ -3,7 +3,6 @@
 # fabfile for Django:
 # http://morethanseven.net/2009/07/27/fabric-django-git-apache-mod_wsgi-virtualenv-and-p/
 # modified for fabric 0.9/1.0
-from __future__ import with_statement # needed for python 2.5
 from fabric.api import *
 import time
 
@@ -28,7 +27,7 @@ def localhost():
     env.user = 'hraban' # You must create and sudo-enable the user first!
     env.path = '/Users/%(user)s/workspace/%(prj_name)s' % env # User home on OSX, TODO: check local OS
     env.virtualhost_path = env.path
-    env.pysp = '%(virtualhost_path)s/lib/python2.6/site-packages' % env
+    env.pysp = '%(virtualhost_path)s/lib/python2.7/site-packages' % env
     env.tmppath = '/var/tmp/django_cache/%(prj_name)s' % env
 
 def webserver():
@@ -37,7 +36,7 @@ def webserver():
     env.user = env.prj_name
     env.path = '/var/www/%(prj_name)s' % env
     env.virtualhost_path = env.path
-    env.pysp = '%(virtualhost_path)s/lib/python2.5/site-packages' % env
+    env.pysp = '%(virtualhost_path)s/lib/python2.7/site-packages' % env
     env.tmppath = '/var/tmp/django_cache/%(prj_name)s' % env
    
 # tasks
