@@ -16,7 +16,7 @@ Requirements
 * server OS: Debian/Ubuntu based Linux
 * local OS: MacOS X (only some local settings are OSX specific)
 * web server: Apache/mod_wsgi or Nginx/gunicorn or Nginx/fcgi
-* Python_ version: 2.5+
+* Python_ version: 2.7
 * Django_ version: 1.6
 * version control: Git_
 * deployment tool: Fabric_
@@ -30,9 +30,9 @@ Requirements
 Rationale
 ---------
 
-Django's startproject doesn't do enough. I'm a programmer, thus lazy, and try to reduce redundant work like repeating the same setup steps over and over. (DRY)
+Django’s `startproject` doesn’t do enough. I’m a programmer, thus lazy, and try to reduce redundant work like repeating the same setup steps over and over. (DRY)
 
-Just copying/cloning this generic project to a new site isn't ideal either, since general changes don't affect all dependent sites, but I got no idea how to do that.
+Just copying/cloning this generic project to a new site isn’t ideal either, since general changes don’t affect all dependent sites, but I got no idea how to do that.
 
 
 ------
@@ -61,7 +61,7 @@ local:
 
 * copy `generic_project`
 * replace all occurrences of lowercase "project_name" with your project name. this is also the webserver and database server username!
-* check the settings in manage.py_, fabfile.py_, gunicorn-settings.py_, settings/base.py_, settings/local.py_, supervisor.ini_ or service-run.sh_
+* check the settings in manage.py_, fabfile.py_, gunicorn-settings.py_, settings/base.py_, settings/local.py_ and supervisor.ini_ or service-run.sh_
 * set up an email account for your project’s error messages and configure it in settings/base.py_
 * if you use Nginx, change the internal port in nginx.conf_ (``fastcgi_pass 127.0.0.1:8001;``); I use "8 + last 3 numbers of UID" (UIDs start at 1000 on Debian): ``id -u project_name``
 * ``git init``, always commit all changes
@@ -74,7 +74,7 @@ server:
 
 I suggest to use makeuser.sh_ to create system and database accounts. Otherwise:
 
-* create user and sudo-enable it (I suggest via a group like ``wheel``, but you can also add the user to sudoers)::
+* create user and sudo-enable it (I suggest via a group like ``wheel``, but you can also add the user to ``sudoers``)::
   
     adduser project_name
     adduser project_name wheel
@@ -83,7 +83,7 @@ I suggest to use makeuser.sh_ to create system and database accounts. Otherwise:
   
     mysql -u root -p
     
-    # at first setup only: we installed MySQL without user interaction, so there's no root password. Set it!
+    # at first setup only: we installed MySQL without user interaction, so there’s no root password. Set it!
     use mysql;
     update user set password=password('...') where user='root';
   

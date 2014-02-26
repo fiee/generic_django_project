@@ -1,13 +1,14 @@
 Django
 Fabric
-PIL
+PIL # or Pillow
 South
 django-secure
 #django-admin-tools
 #django-guardian
 #django-registration
 #django-tagging-ng
-gunicorn #==0.13.4 # not with fcgi
+gunicorn # not with fcgi
+eventlet # for gunicorn
 #flup # for fcgi
 
 setproctitle # for gunicorn
