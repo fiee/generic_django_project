@@ -5,9 +5,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 import os, sys
-#from django.utils.translation import ugettext_lazy as _
-# docs say: don't import translation in settings, but it works...
+from django.core.exceptions import ImproperlyConfigured
+
 _ = lambda s: s
+
+def get_env_variable(var_name):
+    """Get the environment variable or return exception."""
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = _('Set the %s environment variable.') % var_name
+        raise ImproperlyConfigured(error_msg)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -150,7 +158,7 @@ EMAIL_HOST = 'mail.%s' % YOUR_DOMAIN
 EMAIL_PORT = 25
 EMAIL_HOST_USER = '%s@%s' % (PROJECT_NAME, YOUR_DOMAIN)
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_PASSWORD')
 EMAIL_USE_TLS = False
 
 # ==============================================================================
@@ -162,7 +170,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': PROJECT_NAME,                      # Or path to database file if using sqlite3.
         'USER': PROJECT_NAME,                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'PASSWORD': get_env_variable('DATABASE_PASSWORD'),                  # Not used with sqlite3.
         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }

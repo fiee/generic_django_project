@@ -74,6 +74,13 @@ local:
 server:
 -------
 
+Add to the end of your virtualenvs_ ``activate`` script the setting of passwords as environment variables 
+to avoid to have them in version control.
+
+	export DJANGO_SETTINGS_MODULE=project_name.settings
+    export DATABASE_PASSWORD=secret123
+    export EMAIL_PASSWORD=secret123
+
 I suggest to use makeuser.sh_ to create system and database accounts. Otherwise:
 
 * create user and sudo-enable it (I suggest via a group like ``wheel``, but you can also add the user to ``sudoers``)::
