@@ -47,10 +47,10 @@ Issues
 Ideas
 -----
 
-* Learn more from http://djangopatterns.com and https://github.com/callowayproject/django-app-skeleton
-* Include Sphinx template and setup.py
+* Learn more from "Two Scoops of Django"_, http://djangopatterns.com and https://github.com/callowayproject/django-app-skeleton
+* Include Sphinx template and ``setup.py``
 * Optionally use Redis_ for sessions and cache, see http://unfoldthat.com/2011/09/14/try-redis-instead.html
-
+* Make ``django-admin.py startproject --template=https://github.com/fiee/generic_django_project/zipball/master --extension=py,rst,html,txt,ini,sh MY_PROJECT`` work
 
 ------
 How To
@@ -59,11 +59,13 @@ How To
 local:
 ------
 
-* copy `generic_project`
-* replace all occurrences of lowercase "project_name" with your project name. this is also the webserver and database server username!
-* check the settings in manage.py_, fabfile.py_, gunicorn-settings.py_, settings/base.py_, settings/local.py_ and supervisor.ini_ or service-run.sh_
-* set up an email account for your project’s error messages and configure it in settings/base.py_
-* if you use Nginx, change the internal port in nginx.conf_ (``fastcgi_pass 127.0.0.1:8001;``); I use "8 + last 3 numbers of UID" (UIDs start at 1000 on Debian): ``id -u project_name``
+* Copy ``generic_django_project``
+* Rename "django_project" (this would be the project root as created by ``django-admin.py startproject``)
+* Replace all occurrences of lowercase "project_name" with your project name. This is also the webserver and database server username!
+  The "project_name" directory is the one that would be created by ``manage.py startapp``.
+* Check the settings in manage.py_, fabfile.py_, gunicorn-settings.py_, settings/base.py_, settings/local.py_ and supervisor.ini_ or service-run.sh_
+* Set up an email account for your project’s error messages and configure it in settings/base.py_
+* If you use Nginx, change the internal port in nginx.conf_ (``fastcgi_pass 127.0.0.1:8001;``); I use "8 + last 3 numbers of UID" (UIDs start at 1000 on Debian): ``id -u project_name``
 * ``git init``, always commit all changes
 * ``manage syncdb`` (initialize south)
 * ``fab webserver setup`` (once)
@@ -112,6 +114,11 @@ since the changes aren’t detected by South!
 Links / Sources
 ---------------
 
+Everything:
+-----------
+
+* "Two Scoops of Django"_
+
 Setup:
 ------
 
@@ -157,13 +164,14 @@ Modules:
 .. _logrotate: http://www.linux-praxis.de/lpic1/manpages/logrotate.html
 .. _virtualenvs: http://virtualenv.readthedocs.org/
 .. _Redis: http://redis.io
+.. _"Two Scoops of Django": http://twoscoopspress.org/products/two-scoops-of-django-1-6
 
 .. _makeuser.sh: blob/master/tools/makeuser.sh
-.. _manage.py: blob/master/manage.py
-.. _settings/base.py: blob/master/project_name/settings/base.py
-.. _settings/local.py: blob/master/project_name/settings/local.py
-.. _gunicorn-settings.py: blob/master/gunicorn-settings.py
+.. _manage.py: blob/master/django_project/manage.py
+.. _settings/base.py: blob/master/django_project/project_name/settings/base.py
+.. _settings/local.py: blob/master/django_project/project_name/settings/local.py
+.. _gunicorn-settings.py: blob/master/deploy/gunicorn-settings.py
 .. _fabfile.py: blob/master/fabfile.py
-.. _supervisor.ini: blob/master/supervisor.ini
-.. _service-run.sh: blob/master/service-run.sh
-.. _nginx.conf: blob/master/nginx.conf
+.. _supervisor.ini: blob/master/deploy/supervisor.ini
+.. _service-run.sh: blob/master/deploy/service-run.sh
+.. _nginx.conf: blob/master/deploy/nginx.conf
