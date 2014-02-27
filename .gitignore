@@ -6,7 +6,7 @@
 .svn
 secret.txt
 settings_local.py
-*/settings/local.py
+*/*/settings/local.py
 dev.db
 .tmp*
 build
@@ -14,4 +14,4 @@ build
 *.bak
 *.log
 migrations/
-static_collection/
+*/static_collection/
