@@ -6,7 +6,7 @@ This is my starting point for a new Django_ site, mixed and stirred from several
 
 I normally work with FeinCMS_ and its medialibrary_, but sometimes also with Photologue_, this is reflected in my setups.
 
-My webserver of choice is Nginx_ with gunicorn_, since my virtual server is always low on memory. Setup for Apache_ with mod_wsgi_ and Nginx_ with fcgi_ is also provided.
+My webserver of choice is Nginx_ with gunicorn_, since my virtual server is always low on memory. Setup for Nginx_ with fcgi_ is also provided.
 
 
 ------------
@@ -15,7 +15,7 @@ Requirements
 
 * server OS: Debian/Ubuntu based Linux
 * local OS: MacOS X (only some local settings are OSX specific)
-* web server: Apache/mod_wsgi or Nginx/gunicorn or Nginx/fcgi
+* web server: Nginx/gunicorn or Nginx/fcgi
 * Python_ version: 2.7
 * Django_ version: 1.6
 * version control: Git_
@@ -47,7 +47,7 @@ Issues
 Ideas
 -----
 
-* Learn more from "Two Scoops of Django"_, http://djangopatterns.com and https://github.com/callowayproject/django-app-skeleton
+* Learn more from `Two Scoops of Django`_, http://djangopatterns.com and https://github.com/callowayproject/django-app-skeleton
 * Include Sphinx template and ``setup.py``
 * Optionally use Redis_ for sessions and cache, see http://unfoldthat.com/2011/09/14/try-redis-instead.html
 * Make ``django-admin.py startproject --template=https://github.com/fiee/generic_django_project/zipball/master --extension=py,rst,html,txt,ini,sh MY_PROJECT`` work
@@ -122,7 +122,6 @@ Everything:
 Setup:
 ------
 
-* Setup with Apache/mod_wsgi: http://morethanseven.net/2009/07/27/fabric-django-git-apache-mod_wsgi-virtualenv-and-p/
 * Setup with Nginx: http://djangoadvent.com/1.2/deploying-django-site-using-fastcgi/
 * Nginx configuration: http://wiki.nginx.org/NginxConfiguration
 * Gunicorn configuration: http://gunicorn.org/configure.html
@@ -152,7 +151,6 @@ Modules:
 .. _Photologue: http://code.google.com/p/django-photologue/
 .. _Schedule: http://github.com/fiee/django-schedule
 .. _gunicorn: http://gunicorn.org/
-.. _Apache: http://httpd.apache.org/
 .. _mod_wsgi: http://code.google.com/p/modwsgi/
 .. _fcgi: http://docs.djangoproject.com/en/dev/howto/deployment/fastcgi/
 .. _MySQL: http://mysql.com/products/community/
@@ -164,7 +162,7 @@ Modules:
 .. _logrotate: http://www.linux-praxis.de/lpic1/manpages/logrotate.html
 .. _virtualenvs: http://virtualenv.readthedocs.org/
 .. _Redis: http://redis.io
-.. _"Two Scoops of Django": http://twoscoopspress.org/products/two-scoops-of-django-1-6
+.. _`Two Scoops of Django`: http://twoscoopspress.org/products/two-scoops-of-django-1-6
 
 .. _makeuser.sh: blob/master/tools/makeuser.sh
 .. _manage.py: blob/master/django_project/manage.py

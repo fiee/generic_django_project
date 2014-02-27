@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# fabfile for Django:
-# http://morethanseven.net/2009/07/27/fabric-django-git-apache-mod_wsgi-virtualenv-and-p/
-# modified for fabric 0.9/1.0
-from fabric.api import *
+"""
+fabfile for Django:
+derived from http://morethanseven.net/2009/07/27/fabric-django-git-apache-mod_wsgi-virtualenv-and-p/
+"""
 import time
+from fabric.api import *
 
 # globals
 env.prj_name = 'project_name' # no spaces!
@@ -16,7 +17,7 @@ env.use_daemontools = False
 env.use_supervisor = True
 env.use_celery = False
 env.use_memcached = False
-env.webserver = 'nginx' # nginx or apache2 (directory name below /etc!)
+env.webserver = 'nginx' # nginx (directory name below /etc!), nothing else ATM
 env.dbserver = 'mysql' # mysql or postgresql
 
 # environments
@@ -82,8 +83,7 @@ def setup():
     if env.webserver=='nginx':
         sudo('apt-get install -y nginx')
     else:
-        sudo('apt-get install -y apache2-mpm-worker apache2-utils') # apache2-threaded
-        sudo('apt-get install -y libapache2-mod-wsgi') # outdated on hardy!
+        pass # other webservers?
     if env.dbserver=='mysql':
         sudo('apt-get install -y mysql-server python-mysqldb')
     elif env.dbserver=='postgresql':
