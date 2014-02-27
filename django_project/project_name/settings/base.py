@@ -363,28 +363,3 @@ SECURE_CONTENT_TYPE_NOSNIFF=True # if you want to prevent the browser from guess
 SECURE_BROWSER_XSS_FILTER=True # if you want to enable the browser's XSS filtering protections.
 SESSION_COOKIE_SECURE=True # if you are using django.contrib.sessions
 SESSION_COOKIE_HTTPONLY=True # if you are using django.contrib.sessions
-
-# ==============================================================================
-# host specific settings
-# ==============================================================================
-
-try:
-    from settings_local import *
-except ImportError:
-    pass
-if DEBUG:
-    #INSTALLED_APPS.append('django.contrib.admindocs')
-    #INSTALLED_APPS.append('debug_toolbar')
-    #MIDDLEWARE_CLASSES.append('debug_toolbar.middleware.DebugToolbarMiddleware') # see also http://github.com/robhudson/django-debug-toolbar/blob/master/README.rst
-    LOGGING['handlers']['file'] = {
-                'level':'INFO',
-                'class':'logging.FileHandler',
-                'formatter': 'verbose',
-                'filename': rootrel('logs/info.log'),
-            }
-    LOGGING['handlers']['error_file'] = {
-                'level':'ERROR',
-                'class':'logging.FileHandler',
-                'formatter': 'verbose',
-                'filename': rootrel('logs/error.log'),
-            }
