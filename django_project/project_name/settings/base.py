@@ -18,7 +18,7 @@ def get_env_variable(var_name):
         raise ImproperlyConfigured(error_msg)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 PROJECT_NAME = os.path.split(PROJECT_ROOT)[-1]
 
 rel = lambda p: os.path.normpath(os.path.join(PROJECT_ROOT, p)) # this is release and virtualenv dependent
@@ -172,7 +172,8 @@ DATABASES = {
         'USER': PROJECT_NAME,                      # Not used with sqlite3.
         'PASSWORD': get_env_variable('DATABASE_PASSWORD'),                  # Not used with sqlite3.
         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'PORT': '',                               # Set to empty string for default. Not used with sqlite3.
+        'ATOMIC_REQUESTS': True,                  # Wrap everything in transactions.
     }
 }
 
