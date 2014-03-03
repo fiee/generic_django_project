@@ -1,0 +1,31 @@
+#MySQL-python # for MySQL
+#psycopg2 # for PostgreSQL
+#pyOpenSSL
+#pycrypto
+#python-dateutil
+#pytz
+#reportlab
+
+django
+django-secure
+#django-admin-tools
+#django-guardian
+#django-registration
+#django-tagging-ng
+
+gunicorn # not with fcgi
+eventlet # for gunicorn
+setproctitle # for gunicorn
+
+#flup # for fcgi
+
+Fabric
+South
+#python-memcached # for memcached cache (you must install that separately)
+
+#PIL # or Pillow; for feincms medialibrary
+#feincms # see also http://github.com/feincms/feincms
+#django-tinymce
+#django-photologue
+
+#dj_database_url # see https://github.com/kennethreitz/dj-database-url

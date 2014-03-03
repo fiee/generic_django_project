@@ -26,6 +26,7 @@ env.dbserver = 'mysql' # mysql or postgresql
 def localhost():
     "Use the local virtual server"
     env.hosts = ['localhost']
+    env.requirements = 'local'
     env.user = 'hraban' # You must create and sudo-enable the user first!
     env.path = '/Users/%(user)s/workspace/%(prj_name)s' % env # User home on OSX, TODO: check local OS
     env.virtualhost_path = env.path
@@ -36,6 +37,7 @@ def localhost():
 def webserver():
     "Use the actual webserver"
     env.hosts = ['webserver.example.com'] # Change to your server name!
+    env.requirements = 'webserver'
     env.user = env.prj_name
     env.path = '/var/www/%(prj_name)s' % env
     env.virtualhost_path = env.path
@@ -112,7 +114,7 @@ def setup():
             if env.use_medialibrary:
                 run('mkdir medialibrary', pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
-    # FeinCMS is now installable via pip (requirements.txt)
+    # FeinCMS is now installable via pip (requirements/base.txt)
     #if env.use_feincms:
     #    with cd(env.pysp):
     #        run('git clone git://github.com/django-mptt/django-mptt.git; echo django-mptt > mptt.pth;', pty=True)
@@ -216,7 +218,7 @@ def install_site():
 def install_requirements():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
-    run('cd %(path)s; pip install -U -r ./releases/%(release)s/requirements.txt' % env, pty=True)
+    run('cd %(path)s; pip install -U -r ./releases/%(release)s/requirements/%(requirements).txt' % env, pty=True)
     
 def symlink_current_release():
     "Symlink our current release"
