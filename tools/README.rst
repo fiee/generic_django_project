@@ -1,7 +1,7 @@
 Tools for Django/Nginx
 ======================
 
-Server management helpers for my setup:
+Server management helpers for my setup, mostly outdated:
 
 * setup
 
@@ -13,7 +13,7 @@ Server management helpers for my setup:
 * process management with fcgi (obsolete with gunicorn)
 
   - nginxsite.sh_: start/stop one Django site running on fcgi behind Nginx
-  - websites-init.sh_: start/stop/restart all Django sites (use e.g. as startup script)
+  - websites-init.sh_: start/stop/restart all Django sites (use e.g. as startup script), calls the above
 
 Some of these functions will migrate to the fabfile sometime...
 

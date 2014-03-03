@@ -33,15 +33,15 @@ Probably you won’t need all of these.
 
   - see http://wiki.contextgarden.net/ConTeXt_Minimals::
     
-      mkdir /var/opt/context
-      cd /var/opt/context
+      mkdir /opt/context
+      cd /opt/context
       rsync -av rsync://contextgarden.net/minimals/setup/first-setup.sh .
       sh ./first-setup.sh
 
   - edit PATH in `.bashrc` or `.profile`::
     
-      export PATH=$PATH:/var/opt/context/tex/texmf-linux-64/bin
-      . /var/opt/context/tex/setuptex
+      export PATH=$PATH:/opt/context/tex/texmf-linux-64/bin
+      . /opt/context/tex/setuptex
 
 * TODO: SSH setup
 
