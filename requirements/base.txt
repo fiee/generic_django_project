@@ -29,3 +29,5 @@ South
 #django-photologue
 
 #dj_database_url # see https://github.com/kennethreitz/dj-database-url
+
+git+http://github.com/tedtieken/django-dotenv-rw.git

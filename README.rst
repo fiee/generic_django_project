@@ -74,8 +74,12 @@ local:
 server:
 -------
 
-Add to the end of your virtualenvs_ ``activate`` script the setting of passwords as environment variables 
-to avoid to have them in version control.
+Following factor 12 design, we now set our passwords and other secret settings as environment variables 
+to avoid to have them in version control. I suggest to go the *dotenv* route:
+
+Put your settings into a ``.env`` file at ``/var/www/project_name``, to use with django-dotenv-rw_.
+
+Alternatively add the settings to the end of your virtualenvs_ ``activate`` script:
 
 	export DJANGO_SETTINGS_MODULE=project_name.settings
     export DATABASE_PASSWORD=secret123
@@ -170,6 +174,7 @@ Modules:
 .. _virtualenvs: http://virtualenv.readthedocs.org/
 .. _Redis: http://redis.io
 .. _`Two Scoops of Django`: http://twoscoopspress.org/products/two-scoops-of-django-1-6
+.. _django-dotenv-rw: http://github.com/tedtieken/django-dotenv-rw
 
 .. _makeuser.sh: blob/master/tools/makeuser.sh
 .. _manage.py: blob/master/django_project/manage.py
