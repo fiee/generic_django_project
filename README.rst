@@ -39,9 +39,13 @@ Just copying/cloning this generic project to a new site isn’t ideal either, si
 Issues
 ------
 
+I’m trying to keep this current and to implement what I learn from my actual projects and best practice advise.
+But since I mostly do other things than starting new django projects, I’m always far behind.
+
 * Probably security holes - use at your own risk.
 * I could also support runit_, but I didn't want to replace init
 * South_ still doesn't work for me, must overcome problems with several releases and multiple projects accessing the same Django_ app outside of virtualenvs_
+
 
 -----
 Ideas
@@ -51,6 +55,8 @@ Ideas
 * Include Sphinx template and ``setup.py``
 * Optionally use Redis_ for sessions and cache, see http://unfoldthat.com/2011/09/14/try-redis-instead.html
 * Make ``django-admin.py startproject --template=https://github.com/fiee/generic_django_project/zipball/master --extension=py,rst,html,txt,ini,sh MY_PROJECT`` work
+* Finally learn testing
+
 
 ------
 How To
@@ -79,9 +85,9 @@ Don’t forget to tell git to ignore .env files!
 
 Alternatively add the settings to the end of your virtualenvs_ ``activate`` script:
 
-	export DJANGO_SETTINGS_MODULE=project_name.settings
-	export DATABASE_PASSWORD=secret123
-	export EMAIL_PASSWORD=secret123
+    export DJANGO_SETTINGS_MODULE=project_name.settings
+    export DATABASE_PASSWORD=secret123
+    export EMAIL_PASSWORD=secret123
 
 
 server:
