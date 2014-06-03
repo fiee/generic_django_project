@@ -71,19 +71,23 @@ local:
 * ``fab webserver setup`` (once)
 * ``fab webserver deploy`` (publish new release - always last committed version!)
 
-server:
--------
-
-Following factor 12 design, we now set our passwords and other secret settings as environment variables 
+Following 12-factor_ design, we now set our passwords and other secret settings as environment variables 
 to avoid to have them in version control. I suggest to go the *dotenv* route:
 
-Put your settings into a ``.env`` file at ``/var/www/project_name``, to use with django-dotenv-rw_.
+Put your settings into a ``.env`` file in the ``django_project`` directory, to use with django-dotenv-rw_.
+Don’t forget to tell git to ignore .env files!
 
 Alternatively add the settings to the end of your virtualenvs_ ``activate`` script:
 
 	export DJANGO_SETTINGS_MODULE=project_name.settings
-    export DATABASE_PASSWORD=secret123
-    export EMAIL_PASSWORD=secret123
+	export DATABASE_PASSWORD=secret123
+	export EMAIL_PASSWORD=secret123
+
+
+server:
+-------
+
+Create your ``.env`` file at ``/var/www/project_name`` (or use virtualenvs_’ ``activate`` script), see above.
 
 I suggest to use makeuser.sh_ to create system and database accounts. Otherwise:
 
@@ -175,6 +179,7 @@ Modules:
 .. _Redis: http://redis.io
 .. _`Two Scoops of Django`: http://twoscoopspress.org/products/two-scoops-of-django-1-6
 .. _django-dotenv-rw: http://github.com/tedtieken/django-dotenv-rw
+.. _12-factor: http://12factor.net
 
 .. _makeuser.sh: blob/master/tools/makeuser.sh
 .. _manage.py: blob/master/django_project/manage.py
