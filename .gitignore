@@ -4,8 +4,10 @@
 .settings
 .pydevproject
 .svn
+.env
 secret.txt
 dev.db
+dev_db.sqlite3
 .tmp*
 build
 *.tar.gz
