@@ -4,6 +4,7 @@
 fabfile for Django:
 derived from http://morethanseven.net/2009/07/27/fabric-django-git-apache-mod_wsgi-virtualenv-and-p/
 """
+from __future__ import unicode_literals
 import time
 from fabric.api import *
 

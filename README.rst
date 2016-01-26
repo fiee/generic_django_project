@@ -2,11 +2,14 @@
 generic django project
 ======================
 
-This is my starting point for a new Django_ site, mixed and stirred from several public sources and spiced with my own enhancements.
+This is my starting point for a new Django_ site, mixed and stirred from several 
+public sources and spiced with my own enhancements.
 
-I normally work with FeinCMS_ and its medialibrary_, but sometimes also with Photologue_, this is reflected in my setups.
+I normally work with FeinCMS_ and its medialibrary_, 
+but sometimes also with Photologue_, this is reflected in my setups.
 
-My webserver of choice is Nginx_ with gunicorn_, since my virtual server is always low on memory. Setup for Nginx_ with fcgi_ is also provided.
+My webserver of choice is Nginx_ with gunicorn_, since my virtual server is 
+always low on memory. Setup for Nginx_ with fcgi_ is also provided.
 
 
 ------------
@@ -16,8 +19,8 @@ Requirements
 * server OS: Debian/Ubuntu based Linux
 * local OS: MacOS X (only some local settings are OSX specific)
 * web server: Nginx/gunicorn or Nginx/fcgi
-* Python_ version: 2.7
-* Django_ version: 1.6
+* Python_ version: 2.7 or 3.x
+* Django_ version: 1.9 (1.6+ should work)
 * version control: Git_
 * deployment tool: Fabric_
 * local development database: SQLite3_
@@ -30,9 +33,11 @@ Requirements
 Rationale
 ---------
 
-Django’s `startproject` doesn’t do enough. I’m a programmer, thus lazy, and try to reduce redundant work like repeating the same setup steps over and over. (DRY)
+Django’s `startproject` doesn’t do enough. I’m a programmer, thus lazy, 
+and try to reduce redundant work like repeating the same setup steps over and over. (DRY)
 
-Just copying/cloning this generic project to a new site isn’t ideal either, since general changes don’t affect all dependent sites, but I got no idea how to do that.
+Just copying/cloning this generic project to a new site isn’t ideal either, 
+since general changes don’t affect all dependent sites, but I got no idea how to do that.
 
 
 ------
@@ -44,7 +49,6 @@ But since I mostly do other things than starting new django projects, I’m alwa
 
 * Probably security holes - use at your own risk.
 * I could also support runit_, but I didn't want to replace init
-* South_ still doesn't work for me, must overcome problems with several releases and multiple projects accessing the same Django_ app outside of virtualenvs_
 
 
 -----
@@ -55,7 +59,21 @@ Ideas
 * Include Sphinx template and ``setup.py``
 * Optionally use Redis_ for sessions and cache, see http://unfoldthat.com/2011/09/14/try-redis-instead.html
 * Make ``django-admin.py startproject --template=https://github.com/fiee/generic_django_project/zipball/master --extension=py,rst,html,txt,ini,sh MY_PROJECT`` work
-* Finally learn testing
+* Finally learn proper testing
+
+
+-------
+License
+-------
+
+This project template itself has no special license. Do with it what you want.
+Attribution is appreciated. Corrections are welcome.
+
+Since it’s a collection of (modified) snippets from different sources that may
+have different licenses, it would be impossible to untangle.
+
+Following Django’s documentation I suggest to use a 2-clause BSD license for
+your own projects.
 
 
 ------
@@ -70,6 +88,7 @@ local:
 * Replace all occurrences of lowercase "project_name" with your project name. This is also the webserver and database server username!
   The "project_name" directory is the one that would be created by ``manage.py startapp``.
 * Check the settings in manage.py_, fabfile.py_, gunicorn-settings.py_, settings/base.py_, settings/local.py_ and supervisor.ini_ or service-run.sh_
+* Adapt LICENSE_ to your needs. The 2-clause BSD license is just a suggestion.
 * Set up an email account for your project’s error messages and configure it in settings/base.py_
 * If you use Nginx, change the internal port in nginx.conf_ (``fastcgi_pass 127.0.0.1:8001;``); I use "8 + last 3 numbers of UID" (UIDs start at 1000 on Debian): ``id -u project_name``
 * ``git init``, always commit all changes
@@ -125,7 +144,7 @@ FeinCMS
 If you use FeinCMS’ Page, consider *first*, which extensions you’ll need – 
 see the docs__ and the FAQ__ –
 afterwards you would need to change the database table ``page_page`` by hand, 
-since the changes aren’t detected by South!
+since the changes aren’t always detected by migration!
 
 .. __: http://www.feinheit.ch/media/labs/feincms/page.html#module-feincms.module.page.extension
 .. __: http://www.feinheit.ch/media/labs/feincms/faq.html#i-run-syncdb-and-get-a-message-about-missing-columns-in-the-page-table
@@ -187,6 +206,7 @@ Modules:
 .. _django-dotenv-rw: http://github.com/tedtieken/django-dotenv-rw
 .. _12-factor: http://12factor.net
 
+.. _LICENSE: blob/master/django_project/LICENSE
 .. _makeuser.sh: blob/master/tools/makeuser.sh
 .. _manage.py: blob/master/django_project/manage.py
 .. _settings/base.py: blob/master/django_project/project_name/settings/base.py
