@@ -6,7 +6,7 @@ This is my starting point for a new Django_ site, mixed and stirred from several
 public sources and spiced with my own enhancements.
 
 I normally work with FeinCMS_ and its medialibrary_, 
-but sometimes also with Photologue_, this is reflected in my setups.
+previously sometimes also with Photologue_, this is reflected in my setups.
 
 My webserver of choice is Nginx_ with gunicorn_, since my virtual server is 
 always low on memory. Setup for Nginx_ with fcgi_ is also provided.
@@ -21,11 +21,11 @@ Requirements
 * web server: Nginx/gunicorn or Nginx/fcgi
 * Python_ version: 2.7 or 3.x
 * Django_ version: 1.9 (1.6+ should work)
+* FeinCMS_ version: 1.5+
 * version control: Git_
 * deployment tool: Fabric_
 * local development database: SQLite3_
 * server database: MySQL_ or PostgreSQL_
-* database migration: South_
 * process control (optional): daemontools_ or supervisord_
 
 
@@ -149,6 +149,8 @@ since the changes aren’t always detected by migration!
 .. __: http://www.feinheit.ch/media/labs/feincms/page.html#module-feincms.module.page.extension
 .. __: http://www.feinheit.ch/media/labs/feincms/faq.html#i-run-syncdb-and-get-a-message-about-missing-columns-in-the-page-table
 
+Have a look at Feinheit’s FeinCMS compatible apps, content types and plugins:
+ElephantBlog_, form_designer_, feincms_gallery_ etc.
 
 ---------------
 Links / Sources
@@ -173,7 +175,6 @@ Modules:
 --------
 
 * Fabric: http://docs.fabfile.org
-* South: http://south.aeracode.org/ (Getting started: http://mitchfournier.com/?p=25)
 * MPTT: http://github.com/django-mptt/django-mptt
 * FeinCMS: http://github.com/feincms/feincms
 .. * Schedule: http://wiki.github.com/thauber/django-schedule/ or http://github.com/fiee/django-schedule
@@ -188,10 +189,13 @@ Modules:
 .. _MPTT: http://github.com/django-mptt/django-mptt
 .. _FeinCMS: http://github.com/feincms/feincms
 .. _medialibrary: http://www.feinheit.ch/media/labs/feincms/medialibrary.html
-.. _Photologue: http://code.google.com/p/django-photologue/
+.. _ElephantBlog: https://github.com/feincms/feincms-elephantblog
+.. _form_designer: https://github.com/feincms/form_designer
+.. _feincms_gallery: https://github.com/feinheit/feincms_gallery
+.. _Photologue: https://github.com/jdriscoll/django-photologue
 .. _Schedule: http://github.com/fiee/django-schedule
 .. _gunicorn: http://gunicorn.org/
-.. _mod_wsgi: http://code.google.com/p/modwsgi/
+.. _mod_wsgi: http://modwsgi.readthedocs.org
 .. _fcgi: http://docs.djangoproject.com/en/dev/howto/deployment/fastcgi/
 .. _MySQL: http://mysql.com/products/community/
 .. _PostgreSQL: http://www.postgresql.org/

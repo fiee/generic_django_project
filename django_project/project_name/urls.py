@@ -46,6 +46,6 @@ if settings.DEBUG:
 urlpatterns += patterns('',
     #(r'^admin_tools/', include('admin_tools.urls')),
     (r'^admin/', include(admin.site.urls)),    
-    #(r'sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': mysitemaps}),
+    #(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': mysitemaps}),
     #url(r'', include('feincms.urls')),
 )

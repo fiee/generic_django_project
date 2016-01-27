@@ -350,10 +350,13 @@ LOGIN_REDIRECT_URL = '/'
 # feincms
 FEINCMS_ADMIN_MEDIA = '%sfeincms/' % STATIC_URL
 FEINCMS_ADMIN_MEDIA_HOTLINKING = True
-#FEINCMS_MEDIALIBRARY_UPLOAD_TO
-# obsolete with FeinCMS 1.4
 #FEINCMS_MEDIALIBRARY_ROOT = rootrel('') #'/var/www/project_name/medialibrary/'
 #FEINCMS_MEDIALIBRARY_URL = '/' #'/medialibrary/'
+FEINCMS_RICHTEXT_INIT_TEMPLATE = 'admin/content/richtext/init_tinymce4.html'
+FEINCMS_RICHTEXT_INIT_CONTEXT = {
+    'TINYMCE_JS_URL': STATIC_URL + 'tinymce/js/tinymce/tinymce.min.js',
+}
+FEINCMS_REVERSE_MONKEY_PATCH = False
 
 # schedule
 FIRST_DAY_OF_WEEK = 1
