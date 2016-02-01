@@ -92,7 +92,7 @@ local:
 * Set up an email account for your project’s error messages and configure it in settings/base.py_
 * If you use Nginx, change the internal port in nginx.conf_ (``fastcgi_pass 127.0.0.1:8001;``); I use "8 + last 3 numbers of UID" (UIDs start at 1000 on Debian): ``id -u project_name``
 * ``git init``, always commit all changes
-* ``manage syncdb`` (initialize south)
+* ``manage syncdb`` (initialize migrations)
 * ``fab webserver setup`` (once)
 * ``fab webserver deploy`` (publish new release - always last committed version!)
 
@@ -209,6 +209,7 @@ Modules:
 .. _`Two Scoops of Django`: http://twoscoopspress.org/products/two-scoops-of-django-1-6
 .. _django-dotenv-rw: http://github.com/tedtieken/django-dotenv-rw
 .. _12-factor: http://12factor.net
+.. _`maintenance page`: http://www.djangocurrent.com/2015/12/automatic-maintenance-page-for.html
 
 .. _LICENSE: blob/master/django_project/LICENSE
 .. _makeuser.sh: blob/master/tools/makeuser.sh
