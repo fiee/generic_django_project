@@ -260,7 +260,6 @@ THIRD_PARTY_APPS = (
     #'admin_tools.dashboard',
     'gunicorn', # not with fcgi
     'mptt',
-    'south',
     #'tagging',
     'feincms',
     'feincms.module.page',
