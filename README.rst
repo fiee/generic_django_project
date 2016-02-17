@@ -102,9 +102,13 @@ to avoid to have them in version control. I suggest to go the *dotenv* route:
 Put your settings into a ``.env`` file in the ``django_project`` directory, to use with django-dotenv-rw_.
 Don’t forget to tell git to ignore .env files!
 
+    DJANGO_SETTINGS_MODULE=settings
+    DATABASE_PASSWORD=secret123
+    EMAIL_PASSWORD=secret123
+
 Alternatively add the settings to the end of your virtualenvs_ ``activate`` script:
 
-    export DJANGO_SETTINGS_MODULE=project_name.settings
+    export DJANGO_SETTINGS_MODULE=settings
     export DATABASE_PASSWORD=secret123
     export EMAIL_PASSWORD=secret123
 
@@ -116,10 +120,10 @@ Create your ``.env`` file at ``/var/www/project_name`` (or use virtualenvs_’ `
 
 I suggest to use makeuser.sh_ to create system and database accounts. Otherwise:
 
-* create user and sudo-enable it (I suggest via a group like ``wheel``, but you can also add the user to ``sudoers``)::
+* create user and sudo-enable it (I suggest via a ``admin`` group, but you can also add the user to ``sudoers``)::
   
     adduser project_name
-    adduser project_name wheel
+    adduser project_name admin
 
 * create database user and database (schema) ::
   

@@ -17,8 +17,8 @@ if [ ! -d "/home/${USER}" ]; then
   adduser "${USER}"
 fi
 
-echo "Adding ${USER} to group wheel"
-adduser "${USER}" wheel
+echo "Adding ${USER} to group admin"
+adduser "${USER}" admin
 
 echo "
 cd /var/www/${USER} && source bin/activate

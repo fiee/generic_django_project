@@ -11,7 +11,7 @@ from fabric.api import *
 # globals
 env.prj_name = 'project_name' # no spaces!
 env.prj_dir = 'django_project' # subdir under git root that contains the deployable part
-env.sudoers_group = 'wheel'
+env.sudoers_group = 'admin'
 env.use_photologue = False # django-photologue gallery module
 env.use_feincms = True
 env.use_medialibrary = True # feincms.medialibrary or similar
@@ -88,9 +88,9 @@ def setup():
     # install webserver and database server
     sudo('apt-get remove -y apache2 apache2-mpm-prefork apache2-utils') # is mostly pre-installed
     if env.webserver=='nginx':
-        sudo('apt-get install -y nginx')
+        sudo('apt-get install -y nginx-full')
     else:
-        print "WARNING: Your webserver '%s' is not suppoerted!" % env.webserver # other webservers?
+        print "WARNING: Your webserver '%s' is not supported!" % env.webserver # other webservers?
     if env.dbserver=='mysql':
         sudo('apt-get install -y mysql-server python-mysqldb')
     elif env.dbserver=='postgresql':
@@ -101,6 +101,7 @@ def setup():
         sudo('cd /etc/%(webserver)s/sites-enabled/; rm default;' % env, pty=True)
     
     # new project setup
+    setup_user()
     sudo('mkdir -p %(path)s; chown %(user)s:%(user)s %(path)s;' % env, pty=True)
     sudo('mkdir -p %(tmppath)s; chown %(user)s:%(user)s %(tmppath)s;' % env, pty=True)
     with settings(warn_only=True):
@@ -120,7 +121,6 @@ def setup():
     #    with cd(env.pysp):
     #        run('git clone git://github.com/django-mptt/django-mptt.git; echo django-mptt > mptt.pth;', pty=True)
     #        run('git clone git://github.com/feincms/feincms.git; echo feincms > feincms.pth;', pty=True)
-    setup_user()
     deploy('first')
     
 def setup_user():
@@ -205,7 +205,8 @@ def install_site():
             if env.use_celery:
                 sudo('cp server-setup/supervisor-celery.ini /etc/supervisor/%(prj_name)s-celery.ini' % env, pty=True)
         else: # delete old config file
-            sudo('echo; if [ -f /etc/supervisor/%(prj_name)s.ini ]; then supervisorctl %(prj_name)s:appserver stop rm /etc/supervisor/%(prj_name)s.ini; fi' % env, pty=True)
+            # if you set a process name in supervisor.ini, then you must add it like %(prj_name):appserver
+            sudo('echo; if [ -f /etc/supervisor/%(prj_name)s.ini ]; then supervisorctl %(prj_name)s stop rm /etc/supervisor/%(prj_name)s.ini; fi' % env, pty=True)
             if env.use_celery:
                 sudo('echo; if [ -f /etc/supervisor/%(prj_name)s-celery.ini ]; then supervisorctl celery celerybeat stop rm /etc/supervisor/%(prj_name)s-celery.ini; fi' % env, pty=True)
         if env.use_celery and env.use_daemontools:
@@ -257,10 +258,11 @@ def restart_webserver():
             if env.use_daemontools:
                 sudo('kill `cat %(path)s/logs/django.pid`' % env, pty=True) # kill process, daemontools will start it again, see service-run.sh
             if env.use_supervisor:
+                # if you set a process name in supervisor.ini, then you must add it like %(prj_name):appserver
                 if env.use_celery:
-                    sudo('supervisorctl restart %(prj_name)s:appserver celery celerybeat' % env, pty=True)
+                    sudo('supervisorctl restart %(prj_name)s celery celerybeat' % env, pty=True)
                 else:
-                    sudo('supervisorctl restart %(prj_name)s:appserver' % env, pty=True)
+                    sudo('supervisorctl restart %(prj_name)s' % env, pty=True)
             #require('prj_name')
             #run('cd %(path)s; bin/python releases/current/manage.py runfcgi method=threaded maxchildren=6 maxspare=4 minspare=2 host=127.0.0.1 port=%(webport)s pidfile=./logs/django.pid' % env)
         sudo('/etc/init.d/%(webserver)s reload' % env, pty=True)

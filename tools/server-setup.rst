@@ -6,14 +6,14 @@ Probably you won’t need all of these.
 
 * user setup
   
-  - create group wheel::
+  - create group admin::
   
-      adduser --group wheel
+      adduser --group admin # may already exist
   
   - visudo::
   
       Defaults targetpw # ask for root password - makes sense?
-      %wheel ALL=(ALL) ALL
+      %admin ALL=(ALL) ALL
   
   - set root password for MySQL::
   
