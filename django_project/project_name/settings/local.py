@@ -6,7 +6,7 @@ from .base import *
 #PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 #PROJECT_NAME = os.path.split(PROJECT_ROOT)[-1]
 
-rootrel = lambda p: os.path.join(PROJECT_ROOT, '../..', p)
+rootrel = lambda p: os.path.abspath(os.path.join(PROJECT_ROOT, '..', p))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -45,3 +45,5 @@ if DEBUG:
                 'filename': rootrel('logs/error.log'),
             }
 
+SECURE_SSL_REDIRECT=False # if all non-SSL requests should be permanently redirected to SSL.
+SESSION_COOKIE_SECURE=False # if you are using django.contrib.sessions (True blocks admin login)

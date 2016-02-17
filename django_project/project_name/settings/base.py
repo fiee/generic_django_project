@@ -18,7 +18,7 @@ def get_env_variable(var_name):
         raise ImproperlyConfigured(error_msg)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..')) # get out of settings
 PROJECT_NAME = os.path.split(PROJECT_ROOT)[-1]
 
 rel = lambda p: os.path.normpath(os.path.join(PROJECT_ROOT, p)) # this is release and virtualenv dependent
@@ -63,7 +63,7 @@ LOGGING = {
     'handlers': {
         'null': {
             'level':'DEBUG',
-            'class':'django.utils.log.NullHandler',
+            'class':'logging.NullHandler',
         },
         'console':{
             'level':'DEBUG',
@@ -204,7 +204,7 @@ SITE_ID = 1
 ROOT_URLCONF = '%s.urls' % PROJECT_NAME
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = '%s.wsgi.application' % PROJECT_NAME
+#WSGI_APPLICATION = '%s.wsgi.application' % PROJECT_NAME
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -284,7 +284,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
-    'django.middleware.doc.XViewMiddleware', # for local IPs
+    'django.contrib.admindocs.middleware.XViewMiddleware', # for local IPs
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware', # last
@@ -342,9 +342,9 @@ except NameError:
 # ..third party app settings here
 
 # auth/registration
-LOGIN_URL = '/accounts/login/'
-LOGOUT_URL = '/accounts/logout/'
-LOGIN_REDIRECT_URL = '/'
+#LOGIN_URL = '/accounts/login/'
+#LOGOUT_URL = '/accounts/logout/'
+#LOGIN_REDIRECT_URL = '/'
 
 # feincms
 FEINCMS_ADMIN_MEDIA = '%sfeincms/' % STATIC_URL
