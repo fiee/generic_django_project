@@ -4,15 +4,17 @@
   <meta charset="utf-8" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>project_name :: {% block title %}{% trans "Home" %}{% endblock %}</title>
-  <link rel="stylesheet" type="text/css" media="all" href="http://yui.yahooapis.com/2.8.1/build/reset-fonts-grids/reset-fonts-grids.css">
-  <link rel="stylesheet" type="text/css" media="all" href="http://yui.yahooapis.com/2.8.1/build/base/base.css">
+  <!-- YUI is obsolete! And you should host everything yourself, if you use SSL.
+  <link rel="stylesheet" type="text/css" media="all" href="http://yui.yahooapis.com/2.9.0/build/reset-fonts-grids/reset-fonts-grids.css">
+  <link rel="stylesheet" type="text/css" media="all" href="http://yui.yahooapis.com/2.9.0/build/base/base.css">
+  -->
   <link rel="stylesheet" type="text/css" media="screen,projection" href="{{ STATIC_URL|default:"/static/" }}css/style.css" />
   <link rel="stylesheet" type="text/css" media="print" href="{{ STATIC_URL|default:"/static/" }}css/print.css" />
   <!-- <link rel="sitemap" href="/sitemap.xml" type="text/xml" /> -->
   <!-- <link rel="alternate" type="application/rss+xml" title="{% trans "project_name events" %}" href="/calendar/feed/calendar/upcoming/1/"> -->
   <link rel="shortcut icon" href="{{ STATIC_URL|default:"/static/" }}favicon.ico" type="image/x-icon" />
   <link rel="icon" href="{{ STATIC_URL|default:"/static/" }}favicon.ico" type="image/icon" />
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">
+  <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"><!-- better host this yourself -->
   </script>
   {% block extra_head %}
   {% endblock %}
