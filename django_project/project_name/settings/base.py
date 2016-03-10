@@ -138,6 +138,7 @@ YOUR_DOMAIN = 'example.com' # since I'm getting error messages from stupid clone
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.6/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
+                 'localhost',
                  '.'+YOUR_DOMAIN, # wildcard: all servers on your domain
                  '.'+YOUR_DOMAIN+'.', # wildcard plus FQDN (see above doc link)
                  #'www.'+YOUR_DOMAIN,
@@ -366,7 +367,7 @@ ADMIN_TOOLS_INDEX_DASHBOARD = '%s.dashboard.CustomIndexDashboard' % PROJECT_NAME
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = '%s.dashboard.CustomAppIndexDashboard' % PROJECT_NAME
 
 # django-secure
-SECURE_SSL_REDIRECT=True # if all non-SSL requests should be permanently redirected to SSL.
+SECURE_SSL_REDIRECT=False # if all non-SSL requests should be permanently redirected to SSL.
 SECURE_HSTS_SECONDS=10 # integer number of seconds, if you want to use HTTP Strict Transport Security
 SECURE_HSTS_INCLUDE_SUBDOMAINS=True # if you want to use HTTP Strict Transport Security
 SECURE_FRAME_DENY=True # if you want to prevent framing of your pages and protect them from clickjacking.
