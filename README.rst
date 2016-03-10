@@ -47,9 +47,19 @@ Issues
 I’m trying to keep this current and to implement what I learn from my actual projects and best practice advise.
 But since I mostly do other things than starting new django projects, I’m always far behind.
 
-* Probably security holes - use at your own risk.
+* While I try to adhere to best practices, there are probably security holes - use at your own risk.
+* Since I update this template after experiences with my actual sites, the commits are often not atomic.
+* pip-installed requirements are not fixed on a version
 * I could also support runit_, but I didn't want to replace init
 
+
+-------
+Details
+-------
+
+* gunicorn runs internally on an unix socket, because I find file locations easier to control than server ports.
+* I’m integrating Let’s Encrypt certificates and automating their renewal.
+* My nginx settings get an A+ rating at SSLLabs_
 
 -----
 Ideas
@@ -87,12 +97,11 @@ local:
 * Rename "django_project" (this would be the project root as created by ``django-admin.py startproject``)
 * Replace all occurrences of lowercase "project_name" with your project name. This is also the webserver and database server username!
   The "project_name" directory is the one that would be created by ``manage.py startapp``.
-* Check the settings in manage.py_, fabfile.py_, gunicorn-settings.py_, settings/base.py_, settings/local.py_ and supervisor.ini_ or service-run.sh_
+* Check the settings in fabfile.py_, gunicorn-settings.py_, settings/base.py_, settings/local.py_ and supervisor.ini_ or service-run.sh_
 * Adapt LICENSE_ to your needs. The 2-clause BSD license is just a suggestion.
 * Set up an email account for your project’s error messages and configure it in settings/base.py_
-* If you use Nginx, change the internal port in nginx.conf_ (``fastcgi_pass 127.0.0.1:8001;``); I use "8 + last 3 numbers of UID" (UIDs start at 1000 on Debian): ``id -u project_name``
 * ``git init``, always commit all changes
-* ``manage syncdb`` (initialize migrations)
+* ``manage migrate`` (initialize migrations)
 * ``fab webserver setup`` (once)
 * ``fab webserver deploy`` (publish new release - always last committed version!)
 
@@ -118,7 +127,9 @@ server:
 
 Create your ``.env`` file at ``/var/www/project_name`` (or use virtualenvs_’ ``activate`` script), see above.
 
-I suggest to use makeuser.sh_ to create system and database accounts. Otherwise:
+I suggest to use makeuser.sh_ to create system and database accounts.
+(This is also included in the fabfile.)
+Otherwise:
 
 * create user and sudo-enable it (I suggest via a ``admin`` group, but you can also add the user to ``sudoers``)::
   
@@ -140,6 +151,8 @@ I suggest to use makeuser.sh_ to create system and database accounts. Otherwise:
   
     flush privileges;
     quit;
+
+* Open your firewall for tcp 433 (not default on some systems).
 
 
 FeinCMS
@@ -168,12 +181,15 @@ Everything:
 Setup:
 ------
 
-* Setup with Nginx: http://djangoadvent.com/1.2/deploying-django-site-using-fastcgi/
 * Nginx configuration: http://wiki.nginx.org/NginxConfiguration
+* Secure Nginx TLS configuration: https://www.sherbers.de/howto/nginx/ (German)
 * Gunicorn configuration: http://gunicorn.org/configure.html
 * logrotate: e.g. http://www.linux-praxis.de/lpic1/manpages/logrotate.html
 * daemontools: http://cr.yp.to/daemontools.html
 * supervisord: http://supervisord.org
+* Let’s Encrypt certificates with Nginx: https://www.nginx.com/blog/free-certificates-lets-encrypt-and-nginx/
+* Let’s Encrypt certificates with Nginx: https://gist.github.com/xrstf/581981008b6be0d2224f
+
 
 Modules:
 --------
@@ -225,3 +241,6 @@ Modules:
 .. _supervisor.ini: blob/master/deploy/supervisor.ini
 .. _service-run.sh: blob/master/deploy/service-run.sh
 .. _nginx.conf: blob/master/deploy/nginx.conf
+
+.. _SSLLabs: https://www.ssllabs.com/ssltest/
+

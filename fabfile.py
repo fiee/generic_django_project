@@ -81,7 +81,7 @@ def setup():
         if env.use_daemontools:
             sudo('mkdir -p /etc/service/%(prj_name)s-celery' % env, pty=True)
         elif env.use_supervisor:
-            print "CHECK: You want to use celery under supervisor. Please check your celery configuration in supervisor-celery.ini!"
+            print "CHECK: You want to use celery under supervisor. Please check your celery configuration in supervisor-celery.conf!"
     if env.use_memcached:
         sudo('apt-get install -y memcached python-memcache', pty=True)
     
@@ -92,7 +92,7 @@ def setup():
     else:
         print "WARNING: Your webserver '%s' is not supported!" % env.webserver # other webservers?
     if env.dbserver=='mysql':
-        sudo('apt-get install -y mysql-server python-mysqldb')
+        sudo('apt-get install -y mysql-server python-mysqldb libmysqlclient-dev')
     elif env.dbserver=='postgresql':
         sudo('apt-get install -y postgresql python-psycopg2')
         
@@ -109,7 +109,7 @@ def setup():
     with cd(env.path):
         run('virtualenv .') # activate with 'source ~/www/bin/activate', perhaps add that to your .bashrc or .profile
         with settings(warn_only=True):
-            run('mkdir -m a+w logs; mkdir releases; mkdir shared; mkdir packages; mkdir backup;', pty=True)
+            run('mkdir -m a+w logs; mkdir run; mkdir releases; mkdir shared; mkdir packages; mkdir backup; mkdir letsencypt;', pty=True)
             if env.use_photologue:
                 run('mkdir photologue', pty=True)
                 #run('pip install -U django-photologue' % env, pty=True)
@@ -188,7 +188,7 @@ def upload_tar_from_git():
     local('git archive --format=tar master | gzip > %(release)s.tar.gz' % env)
     run('mkdir -p %(path)s/releases/%(release)s' % env) #, pty=True)
     put('%(release)s.tar.gz' % env, '%(path)s/packages/' % env)
-    run('cd %(path)s/releases/%(release)s && tar zxf ../../packages/%(release)s.tar.gz' % env, pty=True)
+    run('cd %(path)s/releases/%(release)s && tar zxf ../../packages/%(release)s.tar.gz && mkdir logs' % env, pty=True)
     local('rm %(release)s.tar.gz' % env)
     
 def install_site():
@@ -200,15 +200,17 @@ def install_site():
             sudo('cp server-setup/service-run.sh /etc/service/%(prj_name)s/run; chmod a+x /etc/service/%(prj_name)s/run;' % env, pty=True)
         else: # delete old service dir
             sudo('echo; if [ -d /etc/service/%(prj_name)s ]; then rm -rf /etc/service/%(prj_name)s; fi' % env, pty=True)
-        if env.use_supervisor: # activate new supervisor.ini
-            sudo('cp server-setup/supervisor.ini /etc/supervisor/%(prj_name)s.ini' % env, pty=True)
+        if env.use_supervisor: # activate new supervisor.conf
+            sudo('cp server-setup/supervisor.conf /etc/supervisor/conf.d/%(prj_name)s.conf' % env, pty=True)
             if env.use_celery:
-                sudo('cp server-setup/supervisor-celery.ini /etc/supervisor/%(prj_name)s-celery.ini' % env, pty=True)
+                sudo('cp server-setup/supervisor-celery.conf /etc/supervisor/conf.d/%(prj_name)s-celery.conf' % env, pty=True)
         else: # delete old config file
             # if you set a process name in supervisor.ini, then you must add it like %(prj_name):appserver
             sudo('echo; if [ -f /etc/supervisor/%(prj_name)s.ini ]; then supervisorctl %(prj_name)s stop rm /etc/supervisor/%(prj_name)s.ini; fi' % env, pty=True)
+            sudo('echo; if [ -f /etc/supervisor/conf.d/%(prj_name)s.conf ]; then supervisorctl %(prj_name)s stop rm /etc/supervisor/conf.d/%(prj_name)s.conf; fi' % env, pty=True)
             if env.use_celery:
                 sudo('echo; if [ -f /etc/supervisor/%(prj_name)s-celery.ini ]; then supervisorctl celery celerybeat stop rm /etc/supervisor/%(prj_name)s-celery.ini; fi' % env, pty=True)
+                sudo('echo; if [ -f /etc/supervisor/conf.d/%(prj_name)s-celery.conf ]; then supervisorctl celery celerybeat stop rm /etc/supervisor/conf.d/%(prj_name)s-celery.conf; fi' % env, pty=True)
         if env.use_celery and env.use_daemontools:
             sudo('cp server-setup/service-run-celeryd.sh /etc/service/%(prj_name)s-celery/run; chmod a+x /etc/service/%(prj_name)s-celery/run;' % env, pty=True)
         # try logrotate
@@ -220,7 +222,8 @@ def install_site():
 def install_requirements():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
-    run('cd %(path)s; pip install -U -r ./releases/%(release)s/requirements/%(requirements).txt' % env, pty=True)
+    require('requirements', provided_by=[localhost, webserver])
+    run('cd %(path)s; pip install -U -r ./releases/%(release)s/requirements/%(requirements)s.txt' % env, pty=True)
     
 def symlink_current_release():
     "Symlink our current release"
@@ -231,7 +234,7 @@ def symlink_current_release():
         # copy South migrations from previous release, if there are any
         run('cd releases/previous/%(prj_name)s; if [ -d migrations ]; then cp -r migrations ../../current/%(prj_name)s/; fi' % env, pty=True)
         # collect static files
-        with cd('releases/current/%(prj_path)s' % env):
+        with cd('releases/current/%(prj_name)s' % env):
             run('%(path)s/bin/python manage.py collectstatic -v0 --noinput' % env, pty=True)
             if env.use_photologue:
                 run('cd %(prj_name)s/static; rm -rf photologue; ln -s %(path)s/photologue photologue;' % env, pty=True)
@@ -242,9 +245,9 @@ def migrate(param=''):
     require('path')
     env.southparam = '--auto'
     if param=='first':
-        run('cd %(path)s/releases/current/%(prj_path)s; %(path)s/bin/python manage.py syncdb --noinput' % env, pty=True)
+        run('cd %(path)s/releases/current/%(prj_name)s; %(path)s/bin/python manage.py migrate --noinput' % env, pty=True)
         env.southparam = '--initial'
-    #with cd('%(path)s/releases/current/%(prj_path)s' % env):
+    #with cd('%(path)s/releases/current/%(prj_name)s' % env):
     #    run('%(path)s/bin/python manage.py schemamigration %(prj_name)s %(southparam)s && %(path)s/bin/python manage.py migrate %(prj_name)s' % env)
     #    # TODO: should also migrate other apps! get migrations from previous releases
     
