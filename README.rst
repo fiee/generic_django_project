@@ -5,8 +5,7 @@ generic django project
 This is my starting point for a new Django_ site, mixed and stirred from several 
 public sources and spiced with my own enhancements.
 
-I normally work with FeinCMS_ and its medialibrary_, 
-previously sometimes also with Photologue_, this is reflected in my setups.
+I normally work with FeinCMS_ and its medialibrary_, this is reflected in my setups.
 
 My webserver of choice is Nginx_ with gunicorn_, since my virtual server is 
 always low on memory. Setup for Nginx_ with fcgi_ is also provided.
@@ -212,7 +211,6 @@ Modules:
 .. _ElephantBlog: https://github.com/feincms/feincms-elephantblog
 .. _form_designer: https://github.com/feincms/form_designer
 .. _feincms_gallery: https://github.com/feinheit/feincms_gallery
-.. _Photologue: https://github.com/jdriscoll/django-photologue
 .. _Schedule: http://github.com/fiee/django-schedule
 .. _gunicorn: http://gunicorn.org/
 .. _mod_wsgi: http://modwsgi.readthedocs.org

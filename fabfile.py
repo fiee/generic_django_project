@@ -12,7 +12,6 @@ from fabric.api import *
 env.prj_name = 'project_name' # no spaces!
 env.prj_dir = 'django_project' # subdir under git root that contains the deployable part
 env.sudoers_group = 'admin'
-env.use_photologue = False # django-photologue gallery module
 env.use_feincms = True
 env.use_medialibrary = True # feincms.medialibrary or similar
 env.use_daemontools = False
@@ -110,9 +109,6 @@ def setup():
         run('virtualenv .') # activate with 'source ~/www/bin/activate', perhaps add that to your .bashrc or .profile
         with settings(warn_only=True):
             run('mkdir -m a+w logs; mkdir run; mkdir releases; mkdir shared; mkdir packages; mkdir backup; mkdir letsencypt;', pty=True)
-            if env.use_photologue:
-                run('mkdir photologue', pty=True)
-                #run('pip install -U django-photologue' % env, pty=True)
             if env.use_medialibrary:
                 run('mkdir medialibrary', pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
@@ -236,8 +232,6 @@ def symlink_current_release():
         # collect static files
         with cd('releases/current/%(prj_name)s' % env):
             run('%(path)s/bin/python manage.py collectstatic -v0 --noinput' % env, pty=True)
-            if env.use_photologue:
-                run('cd %(prj_name)s/static; rm -rf photologue; ln -s %(path)s/photologue photologue;' % env, pty=True)
     
 def migrate(param=''):
     "Update the database"

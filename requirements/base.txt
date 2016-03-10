@@ -25,7 +25,6 @@ Fabric
 #Pillow # for feincms medialibrary
 #feincms # see also http://github.com/feincms/feincms
 #django-tinymce
-#django-photologue
 #git+https://github.com/feinheit/feincms_gallery.git
 
 #dj_database_url # see https://github.com/kennethreitz/dj-database-url

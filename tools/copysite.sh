@@ -1,7 +1,7 @@
 #!/bin/bash
 # Copy a site's contents from another server after deploying it via fab
 WWWDIR=/var/www
-CONTENTDIRS="backup photologue medialibrary"
+CONTENTDIRS="backup medialibrary"
 OLDSERVER=$1
 SITE=$2
 

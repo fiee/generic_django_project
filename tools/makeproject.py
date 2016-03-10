@@ -29,7 +29,7 @@ questions = [
     ('webserver', _(u'Webserver software? (apache+mod_wsgi, nginx+gunicorn, nginx+fcgi)'), 'nginx+gunicorn'),
     ('processcontrol', _(u'Process supervision? (daemontools, supervisord'), 'supervisord'),
     ('messagequeue', _(u'Message queue? (celery)'), ''),
-    ('modules', _(u'Use special modules? (feincms, medialibrary, photologue, south)'), 'feincms,medialibrary,south'),
+    ('modules', _(u'Use special modules? (feincms, medialibrary)'), 'feincms,medialibrary'),
     ('server_root_user', _(u'Name of server admin user?'), 'root'),
 ]
 
@@ -38,7 +38,7 @@ questions = [
 # replace "project_name" in files...
 # git init
 
-# use feincms, medialibrary, photologue, daemontools, supervisord, celery, nginx/apache, mysql/postgresql ?
+# use feincms, medialibrary, daemontools, supervisord, celery, nginx/apache, mysql/postgresql ?
 
 # get server name
 # get server root account
