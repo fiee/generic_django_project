@@ -14,24 +14,37 @@ fi
 
 if [ ! -d "/home/${USER}" ]; then
   echo "User ${USER} is to be created"
-  adduser "${USER}"
+  adduser "${USER}" --disabled-password --gecos ""
 fi
 
 echo "Adding ${USER} to group admin"
 adduser "${USER}" admin
 
-echo "
-cd /var/www/${USER} && source bin/activate
-" >> /home/${USER}/.profile
+echo "Enabling certificate login"
+mkdir /home/${USER}/.ssh
+sudo cp /root/.ssh/authorized_keys /home/${USER}/.ssh/
 
 echo "Creating website directory ${WEBDIR}/${USER}"
 # already in fabfile
 mkdir "${WEBDIR}/${USER}"
 chown -R "${USER}:${USER}" "${WEBDIR}/${USER}"
+
 echo "Creating symlink in user's home"
 # already in fabfile
 ln -s "${WEBDIR}/${USER}" "/home/${USER}/www"
 chown -R "${USER}:${USER}" "/home/${USER}"
+
+echo "Enable virtualenv activation on login"
+echo "
+cd ${WEBDIR}/${USER} && source bin/activate
+" >> /home/${USER}/.profile
+
+echo "Creating .env, setting database and email passwords"
+echo "
+DJANGO_SETTINGS_MODULE=settings
+DATABASE_PASSWORD=${PASS}
+EMAIL_PASSWORD=${PASS}
+" > ${WEBDIR}/${USER}/.env
 
 echo "
 create user '${USER}'@'localhost' identified by '${PASS}';
@@ -40,6 +53,6 @@ grant all privileges on ${USER}.* to '${USER}'@'localhost';
 flush privileges;
 " > ${USCRIPT}
 
-echo "Setting up ${USER} in MySQL. Please enter password for root:"
+echo "Setting up ${USER} in MySQL. Please enter password for MySQL root:"
 mysql -u root -p -D mysql < ${USCRIPT}
 rm ${USCRIPT}

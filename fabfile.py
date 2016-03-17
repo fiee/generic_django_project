@@ -100,7 +100,7 @@ def setup():
         sudo('cd /etc/%(webserver)s/sites-enabled/; rm default;' % env, pty=True)
     
     # new project setup
-    setup_user()
+    #setup_user()
     sudo('mkdir -p %(path)s; chown %(user)s:%(user)s %(path)s;' % env, pty=True)
     sudo('mkdir -p %(tmppath)s; chown %(user)s:%(user)s %(tmppath)s;' % env, pty=True)
     with settings(warn_only=True):
@@ -108,7 +108,9 @@ def setup():
     with cd(env.path):
         run('virtualenv .') # activate with 'source ~/www/bin/activate', perhaps add that to your .bashrc or .profile
         with settings(warn_only=True):
-            run('mkdir -m a+w logs; mkdir run; mkdir releases; mkdir shared; mkdir packages; mkdir backup; mkdir letsencypt;', pty=True)
+            for dir in 'logs run releases shared packages backup letsencrypt'.split():
+                run('mkdir %s' % dir, pty=True)
+            run('chmod a+w logs', pty=True)
             if env.use_medialibrary:
                 run('mkdir medialibrary', pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
@@ -120,6 +122,7 @@ def setup():
     deploy('first')
     
 def setup_user():
+    # This doesn’t work. Create the user first with tool/makeuser.sh
     require('hosts', provided_by=[webserver])
     sudo('adduser "%(prj_name)s"' % env, pty=True)
     sudo('adduser "%(prj_name)s" %(sudoers_group)s' % env, pty=True)

@@ -124,32 +124,37 @@ Alternatively add the settings to the end of your virtualenvs_ ``activate`` scri
 server:
 -------
 
-Create your ``.env`` file at ``/var/www/project_name`` (or use virtualenvs_’ ``activate`` script), see above.
+* Create the user and
 
-I suggest to use makeuser.sh_ to create system and database accounts.
-(This is also included in the fabfile.)
-Otherwise:
-
-* create user and sudo-enable it (I suggest via a ``admin`` group, but you can also add the user to ``sudoers``)::
+  I suggest to copy ``makeuser.sh``_ to your webserver’s root/admin account 
+  and use it to create system and database accounts.
   
-    adduser project_name
-    adduser project_name admin
-
-* create database user and database (schema) ::
+    scp makeuser.sh root@www.yourdomain.tld:/root/bin/
   
-    mysql -u root -p
+  Otherwise look into that script. This is just a part of the necessary setup:
+
+  * create user and sudo-enable it (I suggest via a ``admin`` group, but you can also add the user to ``sudoers``)::
+  
+      adduser project_name --disabled-password --gecos ""
+      adduser project_name admin
+
+  * create database user and database (schema) ::
     
-    # at first setup only: we installed MySQL without user interaction, so there’s no root password. Set it!
-    use mysql;
-    update user set password=password('...') where user='root';
-  
-    # create user and database for our project:
-    create user 'project_name'@'localhost' identified by '...';
-    create database project_name character set 'utf8';
-    grant all privileges on project_name.* to 'project_name'@'localhost';
-  
-    flush privileges;
-    quit;
+      mysql -u root -p
+    
+      # at first setup only: we installed MySQL without user interaction, so there’s no root password. Set it!
+      use mysql;
+      update user set password=password('...') where user='root';
+    
+      # create user and database for our project:
+      create user 'project_name'@'localhost' identified by '...';
+      create database project_name character set 'utf8';
+      grant all privileges on project_name.* to 'project_name'@'localhost';
+    
+      flush privileges;
+      quit;
+
+* Create your ``.env`` file at ``/var/www/project_name`` (or use virtualenvs_’ ``activate`` script), see above.
 
 * Open your firewall for tcp 433 (not default on some systems).
 
