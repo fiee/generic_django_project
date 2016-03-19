@@ -21,7 +21,7 @@ admin.autodiscover()
 # mysitemaps = {'pages' : PageSitemap}
 
 urlpatterns = patterns('',
-        (r'^/?$', TemplateView.as_view(template_name="root.html")),
+        (r'', TemplateView.as_view(template_name="root.html")),
 )
 
 # serve static content in debug mode
