@@ -110,15 +110,15 @@ to avoid to have them in version control. I suggest to go the *dotenv* route:
 Put your settings into a ``.env`` file in the ``django_project`` directory, to use with django-dotenv-rw_.
 Don’t forget to tell git to ignore .env files!
 
-    DJANGO_SETTINGS_MODULE=settings
-    DATABASE_PASSWORD=secret123
-    EMAIL_PASSWORD=secret123
+      DJANGO_SETTINGS_MODULE=settings
+      DATABASE_PASSWORD=secret123
+      EMAIL_PASSWORD=secret123
 
 Alternatively add the settings to the end of your virtualenvs_ ``activate`` script:
 
-    export DJANGO_SETTINGS_MODULE=settings
-    export DATABASE_PASSWORD=secret123
-    export EMAIL_PASSWORD=secret123
+      export DJANGO_SETTINGS_MODULE=settings
+      export DATABASE_PASSWORD=secret123
+      export EMAIL_PASSWORD=secret123
 
 
 server:
@@ -129,7 +129,7 @@ server:
   I suggest to copy ``makeuser.sh``_ to your webserver’s root/admin account 
   and use it to create system and database accounts.
   
-    scp makeuser.sh root@www.yourdomain.tld:/root/bin/
+      scp makeuser.sh root@www.yourdomain.tld:/root/bin/
   
   Otherwise look into that script. This is just a part of the necessary setup:
 
@@ -180,7 +180,7 @@ Links / Sources
 Everything:
 -----------
 
-* "Two Scoops of Django"_
+* `Two Scoops of Django`_
 
 Setup:
 ------
