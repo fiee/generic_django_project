@@ -27,8 +27,10 @@ def localhost():
     "Use the local virtual server"
     env.hosts = ['localhost']
     env.requirements = 'local'
-    env.user = 'hraban' # You must create and sudo-enable the user first!
-    env.path = '/Users/%(user)s/workspace/%(prj_name)s' % env # User home on OSX, TODO: check local OS
+    env.user = 'hraban'
+    env.adminuser = env.user  # not used on localhost
+    env.homepath = '/Users/%(user)s' % env  # User home on OSX, TODO: check local OS
+    env.path = '%(homepath)s/workspace/%(prj_name)s' % env
     env.virtualhost_path = env.path
     env.pysp = '%(virtualhost_path)s/lib/python2.7/site-packages' % env
     env.tmppath = '/var/tmp/django_cache/%(prj_name)s' % env
@@ -38,7 +40,9 @@ def webserver():
     "Use the actual webserver"
     env.hosts = ['webserver.example.com'] # Change to your server name!
     env.requirements = 'webserver'
-    env.user = env.prj_name
+    env.user = env.prj_name  # You must create and sudo-enable the user first!
+    env.adminuser = 'root'  # This user is used to create the other user on first setup
+    env.homepath = '/home/%(user)s' % env  # User home on Linux
     env.path = '/var/www/%(prj_name)s' % env
     env.virtualhost_path = env.path
     env.pysp = '%(virtualhost_path)s/lib/python2.7/site-packages' % env
@@ -57,88 +61,141 @@ def setup():
     Setup a fresh virtualenv as well as a few useful directories, then run
     a full deployment
     """
-    require('hosts', provided_by=[localhost,webserver])
+    require('hosts', provided_by=[webserver])
     require('path')
-    # install Python environment
-    sudo('apt-get install -y build-essential python-dev python-setuptools python-imaging python-virtualenv python-yaml')
-    # install some version control systems, since we need Django modules in development
-    sudo('apt-get install -y git-core') # subversion git-core mercurial
-        
-    # install more Python stuff
-    # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
-    sudo('easy_install pip')
 
-    if env.use_daemontools:
-        sudo('apt-get install -y daemontools daemontools-run')
-        sudo('mkdir -p /etc/service/%(prj_name)s' % env, pty=True)
-    if env.use_supervisor:
-        sudo('pip install supervisor')
-        #sudo('echo; if [ ! -f /etc/supervisord.conf ]; then echo_supervisord_conf > /etc/supervisord.conf; fi', pty=True) # configure that!
-        sudo('echo; if [ ! -d /etc/supervisor ]; then mkdir /etc/supervisor; fi', pty=True)
-    if env.use_celery:
-        sudo('apt-get install -y rabbitmq-server') # needs additional deb-repository, see tools/README.rst!
-        if env.use_daemontools:
-            sudo('mkdir -p /etc/service/%(prj_name)s-celery' % env, pty=True)
-        elif env.use_supervisor:
-            print "CHECK: You want to use celery under supervisor. Please check your celery configuration in supervisor-celery.conf!"
-    if env.use_memcached:
-        sudo('apt-get install -y memcached python-memcache', pty=True)
+    with settings(user=env.adminuser):
+        # install Python environment and version control
+        sudo('apt-get install -y build-essential python-dev python-setuptools python-imaging python-virtualenv python-yaml git-core')
+        # If you need Django modules in development, install more version control systems
+        # sudo('apt-get install -y subversion git-core mercurial', pty=False)
+            
+        # install more Python stuff
+        # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
+        sudo('easy_install pip')
     
-    # install webserver and database server
-    sudo('apt-get remove -y apache2 apache2-mpm-prefork apache2-utils') # is mostly pre-installed
-    if env.webserver=='nginx':
-        sudo('apt-get install -y nginx-full')
-    else:
-        print "WARNING: Your webserver '%s' is not supported!" % env.webserver # other webservers?
-    if env.dbserver=='mysql':
-        sudo('apt-get install -y mysql-server python-mysqldb libmysqlclient-dev')
-    elif env.dbserver=='postgresql':
-        sudo('apt-get install -y postgresql python-psycopg2')
+        if env.use_daemontools:
+            sudo('apt-get install -y daemontools daemontools-run')
+            sudo('mkdir -p /etc/service/%(prj_name)s' % env, pty=True)
+        if env.use_supervisor:
+            sudo('pip install supervisor')
+            #sudo('echo; if [ ! -f /etc/supervisord.conf ]; then echo_supervisord_conf > /etc/supervisord.conf; fi', pty=True) # configure that!
+            sudo('echo; if [ ! -d /etc/supervisor ]; then mkdir /etc/supervisor; fi', pty=True)
+        if env.use_celery:
+            sudo('apt-get install -y rabbitmq-server') # needs additional deb-repository, see tools/README.rst!
+            if env.use_daemontools:
+                sudo('mkdir -p /etc/service/%(prj_name)s-celery' % env, pty=True)
+            elif env.use_supervisor:
+                local('echo "CHECK: You want to use celery under supervisor. Please check your celery configuration in supervisor-celery.conf!"', pty=True)
+        if env.use_memcached:
+            sudo('apt-get install -y memcached python-memcache')
         
-    # disable default site
-    with settings(warn_only=True):
-        sudo('cd /etc/%(webserver)s/sites-enabled/; rm default;' % env, pty=True)
+        # install webserver and database server
+        if env.webserver=='nginx':
+            sudo('apt-get remove -y apache2 apache2-mpm-prefork apache2-utils') # is mostly pre-installed
+            sudo('apt-get install -y nginx-full')
+        else:
+            local('echo "WARNING: Your webserver «%s» is not supported!"' % env.webserver, pty=True) # other webservers?
+        if env.dbserver=='mysql':
+            sudo('apt-get install -y mysql-server python-mysqldb libmysqlclient-dev')
+        elif env.dbserver=='postgresql':
+            sudo('apt-get install -y postgresql python-psycopg2')
+            
+        # disable default site
+        with settings(warn_only=True):
+            sudo('cd /etc/%(webserver)s/sites-enabled/; rm default;' % env, pty=True)
     
     # new project setup
-    #setup_user()
-    sudo('mkdir -p %(path)s; chown %(user)s:%(user)s %(path)s;' % env, pty=True)
-    sudo('mkdir -p %(tmppath)s; chown %(user)s:%(user)s %(tmppath)s;' % env, pty=True)
-    with settings(warn_only=True):
-        run('cd ~; ln -s %(path)s www;' % env, pty=True) # symlink web dir in home
+    setup_user()
     with cd(env.path):
         run('virtualenv .') # activate with 'source ~/www/bin/activate', perhaps add that to your .bashrc or .profile
         with settings(warn_only=True):
-            for dir in 'logs run releases shared packages backup letsencrypt'.split():
+            # create necessary directories
+            for dir in 'logs run releases shared packages backup letsencrypt ssl'.split():
                 run('mkdir %s' % dir, pty=True)
             run('chmod a+w logs', pty=True)
+            run('chown www-data:www-data letsencrypt && chown www-data:www-data ssl')
             if env.use_medialibrary:
                 run('mkdir medialibrary', pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
     # FeinCMS is now installable via pip (requirements/base.txt)
-    #if env.use_feincms:
-    #    with cd(env.pysp):
-    #        run('git clone git://github.com/django-mptt/django-mptt.git; echo django-mptt > mptt.pth;', pty=True)
-    #        run('git clone git://github.com/feincms/feincms.git; echo feincms > feincms.pth;', pty=True)
+    # if env.use_feincms:
+    #     with cd(env.pysp):
+    #         run('git clone git://github.com/django-mptt/django-mptt.git; echo django-mptt > mptt.pth;', pty=True)
+    #         run('git clone git://github.com/feincms/feincms.git; echo feincms > feincms.pth;', pty=True)
     deploy('first')
-    
+
+
 def setup_user():
-    # This doesn’t work. Create the user first with tool/makeuser.sh
+    """
+    Create a new Linux user, set it up for certificate login.
+    Call `setup_passwords`.
+    """
     require('hosts', provided_by=[webserver])
-    sudo('adduser "%(prj_name)s"' % env, pty=True)
-    sudo('adduser "%(prj_name)s" %(sudoers_group)s' % env, pty=True)
+    require('adminuser')
+    with settings(user=env.adminuser, pty=True):
+        # create user and add it to admin group
+        sudo('adduser "%(user)s" --disabled-password --gecos "" && adduser "%(user)s" %(sudoers_group)s' % env)
+        # copy authorized_keys from root for certificate login
+        sudo('mkdir %(homepath)s/.ssh && cp /root/.ssh/authorized_keys %(homepath)s/%(user)s/.ssh/' % env)
+        # Now we should be able to login with that new user
+        
+        with settings(warn_only=True):
+            # create web and temp dirs
+            sudo('mkdir -p %(path)s; chown %(user)s:%(user)s %(path)s;' % env)
+            sudo('mkdir -p %(tmppath)s; chown %(user)s:%(user)s %(tmppath)s;' % env)
+            # symlink web dir in home
+            run('cd ~; ln -s %(path)s www;' % env)
+
     # cd to web dir and activate virtualenv on login
-    #run('echo "\ncd %(path)s && source bin/activate\n" >> /home/%(prj_name)s/.profile\n' % env, pty=True)
-    if env.dbserver=='mysql':
-        env.dbuserscript = '/home/%(prj_name)s/userscript.sql' % env
-        run('''echo "\ncreate user '%(prj_name)s'@'localhost' identified by '${PASS}';
+    run('echo "\ncd %(path)s && source bin/activate\n" >> %(homepath)s/.profile\n' % env, pty=True)
+
+    setup_passwords()
+    
+
+def local_setup():
+    """
+    user setup on localhost
+    """
+    require('hosts', provided_by=[localhost])
+    require('path')
+    with cd(env.path):
+        run('virtualenv . && source bin/activate')
+    setup_passwords()
+
+
+def setup_passwords():
+    """
+    create .env and MySQL user; to be called from `setup` or `local_setup`
+    """
+    local('echo "I will now ask for the passwords to use for database and email account access. If one is empty, I’ll use the non-empty for both. If you leave both empty, I won’t create an database user."')
+    prompt('Please enter DATABASE_PASSWORD for user %(prj_name)s:' % env, key='database_password')
+    prompt('Please enter EMAIL_PASSWORD for user %(user)s:' % env, key='email_password')
+    
+    if env.database_password and not env.email_password:
+        env.email_password = env.database_password
+    if env.email_password and not env.database_password:
+        env.database_password = env.email_password
+    # TODO: check input for need of quoting!
+
+    # create .env and set database and email passwords
+    run('echo "DJANGO_SETTINGS_MODULE=settings\nDATABASE_PASSWORD=%(database_password)s\nEMAIL_PASSWORD=%(email_password)s\n" > %(path)s/.env' % env, pty=True)
+    del env.email_password
+
+    # create MySQL user
+    if env.dbserver=='mysql' and database_password:
+        env.dbuserscript = '%(homepath)s/userscript.sql' % env
+        run('''echo "\ncreate user '%(prj_name)s'@'localhost' identified by '%(database_password)s';
 create database %(prj_name)s character set 'utf8';\n
 grant all privileges on %(prj_name)s.* to '%(prj_name)s'@'localhost';\n
 flush privileges;\n" > %(dbuserscript)s''' % env, pty=True)
-        run('echo "Setting up %(prj_name)s in MySQL. Please enter password for root:"; mysql -u root -p -D mysql < %(dbuserscript)s' % env, pty=True)
+        run('echo "Setting up %(prj_name)s in MySQL. Please enter password for MySQL root:"; mysql -u root -p -D mysql < %(dbuserscript)s' % env, pty=True)
         run('rm %(dbuserscript)s' % env, pty=True)
         del env.dbuserscript
-    # TODO: create key pair for SSH!
-    
+    # TODO: add setup for PostgreSQL
+    del env.database_password
+
+
 def deploy(param=''):
     """
     Deploy the latest version of the site to the servers, install any
@@ -154,6 +211,7 @@ def deploy(param=''):
     symlink_current_release()
     migrate(param)
     restart_webserver()
+
     
 def deploy_version(version):
     "Specify a specific version to be made live"
@@ -164,6 +222,7 @@ def deploy_version(version):
         run('rm -rf releases/previous; mv releases/current releases/previous;', pty=True)
         run('ln -s %(version)s releases/current' % env, pty=True)
     restart_webserver()
+
     
 def rollback():
     """
@@ -189,6 +248,7 @@ def upload_tar_from_git():
     put('%(release)s.tar.gz' % env, '%(path)s/packages/' % env)
     run('cd %(path)s/releases/%(release)s && tar zxf ../../packages/%(release)s.tar.gz && mkdir logs' % env, pty=True)
     local('rm %(release)s.tar.gz' % env)
+
     
 def install_site():
     "Add the virtualhost config file to the webserver's config, activate logrotate"
@@ -217,13 +277,15 @@ def install_site():
             sudo('cp server-setup/logrotate.conf /etc/logrotate.d/website-%(prj_name)s' % env, pty=True)
     with settings(warn_only=True):        
         sudo('cd /etc/%(webserver)s/sites-enabled/; ln -s ../sites-available/%(prj_name)s %(prj_name)s' % env, pty=True)
+
     
 def install_requirements():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
     require('requirements', provided_by=[localhost, webserver])
     run('cd %(path)s; pip install -U -r ./releases/%(release)s/requirements/%(requirements)s.txt' % env, pty=True)
-    
+
+   
 def symlink_current_release():
     "Symlink our current release"
     require('release', provided_by=[deploy, setup])
@@ -235,6 +297,7 @@ def symlink_current_release():
         # collect static files
         with cd('releases/current/%(prj_name)s' % env):
             run('%(path)s/bin/python manage.py collectstatic -v0 --noinput' % env, pty=True)
+
     
 def migrate(param=''):
     "Update the database"
@@ -247,6 +310,7 @@ def migrate(param=''):
     #with cd('%(path)s/releases/current/%(prj_name)s' % env):
     #    run('%(path)s/bin/python manage.py schemamigration %(prj_name)s %(southparam)s && %(path)s/bin/python manage.py migrate %(prj_name)s' % env)
     #    # TODO: should also migrate other apps! get migrations from previous releases
+
     
 def restart_webserver():
     "Restart the web server"
