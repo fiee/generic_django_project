@@ -7,7 +7,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os, sys
 from django.core.exceptions import ImproperlyConfigured
 
-_ = lambda s: s
+def _(s):
+    return s
 
 def get_env_variable(var_name):
     """Get the environment variable or return exception."""
@@ -21,8 +22,11 @@ def get_env_variable(var_name):
 BASE_DIR = PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..')) # get out of settings
 PROJECT_NAME = os.path.split(PROJECT_ROOT)[-1]
 
-rel = lambda p: os.path.normpath(os.path.join(PROJECT_ROOT, p)) # this is release and virtualenv dependent
-rootrel = lambda p: os.path.normpath(os.path.join('/var/www', PROJECT_NAME, p)) # this is not
+def rel(p):
+    return os.path.normpath(os.path.join(PROJECT_ROOT, p)) # this is release and virtualenv dependent
+
+def rootrel(p):
+    return os.path.normpath(os.path.join('/var/www', PROJECT_NAME, p)) # this is not
 
 sys.path += [PROJECT_ROOT, os.path.join(PROJECT_ROOT,'lib/python2.7/site-packages')]
 
@@ -292,12 +296,12 @@ MIDDLEWARE_CLASSES = [
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth', # Django 1.3+
+    'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
-    'django.core.context_processors.static', # Django 1.3+ staticfiles
+    'django.core.context_processors.static',
     'django.contrib.messages.context_processors.messages',
 )
 
