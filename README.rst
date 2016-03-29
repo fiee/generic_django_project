@@ -124,7 +124,7 @@ Alternatively add the settings to the end of your virtualenvs_ ``activate`` scri
 server:
 -------
 
-* Create the user and
+* Create the user
 
   I suggest to copy ``makeuser.sh``_ to your webserver’s root/admin account 
   and use it to create system and database accounts.
@@ -158,6 +158,8 @@ server:
 
 * Open your firewall for tcp 433 (not default on some systems).
 
+* Request a SSL certificate, see e.g. https://www.nginx.com/blog/free-certificates-lets-encrypt-and-nginx/
+
 
 FeinCMS
 -------
@@ -172,6 +174,7 @@ since the changes aren’t always detected by migration!
 
 Have a look at Feinheit’s FeinCMS compatible apps, content types and plugins:
 ElephantBlog_, form_designer_, feincms_gallery_ etc.
+
 
 ---------------
 Links / Sources
