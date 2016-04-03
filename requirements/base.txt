@@ -5,24 +5,22 @@
 #python-dateutil
 #pytz
 #reportlab
+#PyYAML # for fixatures
 
 django
 django-secure
-#django-admin-tools
 #django-guardian
 #django-registration
 #django-tagging-ng
 
-gunicorn # not with fcgi
+gunicorn
 eventlet # for gunicorn
 setproctitle # for gunicorn
 
-#flup # for fcgi
-
-Fabric
 #python-memcached # for memcached cache (you must install that separately)
 
 #Pillow # for feincms medialibrary
+#django-mptt  # for feincms
 #feincms # see also http://github.com/feincms/feincms
 #django-tinymce
 #git+https://github.com/feinheit/feincms_gallery.git
@@ -30,3 +28,9 @@ Fabric
 #dj_database_url # see https://github.com/kennethreitz/dj-database-url
 
 git+http://github.com/tedtieken/django-dotenv-rw.git
+
+# for celery:
+#librabbitmq
+#celery
+#django-celery
+#celerymon

@@ -1,4 +1,6 @@
 -r base.txt
 
+Fabric
+paramiko
 django-debug-toolbar
 # see also http://procrastinatingdev.com/django/my-requirements-txt/
