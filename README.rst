@@ -8,7 +8,7 @@ public sources and spiced with my own enhancements.
 I normally work with FeinCMS_ and its medialibrary_, this is reflected in my setups.
 
 My webserver of choice is Nginx_ with gunicorn_, since my virtual server is 
-always low on memory. Setup for Nginx_ with fcgi_ is also provided.
+always low on memory.
 
 
 ------------
@@ -124,13 +124,13 @@ as environment variables to avoid to have them in version control.
 I suggest to go the *dotenv* route:
 
 Put your settings into a ``.env`` file in the ``django_project`` directory,
-to use with django-dotenv-rw_. Don’t forget to tell git to ignore .env files!
+to use with django-dotenv-rw_. Don’t forget to tell git to ignore .env files! ::
 
       DJANGO_SETTINGS_MODULE=settings
       DATABASE_PASSWORD=secret123
       EMAIL_PASSWORD=secret123
 
-Alternatively add the settings to the end of your virtualenvs_ ``activate`` script:
+Alternatively add the settings to the end of your virtualenvs_ ``activate`` script ::
 
       export DJANGO_SETTINGS_MODULE=settings
       export DATABASE_PASSWORD=secret123
