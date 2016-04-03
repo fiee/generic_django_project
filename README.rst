@@ -25,7 +25,7 @@ Requirements
 * deployment tool: Fabric_
 * local development database: SQLite3_
 * server database: MySQL_ or PostgreSQL_
-* process control (optional): daemontools_ or supervisord_
+* process control (optional): supervisord_ or daemontools_ 
 
 
 ---------
@@ -43,32 +43,39 @@ since general changes don’t affect all dependent sites, but I got no idea how 
 Issues
 ------
 
-I’m trying to keep this current and to implement what I learn from my actual projects and best practice advise.
-But since I mostly do other things than starting new django projects, I’m always far behind.
+I’m trying to keep this current and to implement what I learn from my actual 
+projects and best practice advise. But since I mostly do other things than 
+starting new django projects, I’m always far behind.
 
-* While I try to adhere to best practices, there are probably security holes - use at your own risk.
-* Since I update this template after experiences with my actual sites, the commits are often not atomic.
-* pip-installed requirements are not fixed on a version
-* I could also support runit_, but I didn't want to replace init
+* While I try to adhere to best practices, there are probably security holes - 
+  use at your own risk.
+* Since I update this template after experiences with my actual sites,
+  the commits are often not atomic.
+* pip-installed requirements are not fixed on a version.
+* I could also support runit_, but I didn't want to replace init.
+* I’m not using daemontools_ any more, so its configuration is outdated.
 
 
 -------
 Details
 -------
 
-* gunicorn runs internally on an unix socket, because I find file locations easier to control than server ports.
+* gunicorn runs internally on an unix socket, because I find file locations 
+  easier to control than server ports.
 * I’m integrating Let’s Encrypt certificates and automating their renewal.
 * My nginx settings get an A+ rating at SSLLabs_
+
 
 -----
 Ideas
 -----
 
-* Learn more from `Two Scoops of Django`_, http://djangopatterns.com and https://github.com/callowayproject/django-app-skeleton
-* Include Sphinx template and ``setup.py``
-* Optionally use Redis_ for sessions and cache, see http://unfoldthat.com/2011/09/14/try-redis-instead.html
+* Learn more from `Two Scoops of Django`_, http://djangopatterns.com and 
+  https://github.com/callowayproject/django-app-skeleton
+* Include Sphinx template
 * Make ``django-admin.py startproject --template=https://github.com/fiee/generic_django_project/zipball/master --extension=py,rst,html,txt,ini,sh MY_PROJECT`` work
 * Finally learn proper testing
+* Split templates for simple site, cerebrale site, reusable app
 
 
 -------
@@ -76,7 +83,8 @@ License
 -------
 
 This project template itself has no special license. Do with it what you want.
-Attribution is appreciated. Corrections are welcome.
+Attribution is appreciated. Corrections are welcome. I’m not responsible for
+your failure, damage or loss.
 
 Since it’s a collection of (modified) snippets from different sources that may
 have different licenses, it would be impossible to untangle.
@@ -93,22 +101,30 @@ local:
 ------
 
 * Copy ``generic_django_project``
-* Rename "django_project" (this would be the project root as created by ``django-admin.py startproject``)
-* Replace all occurrences of lowercase "project_name" with your project name. This is also the webserver and database server username!
-  The "project_name" directory is the one that would be created by ``manage.py startapp``.
-* Check the settings in fabfile.py_, gunicorn-settings.py_, settings/base.py_, settings/local.py_ and supervisor.ini_ or service-run.sh_
-* Adapt LICENSE_ to your needs. The 2-clause BSD license is just a suggestion.
-* Set up an email account for your project’s error messages and configure it in settings/base.py_
+* Rename "django_project" (this would be the project root as created by 
+  ``django-admin.py startproject``)
+* Replace all occurrences of lowercase "project_name" with your project name.
+  This is also the webserver and database server username!
+  The "project_name" directory is the one that would be created by
+  ``manage.py startapp``.
+* Check the settings in server-setup and django_project/settings:
+  fabfile.py_, gunicorn-settings.py_,  supervisor.conf_,
+  settings/base.py_, settings/local.py_ etc.
+* Adapt LICENSE_ to your needs if you might publish your project.
+  The 2-clause BSD license is just a suggestion.
+* Set up an email account for your project’s error messages and configure it
+  in settings/base.py_ and .env
 * ``git init``, always commit all changes
 * ``manage migrate`` (initialize migrations)
 * ``fab webserver setup`` (once)
 * ``fab webserver deploy`` (publish new release - always last committed version!)
 
-Following 12-factor_ design, we now set our passwords and other secret settings as environment variables 
-to avoid to have them in version control. I suggest to go the *dotenv* route:
+Following 12-factor_ design, we now set our passwords and other secret settings 
+as environment variables to avoid to have them in version control.
+I suggest to go the *dotenv* route:
 
-Put your settings into a ``.env`` file in the ``django_project`` directory, to use with django-dotenv-rw_.
-Don’t forget to tell git to ignore .env files!
+Put your settings into a ``.env`` file in the ``django_project`` directory,
+to use with django-dotenv-rw_. Don’t forget to tell git to ignore .env files!
 
       DJANGO_SETTINGS_MODULE=settings
       DATABASE_PASSWORD=secret123
@@ -133,8 +149,9 @@ server:
   
   Otherwise look into that script. This is just a part of the necessary setup:
 
-  * create user and sudo-enable it (I suggest via a ``admin`` group, but you can also add the user to ``sudoers``)::
-  
+  * create user and sudo-enable it (I suggest via a ``admin`` group, 
+    but you can also add the user to ``sudoers``) ::
+
       adduser project_name --disabled-password --gecos ""
       adduser project_name admin
 
@@ -142,7 +159,8 @@ server:
     
       mysql -u root -p
     
-      # at first setup only: we installed MySQL without user interaction, so there’s no root password. Set it!
+      # at first setup only: we installed MySQL without user interaction, 
+      # so there’s no root password. Set it!
       use mysql;
       update user set password=password('...') where user='root';
     
@@ -154,7 +172,8 @@ server:
       flush privileges;
       quit;
 
-* Create your ``.env`` file at ``/var/www/project_name`` (or use virtualenvs_’ ``activate`` script), see above.
+* Create your ``.env`` file at ``/var/www/project_name`` 
+  (or use virtualenvs_’ ``activate`` script), see above.
 
 * Open your firewall for tcp 433 (not default on some systems).
 
@@ -175,15 +194,20 @@ since the changes aren’t always detected by migration!
 Have a look at Feinheit’s FeinCMS compatible apps, content types and plugins:
 ElephantBlog_, form_designer_, feincms_gallery_ etc.
 
+At the moment (April 2016) the released version of FeinCMS isn’t yet compatible
+with Django 1.9; you must use the git checkout.
+
 
 ---------------
 Links / Sources
 ---------------
 
+
 Everything:
 -----------
 
 * `Two Scoops of Django`_
+
 
 Setup:
 ------
