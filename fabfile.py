@@ -214,31 +214,57 @@ def local_setup():
     require('hosts', provided_by=[localhost])
     require('path')
     with cd(env.path):
-        local('virtualenv . && source bin/activate')
-        local('pip install -U -r ./requirements/%(requirements)s.txt' % env, pty=True)
-
-    print('I will now ask for the passwords to use for database and email account access. If one is empty, I’ll use the non-empty for both. If you leave both empty, I won’t create an database user.')
-    prompt('Please enter DATABASE_PASSWORD for user %(prj_name)s:' % env, key='database_password')
-    prompt('Please enter EMAIL_PASSWORD for user %(user)s:' % env, key='email_password')
+        with settings(warn_only=True):
+            local('virtualenv . && source bin/activate')
+        local('pip install -U -r ./requirements/%(requirements)s.txt' % env)
     
-    if env.database_password and not env.email_password:
-        env.email_password = env.database_password
-    if env.email_password and not env.database_password:
-        env.database_password = env.email_password
-    # TODO: check input for need of quoting!
-
-    # create .env and set database and email passwords
-    local('echo; if [ ! -f %(path)s/%(prj_name)s/.env ]; then echo "DJANGO_SETTINGS_MODULE=settings\nDATABASE_PASSWORD=%(database_password)s\nEMAIL_PASSWORD=%(email_password)s\n" > %(path)s/%(prj_name)s/.env; fi' % env)
+    dotenv_file = '%(path)s/%(prj_name)s/.env' % env
+    if not os.path.exists(dotenv_file):
+        print('I will now ask for the passwords to use for database and email account access. If one is empty, I’ll use the non-empty for both. If you leave both empty, I won’t create an database user.')
+        prompt('Please enter DATABASE_PASSWORD for user %(prj_name)s:' % env, key='database_password')
+        prompt('Please enter EMAIL_PASSWORD for user %(user)s:' % env, key='email_password')
+        
+        if env.database_password and not env.email_password:
+            env.email_password = env.database_password
+        if env.email_password and not env.database_password:
+            env.database_password = env.email_password
+        # TODO: check input for need of quoting!
+    
+        # create .env and set database and email passwords
+        local('echo; if [ ! -f %(path)s/%(prj_name)s/.env ]; then echo "DJANGO_SETTINGS_MODULE=settings\nDATABASE_PASSWORD=%(database_password)s\nEMAIL_PASSWORD=%(email_password)s\n" > %(path)s/%(prj_name)s/.env; fi' % env)
+    else:
+        print('Reading existing .env file...')
+        import dotenv
+        dotenv.load_dotenv(dotenv_file)
+        env.database_password = os.environ['DATABASE_PASSWORD']
 
     # create MySQL user
     if env.dbserver=='mysql' and env.database_password:
-        env.dbuserscript = '%(path)s/userscript.sql' % env
-        local('''echo "\ncreate user '%(prj_name)s'@'localhost' identified by '%(database_password)s';
-create database %(prj_name)s character set 'utf8';\n
-grant all privileges on %(prj_name)s.* to '%(prj_name)s'@'localhost';\n
-flush privileges;\n" > %(dbuserscript)s''' % env)
-        local('echo "Setting up %(prj_name)s in MySQL. Please enter password for MySQL root:"; mysql -u root -p -D mysql < %(dbuserscript)s' % env)
-        local('rm %(dbuserscript)s' % env)
+        # check MySQL:
+        print('Checking database connection...')
+        try:
+            import _mysql, _mysql_exceptions
+        except ImportError, ex:
+            print(ex)
+            print('MySQL module not installed!')
+            
+        try:    
+            db=_mysql.connect(host=env.hosts[0], user=env.user, passwd=env.database_password, db=env.prj_name)
+            print('Database connection successful.')
+            del db
+        except Exception, ex:
+            print(ex)
+    
+            env.dbuserscript = '%(path)s/userscript.sql' % env
+            dbs = open(env.dbuserscript, 'w')
+            dbs.write('''create user '%(prj_name)s'@'localhost' identified by '%(database_password)s';
+    create database %(prj_name)s character set 'utf8';
+    grant all privileges on %(prj_name)s.* to '%(prj_name)s'@'localhost';
+    flush privileges;\n" > %(dbuserscript)s''' % env)
+            dbs.close()
+            print('Setting up %(prj_name)s in MySQL. Please enter password for MySQL root:')
+            local('mysql -u root -p -D mysql < %(dbuserscript)s' % env)
+            os.unlink(env.dbuserscript)
 
 
 def deploy(param=''):
