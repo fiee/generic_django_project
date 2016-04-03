@@ -4,7 +4,7 @@
 fabfile for Django:
 derived from http://morethanseven.net/2009/07/27/fabric-django-git-apache-mod_wsgi-virtualenv-and-p/
 """
-from __future__ import unicode_literals
+from __future__ import unicode_literals, print_function
 import time
 from fabric.api import *
 
@@ -27,9 +27,9 @@ def localhost():
     "Use the local virtual server"
     env.hosts = ['localhost']
     env.requirements = 'local'
-    env.user = 'hraban'
-    env.adminuser = env.user  # not used on localhost
-    env.homepath = '/Users/%(user)s' % env  # User home on OSX, TODO: check local OS
+    env.user = env.prj_name
+    env.adminuser = 'you'
+    env.homepath = '/Users/%(adminuser)s' % env  # User home on OSX, TODO: check local OS
     env.path = '%(homepath)s/workspace/%(prj_name)s' % env
     env.virtualhost_path = env.path
     env.pysp = '%(virtualhost_path)s/lib/python2.7/site-packages' % env
@@ -47,13 +47,34 @@ def webserver():
     env.virtualhost_path = env.path
     env.pysp = '%(virtualhost_path)s/lib/python2.7/site-packages' % env
     env.tmppath = '/var/tmp/django_cache/%(prj_name)s' % env
+    if not _is_host_up(env.hosts[0], 22):
+        import sys
+        sys.exit(1)
+
+# helpers
+
+def _is_host_up(host, port):
+    import socket, paramiko
+    original_timeout = socket.getdefaulttimeout()
+    new_timeout = 3
+    socket.setdefaulttimeout(new_timeout)
+    host_status = False
+    try:
+        transport = paramiko.Transport((host, port))
+        host_status = True
+    except:
+        print('***Warning*** Host {host} on port {port} is down.'.format(
+            host=host, port=port)
+        )
+    socket.setdefaulttimeout(original_timeout)
+    return host_status
    
    
 # tasks
 
 def test():
     "Run the test suite and bail out if it fails"
-    local("cd %(path)s; python manage.py test" % env) #, fail="abort")
+    local("cd %(path)s/releases/current/%(prj_name)s; python manage.py test" % env) #, fail="abort")
     
     
 def setup():
@@ -107,6 +128,68 @@ def setup():
     
     # new project setup
     setup_user()
+    deploy('first')
+
+
+def setup_user():
+    """
+    Create a new Linux user, set it up for certificate login.
+    Call `setup_passwords`.
+    """
+    require('hosts', provided_by=[webserver])
+    require('adminuser')
+    env.new_user=env.user
+    with settings(user=env.adminuser, pty=True):
+        # create user and add it to admin group
+        sudo('adduser "%(new_user)s" --disabled-password --gecos "" && adduser "%(new_user)s" %(sudoers_group)s' % env)
+        # copy authorized_keys from root for certificate login
+        sudo('mkdir %(homepath)s/.ssh && cp /root/.ssh/authorized_keys %(homepath)s/.ssh/' % env)
+        # Now we should be able to login with that new user
+        
+        with settings(warn_only=True):
+            # create web and temp dirs
+            sudo('mkdir -p %(path)s; chown %(new_user)s:%(new_user)s %(path)s;' % env)
+            sudo('mkdir -p %(tmppath)s; chown %(new_user)s:%(new_user)s %(tmppath)s;' % env)
+            # symlink web dir in home
+            run('cd ~; ln -s %(path)s www;' % env)
+    env.user = env.new_user
+
+    # cd to web dir and activate virtualenv on login
+    run('echo "\ncd %(path)s && source bin/activate\n" >> %(homepath)s/.profile\n' % env, pty=True)
+
+    setup_passwords()
+
+
+def setup_passwords():
+    """
+    create .env and MySQL user; to be called from `setup` or `local_setup`
+    """
+    print('I will now ask for the passwords to use for database and email account access. If one is empty, I’ll use the non-empty for both. If you leave both empty, I won’t create an database user.')
+    prompt('Please enter DATABASE_PASSWORD for user %(prj_name)s:' % env, key='database_password')
+    prompt('Please enter EMAIL_PASSWORD for user %(user)s:' % env, key='email_password')
+    
+    if env.database_password and not env.email_password:
+        env.email_password = env.database_password
+    if env.email_password and not env.database_password:
+        env.database_password = env.email_password
+    # TODO: check input for need of quoting!
+
+    with settings(user=env.adminuser, pty=True):
+        # create .env and set database and email passwords
+        run('echo; if [ ! -f %(path)s/.env ]; then echo "DJANGO_SETTINGS_MODULE=settings\nDATABASE_PASSWORD=%(database_password)s\nEMAIL_PASSWORD=%(email_password)s\n" > %(path)s/.env; fi' % env)
+    
+        # create MySQL user
+        if env.dbserver=='mysql' and env.database_password:
+            env.dbuserscript = '%(homepath)s/userscript.sql' % env
+            run('''echo "\ncreate user '%(prj_name)s'@'localhost' identified by '%(database_password)s';
+    create database %(prj_name)s character set 'utf8';\n
+    grant all privileges on %(prj_name)s.* to '%(prj_name)s'@'localhost';\n
+    flush privileges;\n" > %(dbuserscript)s''' % env)
+            print('Setting up %(prj_name)s in MySQL. Please enter password for MySQL root:')
+            run('mysql -u root -p -D mysql < %(dbuserscript)s' % env)
+            run('rm %(dbuserscript)s' % env)
+        # TODO: add setup for PostgreSQL
+
     with cd(env.path):
         run('virtualenv .') # activate with 'source ~/www/bin/activate', perhaps add that to your .bashrc or .profile
         with settings(warn_only=True):
@@ -118,39 +201,6 @@ def setup():
             if env.use_medialibrary:
                 run('mkdir medialibrary', pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
-    # FeinCMS is now installable via pip (requirements/base.txt)
-    # if env.use_feincms:
-    #     with cd(env.pysp):
-    #         run('git clone git://github.com/django-mptt/django-mptt.git; echo django-mptt > mptt.pth;', pty=True)
-    #         run('git clone git://github.com/feincms/feincms.git; echo feincms > feincms.pth;', pty=True)
-    deploy('first')
-
-
-def setup_user():
-    """
-    Create a new Linux user, set it up for certificate login.
-    Call `setup_passwords`.
-    """
-    require('hosts', provided_by=[webserver])
-    require('adminuser')
-    with settings(user=env.adminuser, pty=True):
-        # create user and add it to admin group
-        sudo('adduser "%(user)s" --disabled-password --gecos "" && adduser "%(user)s" %(sudoers_group)s' % env)
-        # copy authorized_keys from root for certificate login
-        sudo('mkdir %(homepath)s/.ssh && cp /root/.ssh/authorized_keys %(homepath)s/%(user)s/.ssh/' % env)
-        # Now we should be able to login with that new user
-        
-        with settings(warn_only=True):
-            # create web and temp dirs
-            sudo('mkdir -p %(path)s; chown %(user)s:%(user)s %(path)s;' % env)
-            sudo('mkdir -p %(tmppath)s; chown %(user)s:%(user)s %(tmppath)s;' % env)
-            # symlink web dir in home
-            run('cd ~; ln -s %(path)s www;' % env)
-
-    # cd to web dir and activate virtualenv on login
-    run('echo "\ncd %(path)s && source bin/activate\n" >> %(homepath)s/.profile\n' % env, pty=True)
-
-    setup_passwords()
     
 
 def local_setup():
@@ -160,15 +210,10 @@ def local_setup():
     require('hosts', provided_by=[localhost])
     require('path')
     with cd(env.path):
-        run('virtualenv . && source bin/activate')
-    setup_passwords()
+        local('virtualenv . && source bin/activate')
+        local('pip install -U -r ./requirements/%(requirements)s.txt' % env, pty=True)
 
-
-def setup_passwords():
-    """
-    create .env and MySQL user; to be called from `setup` or `local_setup`
-    """
-    local('echo "I will now ask for the passwords to use for database and email account access. If one is empty, I’ll use the non-empty for both. If you leave both empty, I won’t create an database user."')
+    print('I will now ask for the passwords to use for database and email account access. If one is empty, I’ll use the non-empty for both. If you leave both empty, I won’t create an database user.')
     prompt('Please enter DATABASE_PASSWORD for user %(prj_name)s:' % env, key='database_password')
     prompt('Please enter EMAIL_PASSWORD for user %(user)s:' % env, key='email_password')
     
@@ -179,21 +224,17 @@ def setup_passwords():
     # TODO: check input for need of quoting!
 
     # create .env and set database and email passwords
-    run('echo "DJANGO_SETTINGS_MODULE=settings\nDATABASE_PASSWORD=%(database_password)s\nEMAIL_PASSWORD=%(email_password)s\n" > %(path)s/.env' % env, pty=True)
-    del env.email_password
+    local('echo; if [ ! -f %(path)s/%(prj_name)s/.env ]; then echo "DJANGO_SETTINGS_MODULE=settings\nDATABASE_PASSWORD=%(database_password)s\nEMAIL_PASSWORD=%(email_password)s\n" > %(path)s/%(prj_name)s/.env; fi' % env)
 
     # create MySQL user
-    if env.dbserver=='mysql' and database_password:
-        env.dbuserscript = '%(homepath)s/userscript.sql' % env
-        run('''echo "\ncreate user '%(prj_name)s'@'localhost' identified by '%(database_password)s';
+    if env.dbserver=='mysql' and env.database_password:
+        env.dbuserscript = '%(path)s/userscript.sql' % env
+        local('''echo "\ncreate user '%(prj_name)s'@'localhost' identified by '%(database_password)s';
 create database %(prj_name)s character set 'utf8';\n
 grant all privileges on %(prj_name)s.* to '%(prj_name)s'@'localhost';\n
-flush privileges;\n" > %(dbuserscript)s''' % env, pty=True)
-        run('echo "Setting up %(prj_name)s in MySQL. Please enter password for MySQL root:"; mysql -u root -p -D mysql < %(dbuserscript)s' % env, pty=True)
-        run('rm %(dbuserscript)s' % env, pty=True)
-        del env.dbuserscript
-    # TODO: add setup for PostgreSQL
-    del env.database_password
+flush privileges;\n" > %(dbuserscript)s''' % env)
+        local('echo "Setting up %(prj_name)s in MySQL. Please enter password for MySQL root:"; mysql -u root -p -D mysql < %(dbuserscript)s' % env)
+        local('rm %(dbuserscript)s' % env)
 
 
 def deploy(param=''):
@@ -235,7 +276,7 @@ def rollback():
         run('mv releases/current releases/_previous;', pty=True)
         run('mv releases/previous releases/current;', pty=True)
         run('mv releases/_previous releases/previous;', pty=True)
-        # TODO: use South to migrate back
+    # TODO: check Django migrations for rollback
     restart_webserver()    
     
 # Helpers. These are called by other functions rather than directly
@@ -305,6 +346,9 @@ def migrate(param=''):
     require('path')
     env.southparam = '--auto'
     if param=='first':
+        if env.use_feincms:
+            # FeinCMS 1.9 doesn’t yet have migrations
+            run('cd %(path)s/releases/current/%(prj_name)s; %(path)s/bin/python manage.py makemigrations page medialibrary' % env, pty=True)
         run('cd %(path)s/releases/current/%(prj_name)s; %(path)s/bin/python manage.py migrate --noinput' % env, pty=True)
         env.southparam = '--initial'
     #with cd('%(path)s/releases/current/%(prj_name)s' % env):
