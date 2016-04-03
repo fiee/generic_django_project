@@ -47,6 +47,7 @@ def webserver():
     env.virtualhost_path = env.path
     env.pysp = '%(virtualhost_path)s/lib/python2.7/site-packages' % env
     env.tmppath = '/var/tmp/django_cache/%(prj_name)s' % env
+    env.cryptdomain = 'www.project_name.de'
     if not _is_host_up(env.hosts[0], 22):
         import sys
         sys.exit(1)
@@ -122,9 +123,12 @@ def setup():
         elif env.dbserver=='postgresql':
             sudo('apt-get install -y postgresql python-psycopg2')
             
-        # disable default site
-        with settings(warn_only=True):
-            sudo('cd /etc/%(webserver)s/sites-enabled/; rm default;' % env, pty=True)
+        with settings(warn_only=True, pty=True):
+            # disable default site
+            sudo('cd /etc/%(webserver)s/sites-enabled/; rm default;' % env)
+            # install letsencrypt scripts
+            sudo('git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt; cd /opt/letsencrypt; ./letsencrypt-auto')
+            sudo('cp tools/renew-letsencrypt.sh /etc/cron-monthly/')
     
     # new project setup
     setup_user()
@@ -314,8 +318,9 @@ def install_site():
         if env.use_celery and env.use_daemontools:
             sudo('cp server-setup/service-run-celeryd.sh /etc/service/%(prj_name)s-celery/run; chmod a+x /etc/service/%(prj_name)s-celery/run;' % env, pty=True)
         # try logrotate
-        with settings(warn_only=True):        
-            sudo('cp server-setup/logrotate.conf /etc/logrotate.d/website-%(prj_name)s' % env, pty=True)
+        with settings(warn_only=True, pty=True):        
+            sudo('cp server-setup/logrotate.conf /etc/logrotate.d/website-%(prj_name)s' % env)
+            sudo('cp server-setup/letsencrypt.conf /etc/letsencrypt/configs/%(cryptdomain)s.conf' % env)
     with settings(warn_only=True):        
         sudo('cd /etc/%(webserver)s/sites-enabled/; ln -s ../sites-available/%(prj_name)s %(prj_name)s' % env, pty=True)
 
