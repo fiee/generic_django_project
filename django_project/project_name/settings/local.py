@@ -11,7 +11,11 @@ rootrel = lambda p: os.path.abspath(os.path.join(PROJECT_ROOT, '..', p))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-CACHE_BACKEND = 'locmem://'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DATABASES = {
