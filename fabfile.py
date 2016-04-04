@@ -5,6 +5,7 @@ fabfile for Django:
 derived from http://morethanseven.net/2009/07/27/fabric-django-git-apache-mod_wsgi-virtualenv-and-p/
 """
 from __future__ import unicode_literals, print_function
+import os
 import time
 from fabric.api import *
 
@@ -88,7 +89,7 @@ def setup():
 
     with settings(user=env.adminuser):
         # install Python environment and version control
-        sudo('apt-get install -y build-essential python-dev python-setuptools python-imaging python-virtualenv python-yaml git-core')
+        sudo('apt-get install -y build-essential python-dev python-setuptools python-imaging python-virtualenv libyaml-dev python-yaml git-core')
         # If you need Django modules in development, install more version control systems
         # sudo('apt-get install -y subversion git-core mercurial', pty=False)
             
@@ -201,7 +202,8 @@ def setup_passwords():
             for dir in 'logs run releases shared packages backup letsencrypt ssl'.split():
                 run('mkdir %s' % dir, pty=True)
             run('chmod a+w logs', pty=True)
-            run('chown www-data:www-data letsencrypt && chown www-data:www-data ssl')
+            with settings(user=env.adminuser):
+                run('chown www-data:www-data letsencrypt && chown www-data:www-data ssl')
             if env.use_medialibrary:
                 run('mkdir medialibrary', pty=True)
             run('cd releases; ln -s . current; ln -s . previous;', pty=True)
@@ -317,7 +319,7 @@ def upload_tar_from_git():
     local('git archive --format=tar master | gzip > %(release)s.tar.gz' % env)
     run('mkdir -p %(path)s/releases/%(release)s' % env) #, pty=True)
     put('%(release)s.tar.gz' % env, '%(path)s/packages/' % env)
-    run('cd %(path)s/releases/%(release)s && tar zxf ../../packages/%(release)s.tar.gz && mkdir logs' % env, pty=True)
+    run('cd %(path)s/releases/%(release)s && tar zxf ../../packages/%(release)s.tar.gz' % env, pty=True)
     local('rm %(release)s.tar.gz' % env)
 
     
@@ -325,31 +327,31 @@ def install_site():
     "Add the virtualhost config file to the webserver's config, activate logrotate"
     require('release', provided_by=[deploy, setup])
     with cd('%(path)s/releases/%(release)s' % env):
-        sudo('cp server-setup/%(webserver)s.conf /etc/%(webserver)s/sites-available/%(prj_name)s' % env, pty=True)
-        if env.use_daemontools: # activate new service runner
-            sudo('cp server-setup/service-run.sh /etc/service/%(prj_name)s/run; chmod a+x /etc/service/%(prj_name)s/run;' % env, pty=True)
-        else: # delete old service dir
-            sudo('echo; if [ -d /etc/service/%(prj_name)s ]; then rm -rf /etc/service/%(prj_name)s; fi' % env, pty=True)
-        if env.use_supervisor: # activate new supervisor.conf
-            sudo('cp server-setup/supervisor.conf /etc/supervisor/conf.d/%(prj_name)s.conf' % env, pty=True)
-            if env.use_celery:
-                sudo('cp server-setup/supervisor-celery.conf /etc/supervisor/conf.d/%(prj_name)s-celery.conf' % env, pty=True)
-        else: # delete old config file
-            # if you set a process name in supervisor.ini, then you must add it like %(prj_name):appserver
-            sudo('echo; if [ -f /etc/supervisor/%(prj_name)s.ini ]; then supervisorctl %(prj_name)s stop rm /etc/supervisor/%(prj_name)s.ini; fi' % env, pty=True)
-            sudo('echo; if [ -f /etc/supervisor/conf.d/%(prj_name)s.conf ]; then supervisorctl %(prj_name)s stop rm /etc/supervisor/conf.d/%(prj_name)s.conf; fi' % env, pty=True)
-            if env.use_celery:
-                sudo('echo; if [ -f /etc/supervisor/%(prj_name)s-celery.ini ]; then supervisorctl celery celerybeat stop rm /etc/supervisor/%(prj_name)s-celery.ini; fi' % env, pty=True)
-                sudo('echo; if [ -f /etc/supervisor/conf.d/%(prj_name)s-celery.conf ]; then supervisorctl celery celerybeat stop rm /etc/supervisor/conf.d/%(prj_name)s-celery.conf; fi' % env, pty=True)
-        if env.use_celery and env.use_daemontools:
-            sudo('cp server-setup/service-run-celeryd.sh /etc/service/%(prj_name)s-celery/run; chmod a+x /etc/service/%(prj_name)s-celery/run;' % env, pty=True)
-        # try logrotate
-        with settings(warn_only=True, pty=True):        
-            sudo('cp server-setup/logrotate.conf /etc/logrotate.d/website-%(prj_name)s' % env)
-            sudo('cp server-setup/letsencrypt.conf /etc/letsencrypt/configs/%(cryptdomain)s.conf' % env)
-    with settings(warn_only=True):        
-        sudo('cd /etc/%(webserver)s/sites-enabled/; ln -s ../sites-available/%(prj_name)s %(prj_name)s' % env, pty=True)
-
+        with settings(user=env.adminuser, pty=True):
+            run('cp server-setup/%(webserver)s.conf /etc/%(webserver)s/sites-available/%(prj_name)s' % env)
+            if env.use_daemontools: # activate new service runner
+                run('cp server-setup/service-run.sh /etc/service/%(prj_name)s/run; chmod a+x /etc/service/%(prj_name)s/run;' % env)
+            else: # delete old service dir
+                run('echo; if [ -d /etc/service/%(prj_name)s ]; then rm -rf /etc/service/%(prj_name)s; fi' % env)
+            if env.use_supervisor: # activate new supervisor.conf
+                run('cp server-setup/supervisor.conf /etc/supervisor/conf.d/%(prj_name)s.conf' % env)
+                if env.use_celery:
+                    run('cp server-setup/supervisor-celery.conf /etc/supervisor/conf.d/%(prj_name)s-celery.conf' % env)
+            else: # delete old config file
+                # if you set a process name in supervisor.ini, then you must add it like %(prj_name):appserver
+                run('echo; if [ -f /etc/supervisor/%(prj_name)s.ini ]; then supervisorctl %(prj_name)s stop rm /etc/supervisor/%(prj_name)s.ini; fi' % env)
+                run('echo; if [ -f /etc/supervisor/conf.d/%(prj_name)s.conf ]; then supervisorctl %(prj_name)s stop rm /etc/supervisor/conf.d/%(prj_name)s.conf; fi' % env)
+                if env.use_celery:
+                    run('echo; if [ -f /etc/supervisor/%(prj_name)s-celery.ini ]; then supervisorctl celery celerybeat stop rm /etc/supervisor/%(prj_name)s-celery.ini; fi' % env)
+                    run('echo; if [ -f /etc/supervisor/conf.d/%(prj_name)s-celery.conf ]; then supervisorctl celery celerybeat stop rm /etc/supervisor/conf.d/%(prj_name)s-celery.conf; fi' % env)
+            if env.use_celery and env.use_daemontools:
+                run('cp server-setup/service-run-celeryd.sh /etc/service/%(prj_name)s-celery/run; chmod a+x /etc/service/%(prj_name)s-celery/run;' % env)
+            # try logrotate
+            with settings(warn_only=True):        
+                run('cp server-setup/logrotate.conf /etc/logrotate.d/website-%(prj_name)s' % env)
+                run('cp server-setup/letsencrypt.conf /etc/letsencrypt/configs/%(cryptdomain)s.conf' % env)
+        with settings(warn_only=True):        
+            run('cd /etc/%(webserver)s/sites-enabled/; ln -s ../sites-available/%(prj_name)s %(prj_name)s' % env)
     
 def install_requirements():
     "Install the required packages from the requirements file using pip"
