@@ -1,1 +1,4 @@
 -r base.txt
+# because Python and OpenSSL are outdated
+ndg-httpsclient
+pyasn1

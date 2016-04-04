@@ -1,11 +1,11 @@
 #MySQL-python # for MySQL
 #psycopg2 # for PostgreSQL
-#pyOpenSSL
-#pycrypto
+pyOpenSSL
+pycrypto
 #python-dateutil
 #pytz
 #reportlab
-#PyYAML # for fixatures
+PyYAML # for fixatures
 
 django
 django-secure
