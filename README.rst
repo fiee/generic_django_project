@@ -130,7 +130,7 @@ to use with django-dotenv-rw_. Don’t forget to tell git to ignore .env files! 
       DATABASE_PASSWORD=secret123
       EMAIL_PASSWORD=secret123
 
-Alternatively add the settings to the end of your virtualenvs_ ``activate`` script ::
+Alternatively add the settings to the end of your virtualenvs_ ``activate`` script: ::
 
       export DJANGO_SETTINGS_MODULE=settings
       export DATABASE_PASSWORD=secret123
@@ -150,12 +150,12 @@ server:
   Otherwise look into that script. This is just a part of the necessary setup:
 
   * create user and sudo-enable it (I suggest via a ``admin`` group, 
-    but you can also add the user to ``sudoers``) ::
+    but you can also add the user to ``sudoers``): ::
 
       adduser project_name --disabled-password --gecos ""
       adduser project_name admin
 
-  * create database user and database (schema) ::
+  * create database user and database (schema): ::
     
       mysql -u root -p
     
@@ -177,7 +177,9 @@ server:
 
 * Open your firewall for tcp 433 (not default on some systems).
 
-* Request a SSL certificate, see e.g. https://www.nginx.com/blog/free-certificates-lets-encrypt-and-nginx/
+* Request a SSL certificate, see e.g. https://www.nginx.com/blog/free-certificates-lets-encrypt-and-nginx/ ::
+
+      sudo /opt/letsencrypt/letsencrypt-auto --config /etc/letsencrypt/configs/www.project_name.de.conf certonly
 
 
 FeinCMS
