@@ -95,7 +95,7 @@ def setup():
             
         # install more Python stuff
         # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
-        sudo('easy_install pip')
+        sudo('easy_install pip') # maybe broken
     
         if env.use_daemontools:
             sudo('apt-get install -y daemontools daemontools-run')
@@ -349,10 +349,13 @@ def install_site():
             # try logrotate
             with settings(warn_only=True):        
                 run('cp server-setup/logrotate.conf /etc/logrotate.d/website-%(prj_name)s' % env)
+                if env.use_celery:
+                    run('cp server-setup/logrotate-celery.conf /etc/logrotate.d/celery' % env)
                 run('cp server-setup/letsencrypt.conf /etc/letsencrypt/configs/%(cryptdomain)s.conf' % env)
         with settings(warn_only=True):        
             run('cd /etc/%(webserver)s/sites-enabled/; ln -s ../sites-available/%(prj_name)s %(prj_name)s' % env)
     
+        
 def install_requirements():
     "Install the required packages from the requirements file using pip"
     require('release', provided_by=[deploy, setup])
@@ -370,6 +373,8 @@ def symlink_current_release():
         run('cd releases/previous/%(prj_name)s; if [ -d migrations ]; then cp -r migrations ../../current/%(prj_name)s/; fi' % env, pty=True)
         # collect static files
         with cd('releases/current/%(prj_name)s' % env):
+            run('rm settings/local.*')  # delete local settings, could also copy webserver to local
+            run('mkdir ../logs')  # needed at start, while it stays empty
             run('%(path)s/bin/python manage.py collectstatic -v0 --noinput' % env, pty=True)
 
     
@@ -392,18 +397,18 @@ def migrate(param=''):
 def restart_webserver():
     "Restart the web server"
     require('webserver')
-    env.webport = '8'+run('id -u', pty=True)[1:]
-    with settings(warn_only=True):
+    #env.webport = '8'+run('id -u', pty=True)[1:]
+    with settings(user=env.adminuser, warn_only=True, pty=True):
         if env.webserver=='nginx':
             require('path')
             if env.use_daemontools:
-                sudo('kill `cat %(path)s/logs/django.pid`' % env, pty=True) # kill process, daemontools will start it again, see service-run.sh
+                run('kill `cat %(path)s/logs/django.pid`' % env) # kill process, daemontools will start it again, see service-run.sh
             if env.use_supervisor:
                 # if you set a process name in supervisor.ini, then you must add it like %(prj_name):appserver
                 if env.use_celery:
-                    sudo('supervisorctl restart %(prj_name)s celery celerybeat' % env, pty=True)
+                    run('supervisorctl restart %(prj_name)s celery celerybeat' % env)
                 else:
-                    sudo('supervisorctl restart %(prj_name)s' % env, pty=True)
+                    run('supervisorctl restart %(prj_name)s' % env)
             #require('prj_name')
             #run('cd %(path)s; bin/python releases/current/manage.py runfcgi method=threaded maxchildren=6 maxspare=4 minspare=2 host=127.0.0.1 port=%(webport)s pidfile=./logs/django.pid' % env)
-        sudo('/etc/init.d/%(webserver)s reload' % env, pty=True)
+        run('/etc/init.d/%(webserver)s reload' % env)
