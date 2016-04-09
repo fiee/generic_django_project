@@ -263,7 +263,7 @@ Modules:
 .. _12-factor: http://12factor.net
 .. _`maintenance page`: http://www.djangocurrent.com/2015/12/automatic-maintenance-page-for.html
 
-.. _LICENSE: blob/master/django_project/LICENSE
+.. _LICENSE: blob/master/reusable_app_project/LICENSE
 .. _makeuser.sh: blob/master/tools/makeuser.sh
 .. _manage.py: blob/master/django_project/manage.py
 .. _settings/base.py: blob/master/django_project/project_name/settings/base.py
