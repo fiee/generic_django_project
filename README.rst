@@ -70,8 +70,9 @@ Details
 Ideas
 -----
 
-* Learn more from `Two Scoops of Django`_, http://djangopatterns.com and 
-  https://github.com/callowayproject/django-app-skeleton
+* Learn more from `Two Scoops of Django`_, http://agiliq.com/books/djangodesignpatterns/,
+  https://github.com/callowayproject/django-app-skeleton,
+  https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 * Include Sphinx template
 * Make ``django-admin.py startproject --template=https://github.com/fiee/generic_django_project/zipball/master --extension=py,rst,html,txt,ini,sh MY_PROJECT`` work
 * Finally learn proper testing
