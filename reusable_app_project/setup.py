@@ -11,14 +11,14 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='reusable_app_project',
     version='0.1',
-    packages=['django_project'],
+    packages=['project_name'],
     include_package_data=True,
     license='BSD License',  # example license
     description='Whatever.',
     long_description=README,
-    url='https://www.example.com/',
+    url='https://www.yourdomain.com/',
     author='Your Name',
-    author_email='yourname@example.com',
+    author_email='you@yourdomain.com',
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -26,10 +26,11 @@ setup(
         'License :: OSI Approved :: BSD License',  # example license
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        # Replace these appropriately if you are stuck on Python 2.
+        # Replace these appropriately
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.2',
-        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
