@@ -21,6 +21,7 @@ palette = [
 ]
 
 questions = [
+    ('project_type', _(u'Type of the project? (django_project, fiee_project, reusable_app)'), 'django_project'),
     ('project_name', _(u'Name of the project? (same as user on webserver and database!)'), 'project_name'),
     ('project_root', _(u'Local project root?'), '~/workspace/'),
     ('server_domain', _(u'Name of your domain? (without server name)'), 'example.com'),
