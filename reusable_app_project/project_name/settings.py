@@ -1,5 +1,6 @@
 # use this as settings.py if you’re writing a reusable app and not a single project
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 
 SOME_SETTING = getattr(settings, '%s_SOME_SETTING' % settings.PROJECT_NAME.upper(), 'this')
 
