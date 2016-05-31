@@ -180,7 +180,7 @@ server:
 
 * Request a SSL certificate, see e.g. https://www.nginx.com/blog/free-certificates-lets-encrypt-and-nginx/ ::
 
-      sudo /opt/letsencrypt/letsencrypt-auto --config /etc/letsencrypt/configs/www.project_name.de.conf certonly
+      sudo /opt/letsencrypt/certbot-auto --config /etc/letsencrypt/configs/www.project_name.de.conf certonly
 
 
 FeinCMS

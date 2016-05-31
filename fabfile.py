@@ -127,8 +127,8 @@ def setup():
         with settings(warn_only=True, pty=True):
             # disable default site
             sudo('cd /etc/%(webserver)s/sites-enabled/; rm default;' % env)
-            # install letsencrypt scripts
-            sudo('git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt; cd /opt/letsencrypt; ./letsencrypt-auto')
+            # install certbot scripts
+            sudo('git clone https://github.com/certbot/certbot /opt/letsencrypt; cd /opt/letsencrypt; ./certbot-auto')
             sudo('cp tools/renew-letsencrypt.sh /etc/cron-monthly/')
     
     # new project setup

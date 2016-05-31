@@ -4,14 +4,14 @@
 
 $LOG = /var/log/letsencrypt/letsencrypt.log
 
-cd /opt/letsencrypt
+cd /opt/certbot
 
 for conf in $(ls /etc/letsencrypt/configs/*.conf); do
 
     date "+%Y-%m-%d %H:%M:%S" >> $LOG
     echo "Renew certificate for $conf:" >> $LOG
 
-    ./letsencrypt-auto --renew --config "$conf" certonly
+    ./certbot-auto certonly --config "$conf" --non-interactive --keep-until-expiring --expand --quiet
 
     if [ $? -ne 0 ]; then
         echo "The Let's Encrypt certificate $conf has not been renewed!" >> $LOG
