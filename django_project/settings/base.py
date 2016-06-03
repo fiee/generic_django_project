@@ -322,10 +322,12 @@ TEMPLATE_LOADERS = (
 # ==============================================================================
 
 try:
-    SECRET_KEY
+    x = SECRET_KEY
 except NameError:
     if DEBUG:
         SECRET_FILE = rel('secret.txt')
+    elif os.path.isdir(rootrel('run')):
+        SECRET_FILE = rootrel('run/secret.txt')
     else:
         SECRET_FILE = rootrel('secret.txt')
     try:
