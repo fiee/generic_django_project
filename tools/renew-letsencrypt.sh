@@ -21,5 +21,6 @@ done
 
 # make sure nginx picks them up
 /etc/init.d/nginx reload
+service nginx reload
 
 exit 0
