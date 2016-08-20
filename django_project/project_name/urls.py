@@ -28,13 +28,15 @@ urlpatterns = patterns('',
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += patterns('',
-        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+        (r'^media/(?P<path>.*)$',
+            'django.views.static.serve', {
             'document_root': settings.STATIC_ROOT,
-            'show_indexes' : True
+            'show_indexes': True
         }),
-        (r'^(media/|static/)?medialibrary/(?P<path>.*)$', 'django.views.static.serve', {
+        (r'^(media/|static/)?medialibrary/(?P<path>.*)$',
+            'django.views.static.serve', {
             'document_root': '%s/medialibrary/' % settings.MEDIA_ROOT,
-            'show_indexes' : True
+            'show_indexes': True
         }),
         (r'^(?P<path>favicon.*)$', 'django.views.static.serve', {
             'document_root': settings.MEDIA_ROOT,
@@ -44,8 +46,8 @@ if settings.DEBUG:
 
 
 urlpatterns += patterns('',
-    #(r'^admin_tools/', include('admin_tools.urls')),
+    # (r'^admin_tools/', include('admin_tools.urls')),
     (r'^admin/', include(admin.site.urls)),    
-    #(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': mysitemaps}),
-    #url(r'', include('feincms.urls')),
+    # (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': mysitemaps}),
+    # url(r'', include('feincms.urls')),
 )

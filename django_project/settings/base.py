@@ -4,11 +4,16 @@
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
-import os, sys
+import os
+import sys
 from django.core.exceptions import ImproperlyConfigured
 
-def _(s):
-    return s
+
+# def _(s):
+#    return s
+# translation needed for date and time format setup
+from django.utils.translation import ugettext_lazy as _
+
 
 def get_env_variable(var_name):
     """Get the environment variable or return exception."""
@@ -18,17 +23,24 @@ def get_env_variable(var_name):
         error_msg = _('Set the %s environment variable.') % var_name
         raise ImproperlyConfigured(error_msg)
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..')) # get out of settings
+BASE_DIR = PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))  # get out of settings
 PROJECT_NAME = os.path.split(PROJECT_ROOT)[-1]
 
+
 def rel(p):
-    return os.path.normpath(os.path.join(PROJECT_ROOT, p)) # this is release and virtualenv dependent
+    # this is release and virtualenv dependent
+    return os.path.normpath(os.path.join(PROJECT_ROOT, p))
+
 
 def rootrel(p):
-    return os.path.normpath(os.path.join('/var/www', PROJECT_NAME, p)) # this is not
+    # this is not
+    return os.path.normpath(os.path.join('/var/www', PROJECT_NAME, p))
 
-sys.path += [PROJECT_ROOT, os.path.join(PROJECT_ROOT,'lib/python2.7/site-packages')]
+
+sys.path += [PROJECT_ROOT, os.path.join(PROJECT_ROOT, 'lib/python2.7/site-packages')]
+
 
 # ==============================================================================
 # debug settings
@@ -53,7 +65,7 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(message)s' # %(process)d %(thread)d 
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'  # %(process)d %(thread)d 
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
@@ -66,17 +78,17 @@ LOGGING = {
      },
     'handlers': {
         'null': {
-            'level':'DEBUG',
-            'class':'logging.NullHandler',
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
         },
-        'console':{
-            'level':'DEBUG',
-            'class':'logging.StreamHandler',
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
-        'file':{
-            'level':'INFO',
-            'class':'logging.handlers.TimedRotatingFileHandler',
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
             'formatter': 'verbose',
             'filename': rootrel('logs/info.log'),
             'when': 'D',
@@ -84,9 +96,9 @@ LOGGING = {
             'backupCount': 4,
             # rotate every 7 days, keep 4 old copies
         },
-        'error_file':{
-            'level':'ERROR',
-            'class':'logging.handlers.TimedRotatingFileHandler',
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
             'formatter': 'verbose',
             'filename': rootrel('logs/error.log'),
             'when': 'D',
@@ -101,12 +113,12 @@ LOGGING = {
         }
     },
     'loggers': {
-        'django': { # django is the catch-all logger. No messages are posted directly to this logger.
-            'handlers':['null', 'error_file'],
+        'django': {  # django is the catch-all logger. No messages are posted directly to this logger.
+            'handlers': ['null', 'error_file'],
             'propagate': True,
-            'level':'INFO',
+            'level': 'INFO',
         },
-        'django.request': { # Log messages related to the handling of requests. 5XX responses are raised as ERROR messages; 4XX responses are raised as WARNING messages.
+        'django.request': {  # Log messages related to the handling of requests. 5XX responses are raised as ERROR messages; 4XX responses are raised as WARNING messages.
             'handlers': ['error_file', 'mail_admins'],
             'level': 'ERROR',
             'propagate': False,
@@ -114,7 +126,7 @@ LOGGING = {
         PROJECT_NAME: {
             'handlers': ['console', 'file', 'error_file', 'mail_admins'],
             'level': 'INFO',
-            #'filters': ['special']
+            # 'filters': ['special']
         }
     }
 }
@@ -127,7 +139,7 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         'LOCATION': '/var/tmp/django_cache/%s' % PROJECT_NAME,
-        'TIMEOUT': 600,
+        'TIMEOUT': 30,
     }
 }
 
@@ -143,9 +155,9 @@ YOUR_DOMAIN = 'example.com' # since I'm getting error messages from stupid clone
 # See https://docs.djangoproject.com/en/1.6/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
                  'localhost',
-                 '.'+YOUR_DOMAIN, # wildcard: all servers on your domain
-                 '.'+YOUR_DOMAIN+'.', # wildcard plus FQDN (see above doc link)
-                 #'www.'+YOUR_DOMAIN,
+                 '.' + YOUR_DOMAIN,  # wildcard: all servers on your domain
+                 '.' + YOUR_DOMAIN + '.',  # wildcard plus FQDN (see above doc link)
+                 # 'www.'+YOUR_DOMAIN,
                  ] + list(INTERNAL_IPS)
 
 ADMINS = (
@@ -172,13 +184,13 @@ EMAIL_USE_TLS = False
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': PROJECT_NAME,                      # Or path to database file if using sqlite3.
-        'USER': PROJECT_NAME,                      # Not used with sqlite3.
-        'PASSWORD': get_env_variable('DATABASE_PASSWORD'),                  # Not used with sqlite3.
-        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                               # Set to empty string for default. Not used with sqlite3.
-        'ATOMIC_REQUESTS': True,                  # Wrap everything in transactions.
+        'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': PROJECT_NAME,  # Or path to database file if using sqlite3.
+        'USER': PROJECT_NAME,  # Not used with sqlite3.
+        'PASSWORD': get_env_variable('DATABASE_PASSWORD'),  # Not used with sqlite3.
+        'HOST': 'localhost',  # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',  # Set to empty string for default. Not used with sqlite3.
+        'ATOMIC_REQUESTS': True,  # Wrap everything in transactions.
     }
 }
 
@@ -192,13 +204,17 @@ DATABASES = {
 # ==============================================================================
 
 TIME_ZONE = 'Europe/Berlin'
-LANGUAGE_CODE = 'de' # 'en-us'
+LANGUAGE_CODE = 'de'  # 'en-us'
 LANGUAGES = (('en', _(u'English')),
              ('de', _(u'German')))
 USE_I18N = True
 USE_L10N = True
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
+
+SHORT_DATE_FORMAT = _('d/m/Y')
+SHORT_DATETIME_FORMAT = _('d/m/Y H:m')
+TIME_FORMAT = _('H:m')
 
 LOCALE_PATHS = (
     rel('locale/'),
@@ -209,7 +225,7 @@ SITE_ID = 1
 ROOT_URLCONF = '%s.urls' % PROJECT_NAME
 
 # Python dotted path to the WSGI application used by Django's runserver.
-#WSGI_APPLICATION = '%s.wsgi.application' % PROJECT_NAME
+# WSGI_APPLICATION = '%s.wsgi.application' % PROJECT_NAME
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -226,11 +242,11 @@ MEDIA_URL = '/'
 STATIC_URL = '/static/'
 STATIC_ROOT = rel('static_collection')
 STATICFILES_DIRS = (
-    rel('static'), 
+    rel('static'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-) #'.../feincms/media',
+)
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
@@ -239,7 +255,7 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-ADMIN_MEDIA_PREFIX = '%sadmin/' % STATIC_URL # Don’t know if that’s still used
+# ADMIN_MEDIA_PREFIX = '%sadmin/' % STATIC_URL  # Don’t know if that’s still used
 
 # ==============================================================================
 # application and middleware settings
@@ -250,22 +266,22 @@ DJANGO_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    #'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'django.contrib.sitemaps',
-    #'django.contrib.humanize',
+    # 'django.contrib.sites',
+    # 'django.contrib.sitemaps',
+    # 'django.contrib.humanize',
 )
 
 THIRD_PARTY_APPS = (
     'djangosecure',
-    #'admin_tools',
-    #'admin_tools.theming',
-    #'admin_tools.menu',
-    #'admin_tools.dashboard',
-    'gunicorn', # not with fcgi
+    # 'admin_tools',
+    # 'admin_tools.theming',
+    # 'admin_tools.menu',
+    # 'admin_tools.dashboard',
+    'gunicorn',
     'mptt',
-    #'tagging',
+    # 'tagging',
     'feincms',
     'feincms.module.page',
     'feincms.module.medialibrary',
@@ -279,9 +295,9 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 
 MIDDLEWARE_CLASSES = [
-    'django.middleware.cache.UpdateCacheMiddleware', # first
-    'django.middleware.gzip.GZipMiddleware', # second after UpdateCache
-    'djangosecure.middleware.SecurityMiddleware', # as first as possible
+    'django.middleware.cache.UpdateCacheMiddleware',  # first
+    'django.middleware.gzip.GZipMiddleware',  # second after UpdateCache
+    'djangosecure.middleware.SecurityMiddleware',  # as first as possible
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -289,10 +305,10 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
-    'django.contrib.admindocs.middleware.XViewMiddleware', # for local IPs
+    'django.contrib.admindocs.middleware.XViewMiddleware',  # for local IPs
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware', # last
+    'django.middleware.cache.FetchFromCacheMiddleware',  # last
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -356,16 +372,13 @@ except NameError:
 # feincms
 FEINCMS_ADMIN_MEDIA = '%sfeincms/' % STATIC_URL
 FEINCMS_ADMIN_MEDIA_HOTLINKING = True
-#FEINCMS_MEDIALIBRARY_ROOT = rootrel('') #'/var/www/project_name/medialibrary/'
-#FEINCMS_MEDIALIBRARY_URL = '/' #'/medialibrary/'
-FEINCMS_RICHTEXT_INIT_TEMPLATE = 'admin/content/richtext/init_tinymce4.html'
+# FEINCMS_MEDIALIBRARY_ROOT = rootrel('') #'/var/www/project_name/medialibrary/'
+# FEINCMS_MEDIALIBRARY_URL = '/' #'/medialibrary/'
+FEINCMS_RICHTEXT_INIT_TEMPLATE = 'admin/content/richtext/tinymce_config.html'
 FEINCMS_RICHTEXT_INIT_CONTEXT = {
     'TINYMCE_JS_URL': STATIC_URL + 'tinymce/js/tinymce/tinymce.min.js',
 }
-FEINCMS_REVERSE_MONKEY_PATCH = False
-
-# schedule
-FIRST_DAY_OF_WEEK = 1
+# FEINCMS_REVERSE_MONKEY_PATCH = False
 
 # admin_tools
 ADMIN_TOOLS_MENU = '%s.menu.CustomMenu' % PROJECT_NAME
@@ -373,11 +386,11 @@ ADMIN_TOOLS_INDEX_DASHBOARD = '%s.dashboard.CustomIndexDashboard' % PROJECT_NAME
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = '%s.dashboard.CustomAppIndexDashboard' % PROJECT_NAME
 
 # django-secure
-SECURE_SSL_REDIRECT=False # if all non-SSL requests should be permanently redirected to SSL.
-SECURE_HSTS_SECONDS=10 # integer number of seconds, if you want to use HTTP Strict Transport Security
-SECURE_HSTS_INCLUDE_SUBDOMAINS=True # if you want to use HTTP Strict Transport Security
-SECURE_FRAME_DENY=True # if you want to prevent framing of your pages and protect them from clickjacking.
-SECURE_CONTENT_TYPE_NOSNIFF=True # if you want to prevent the browser from guessing asset content types.
-SECURE_BROWSER_XSS_FILTER=True # if you want to enable the browser's XSS filtering protections.
-SESSION_COOKIE_SECURE=True # if you are using django.contrib.sessions
-SESSION_COOKIE_HTTPONLY=True # if you are using django.contrib.sessions
+SECURE_SSL_REDIRECT = False  # if all non-SSL requests should be permanently redirected to SSL.
+SECURE_HSTS_SECONDS = 10  # integer number of seconds, if you want to use HTTP Strict Transport Security
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # if you want to use HTTP Strict Transport Security
+SECURE_FRAME_DENY = True  # if you want to prevent framing of your pages and protect them from clickjacking.
+SECURE_CONTENT_TYPE_NOSNIFF = True  # if you want to prevent the browser from guessing asset content types.
+SECURE_BROWSER_XSS_FILTER = True  # if you want to enable the browser's XSS filtering protections.
+SESSION_COOKIE_SECURE = False  # if you are using django.contrib.sessions
+SESSION_COOKIE_HTTPONLY = True  # if you are using django.contrib.sessions

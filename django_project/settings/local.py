@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os
+from __future__ import absolute_import
+# import os
 from .base import *
 
-#PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-#PROJECT_NAME = os.path.split(PROJECT_ROOT)[-1]
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+# PROJECT_NAME = os.path.split(PROJECT_ROOT)[-1]
 
-rootrel = lambda p: os.path.abspath(os.path.join(PROJECT_ROOT, '..', p))
+
+def rootrel(p):
+    # print "local rootrel %s" % p
+    return os.path.abspath(os.path.join(PROJECT_ROOT, p))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -30,24 +34,31 @@ DATABASES = {
     }
 }
 
+FEINCMS_THUMBNAIL_DIR = 'medialibrary/_thumbs/'
 MEDIA_ROOT = rel('media')
+MEDIALIBRARY_ROOT = rel('media') #/medialibrary')
 
 if DEBUG:
-    #INSTALLED_APPS.append('django.contrib.admindocs')
-    #INSTALLED_APPS.append('debug_toolbar')
-    #MIDDLEWARE_CLASSES.append('debug_toolbar.middleware.DebugToolbarMiddleware') # see also http://github.com/robhudson/django-debug-toolbar/blob/master/README.rst
+    # INSTALLED_APPS.append('django.contrib.admindocs')
+    # INSTALLED_APPS.append('debug_toolbar')
+    # MIDDLEWARE_CLASSES.append('debug_toolbar.middleware.DebugToolbarMiddleware') # see also http://github.com/robhudson/django-debug-toolbar/blob/master/README.rst
     LOGGING['handlers']['file'] = {
-                'level':'INFO',
-                'class':'logging.FileHandler',
+                'level': 'INFO',
+                'class': 'logging.FileHandler',
                 'formatter': 'verbose',
                 'filename': rootrel('logs/info.log'),
             }
     LOGGING['handlers']['error_file'] = {
-                'level':'ERROR',
-                'class':'logging.FileHandler',
+                'level': 'ERROR',
+                'class': 'logging.FileHandler',
                 'formatter': 'verbose',
                 'filename': rootrel('logs/error.log'),
             }
 
-SECURE_SSL_REDIRECT=False # if all non-SSL requests should be permanently redirected to SSL.
-SESSION_COOKIE_SECURE=False # if you are using django.contrib.sessions (True blocks admin login)
+SECURE_SSL_REDIRECT = False  # if all non-SSL requests should be permanently redirected to SSL.
+SESSION_COOKIE_SECURE = False  # if you are using django.contrib.sessions (True blocks admin login)
+
+import warnings
+warnings.filterwarnings(
+        'error', r"DateTimeField .* received a naive datetime",
+        RuntimeWarning, r'django\.db\.models\.fields')
