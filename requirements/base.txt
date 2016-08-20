@@ -1,9 +1,9 @@
-#MySQL-python # for MySQL
+#MySQL-python # or mysqlclient
 #psycopg2 # for PostgreSQL
 pyOpenSSL
 pycrypto
 #python-dateutil
-#pytz
+pytz
 #reportlab
 PyYAML # for fixatures
 
@@ -11,7 +11,7 @@ django
 django-secure
 #django-guardian
 #django-registration
-#django-tagging-ng
+#django-tagging
 
 gunicorn
 eventlet # for gunicorn
@@ -19,7 +19,7 @@ setproctitle # for gunicorn
 
 #python-memcached # for memcached cache (you must install that separately)
 
-#Pillow # for feincms medialibrary
+Pillow # for feincms medialibrary
 #django-mptt  # for feincms
 #feincms # see also http://github.com/feincms/feincms
 #django-tinymce
