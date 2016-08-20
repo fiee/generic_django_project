@@ -1,60 +1,111 @@
-{% load cache i18n %}{% get_current_language as LANGUAGE_CODE %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{ LANGUAGE_CODE|default:"en" }}" lang="{{ LANGUAGE_CODE|default:"en" }}">
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>project_name :: {% block title %}{% trans "Home" %}{% endblock %}</title>
-  <!-- YUI is obsolete! And you should host everything yourself, if you use SSL.
-  <link rel="stylesheet" type="text/css" media="all" href="http://yui.yahooapis.com/2.9.0/build/reset-fonts-grids/reset-fonts-grids.css">
-  <link rel="stylesheet" type="text/css" media="all" href="http://yui.yahooapis.com/2.9.0/build/base/base.css">
-  -->
-  <link rel="stylesheet" type="text/css" media="screen,projection" href="{{ STATIC_URL|default:"/static/" }}css/style.css" />
-  <link rel="stylesheet" type="text/css" media="print" href="{{ STATIC_URL|default:"/static/" }}css/print.css" />
-  <!-- <link rel="sitemap" href="/sitemap.xml" type="text/xml" /> -->
-  <!-- <link rel="alternate" type="application/rss+xml" title="{% trans "project_name events" %}" href="/calendar/feed/calendar/upcoming/1/"> -->
-  <link rel="shortcut icon" href="{{ STATIC_URL|default:"/static/" }}favicon.ico" type="image/x-icon" />
-  <link rel="icon" href="{{ STATIC_URL|default:"/static/" }}favicon.ico" type="image/icon" />
-  <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"><!-- better host this yourself -->
-  </script>
+{% load cache i18n %}{% load static from staticfiles %}{% get_current_language as LANGUAGE_CODE %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:"en" }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {# The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags #}
+    <title>project_name :: {% block title %}{% trans "Home" %}{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+    <link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}">
+    <!-- site specific -->
+    <link rel="stylesheet" media="screen,projection" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" media="print" href="{% static "css/print.css" %}">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link rel="sitemap" href="/sitemap.xml" type="text/xml">
+    <!-- <link rel="alternate" type="application/rss+xml" title="{% trans "project_name events" %}" href="/calendar/feed/calendar/upcoming/1/"> -->
+    <link rel="shortcut icon" href="{% static "favicon_16.png" %}" type="image/x-icon">
+    <link rel="icon" href="{% static "favicon_16.png" %}" type="image/png">
+  {{ feincms_page.content.media.css }}
+    <link rel="stylesheet" href="{% static "fancybox/jquery.fancybox.css" %}">
+    <script type="text/javascript">
+        var functions_to_call = [];
+    </script>
   {% block extra_head %}
   {% endblock %}
 </head>
-<body>
-  <div id="doc4" class="yui-t4">
+  <body>
+    <a href="#main_content" class="sr-only sr-only-focusable">{% trans "Skip to main content" %}</a>
     {% block header %}
-    <div id="hd">
+    <header>
+    <nav class="navbar navbar-default navbar-fixed-top" id="mainmenu">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">{% trans "Toggle navigation" %}</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!--<a class="navbar-brand" href="/"><img src="{% static "favicon_16.png" alt="E:KA"></a>-->
+            {% block logo %}
+            <div class="navbar-brand">
+                <a href="/"><img src="{% static "img/logo.png" %}" alt="Logo: project_name" id="logo"></a>
+            </div>
+            {% endblock %}
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            {% block hd_menu_more %}
+            {% endblock %}
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
       {% block hd %}
-        <h1>project_name</h1>
       {% endblock %}
-      {% block hd_menu %}
-        {% include "menus/hd.html" %}
+    </header>
+    {% endblock %}
+    {% block wholecontent %}
+    <div id="bd" class="container">
+      {% block bd %}
+        {% block thumbnav %}
+        {% endblock %}
+    <div class="row">
+      <div id="main_content" class="col-md-8">
+          {% block main_content %}
+          <h1>{% trans "Welcome!" %}</h1>
+          {% endblock %}
+      </div>
+      <div id="sidebar" class="col-md-4">
+        {% include "snippets/messages.html" %}
+        {% block sidebar %}
+        {% endblock %}
+      </div>
+      </div>
       {% endblock %}
     </div>
     {% endblock %}
-    <div id="bd">
-      {% block bd %}
-      <div id="yui-main">
-        <div class="yui-b">
-          {% block main_content %}
-          <h2>{% trans "Welcome!" %}</h2>
-          {% endblock %}
-        </div>
-      </div>
-      <div id="sidebar" class="yui-b">
-        {% block side_menu %}
-          {% include "menus/side.html" %}
-        {% endblock %}
-        {% block sidebar %}
-          {% include "snippets/messages.html" %}
-        {% endblock %}
-      </div>
+    <footer>
+      {% block footer %}
       {% endblock %}
-    </div>
-    <div id="ft">
-      {% block ft %}
-      {% include "snippets/languageselect.html" %}
-      {% endblock %}
-    </div>
-  </div>
-</body>
+    </footer>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11/jquery.min.js"></script>-->
+    <script src="{% static "js/jquery.min.js" %}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    {{ feincms_page.content.media.js }}
+    {# mousewheel for fancybox #}
+    <script src="{% static "js/jquery.mousewheel-3.0.6.pack.js" %}"></script>
+    <script src="{% static "fancybox/jquery.fancybox.pack.js" %}"></script>
+    {% block end_js %}
+    {% endblock %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".fancybox").fancybox();
+            $.each( functions_to_call, function( index, value ){
+                value();
+            });
+        });
+    </script>
+  </body>
 </html>

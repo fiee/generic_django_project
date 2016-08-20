@@ -1,0 +1,14 @@
+{% extends "admin/content/richtext/init_tinymce4.html" %}
+
+{% block settings %}
+            height: '300',
+            {% if TINYMCE_CONTENT_CSS_URL %}content_css: "{{ TINYMCE_CONTENT_CSS_URL }}",{% endif %}
+            {% if TINYMCE_LINK_LIST_URL %}link_list: "{{ TINYMCE_LINK_LIST_URL }}",{% endif %}
+            plugins: "{% block plugins %}fullscreen paste link autolink code{% endblock %}",
+            paste_auto_cleanup_on_paste: true,
+            relative_urls: false,
+            invalid_elements: 'script font',
+            statusbar: false,
+            menubar : false,
+            toolbar: "undo redo | styleselect | bold italic | bullist numlist indent outdent | link | removeformat code",
+{% endblock %}

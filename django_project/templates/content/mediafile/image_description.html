@@ -1,0 +1,5 @@
+<div class="image">
+    <img class="fullsize" src="{{ content.mediafile.file.url }}" alt="{{ content.mediafile.translation.caption }}" {% if content.mediafile.copyright %}title="© {{ content.mediafile.copyright }}"{% endif %} />
+    <h4 class="caption">{{ content.mediafile.translation.caption }}</h4>
+    <p class="description">{{ content.mediafile.translation.description }}</p>
+</div>

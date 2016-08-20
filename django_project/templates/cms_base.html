@@ -1,13 +1,84 @@
 {% extends "root.html" %}
-{% load feincms_tags feincms_page_tags cache i18n %}
+{% load mptt_tags feincms_tags feincms_page_tags cache i18n %}
 
-{% block title %}{{ feincms_page.title }}{% endblock %}
 
-{% block main_content %}
-<div id="breadcrumbs">{% feincms_breadcrumbs feincms_page %}</div>
-<h2>{% block pagetitle %}{{ feincms_page.title }}{% endblock %}</h2>
-{% for content in feincms_page.content.main %}
-	{{ content.render }}
-{% endfor %}
+{% block title %}{{ feincms_page.page_title }}{% endblock %}
 
+
+{% block hd_menu_more %}
+    {% feincms_nav feincms_page level=1 depth=1 as toplevel %}
+    {% for p in toplevel %}
+        {% if p.children.active %}
+            <li class="dropdown">
+                <a href="{{ p.get_absolute_url }}" title="{{ p.title }}"class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    {{ p.title }} <span class="caret"></span>
+                </a>
+            <ul class="dropdown-menu">
+            {% for sp in p.children.active %}
+                <li><a href="{{ sp.get_absolute_url }}" title="{{ sp.title }}">{{ sp.title }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <li><a href="{{ p.get_absolute_url }}" title="{{ p.title }}">{{ p.title }}</a>
+        {% endif %}
+        </li>
+    {% endfor %}
 {% endblock %}
+
+
+{% block wholecontent %}
+<div id="bd" class="container">
+{% block bd %}
+    {% block thumbnav %}
+        {% if feincms_page.get_ancestors %}<nav id="breadcrumbs" class="clear">{% feincms_breadcrumbs feincms_page %}</nav>{% endif %}
+    {% endblock %}
+    <div class="row">
+        <div id="main_content" class="col-md-8">
+            {% block main_content %}
+                <article>
+                <h1>{% block pagetitle %}{{ feincms_page.content_title }}{% endblock %}</h1>
+                {% for content in feincms_page.content.main %}
+                    <section>
+                    {{ content.render }}
+                    </section>
+                {% endfor %}
+                </article>
+            {% endblock %}{# main_content #}
+            {# if the page has children, show them as submenu #}  
+            {% if feincms_page.children %}
+            <hr class="clear"/>
+            <nav id="childrenslist">
+            <ul class="nav">
+            {% for p in feincms_page.children.active %}
+                {% if p.children.all %}
+                <li class="dropdown">
+                    <a href="{{ p.get_absolute_url }}" title="{{ p.title }}"class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        {{ p.title }} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                    {% for sp in p.children.active %}
+                        <li><a href="{{ sp.get_absolute_url }}" title="{{ sp.title }}">{{ sp.title }}</a></li>
+                   {% endfor %}
+                    </ul>
+                </li>
+                {% else %}
+                <li><a href="{{ p.get_absolute_url }}" title="{{ p.title }}">{{ p.title }}</a></li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+            </nav>
+            {% endif %}{# if children #}
+        </div>{# main_content #}
+        <div id="sidebar" class="col-md-4">
+        {% include "snippets/messages.html" %}
+        {% block sidebar %}
+            {% if feincms_page.content.sidebar %}
+                {% feincms_render_region feincms_page "sidebar" request %}
+            {% endif %}
+        {% endblock %}{# sidebar #}
+        </div>{# sidebar #}
+    </div>{# row #}
+    {% endblock %}{# bd #}
+</div>{# bd #}
+{% endblock %}{# wholecontent #}
+

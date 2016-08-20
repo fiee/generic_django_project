@@ -1,12 +1,3 @@
-html {
-	color: black;
-  background-color: #6cf;
-  background: -webkit-gradient(linear, center top, center bottom, from(#cff), to(#6cf));
-  background-attachment: fixed;
-  background-position: top left;
-  background-repeat: no-repeat;
-}
-
 html[lang|="de"] {
     quotes: "\201E" "\201C" "\201A" "\2018";
 }
@@ -35,11 +26,10 @@ q q:before { content:open-quote; }
 q q:after { content:close-quote; }
 
 body {
-	margin: 0 0 0 0;
 	font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
-  text-align: left;
-  font-size: 85%;
-	volume: medium;
+    text-align: left;
+    color: black;
+    volume: medium;
 	voice-family: female;
 	pitch: medium;
 }
@@ -69,42 +59,11 @@ body {
 /* Titles */
 
 h1, h2, h3, h4, h5, legend {
-	font-style: italic;
 	color: #c33;
 	line-height: 1.0;
 	font-weight: bold;
 	page-break-after: avoid;
 	voice-family: male;
-}
-
-h1 {
-	font-size: 182%;
-	margin: 0 0 1em 0;
-}
-
-h2 {
-	font-size: 167%;
-	margin: 0 0 1em 0;
-}
-
-h2.center {
-	font-size: 154%;
-	margin: 0 0 1em 0;
-}
-
-h3 {
-	font-size: 138.5%;
-	margin: 1em 0 1em 0;
-}
-
-h4 {
-	font-size: 116%;
-	margin: 0.5em 0 0.25em 0;
-}
-
-h5, th, dt {
-	font-size: 100%;
-	font-weight:bold;
 }
 
 p, 
@@ -121,6 +80,7 @@ td {
 .hidden, .imagetext {
 	display: none;
 	visibility: hidden;
+	speak: none;
 }
 
 /* Images */
@@ -131,23 +91,30 @@ img {
 }
 
 img.intext-right,
-.intext-right img,
-#yui-main p img {
+.intext-right img {
 	float:right;
 	max-width: 300px;
 	margin-left: 2em;
 }
 
-img.logotop {
-	float:left;
-	padding: 0 20px 0 20px;
-	max-height: 110px;
-	max-width: 50%;
-	vertical-align: middle;
-}
-
 .image, .image_center {
 	padding: 1em 0 1em 0;
+}
+
+.caption, .description {
+    display: block;
+    padding: 0.5em 0 0 0.5em;
+    font-size: 80%;
+}
+
+.description {
+    padding: 0 0 0 0.5em; 
+}
+
+img.gallery {
+    float: left;
+    margin: 0 0.5em 0.5em 0;
+    box-shadow: 0 0 6px #aaa;
 }
 
 /* Lists */
@@ -188,6 +155,15 @@ li li li {
 	margin-left: 4.5em;
 }
 
+.h-card ul {
+    margin-left: -2.4em;
+    font-size: 80%;
+}
+
+.h-card ul li {
+    list-style-type: none;
+}
+
 /* Links */
 
 a:link, 
@@ -209,7 +185,7 @@ a img, a:link img, a:visited img, a:active img {
 	border-bottom: none !important;
 }
 
-/* Auszeichnungen */
+/* Emphasis */
 
 i, em {
 	font-style: italic;
@@ -241,24 +217,13 @@ input, textarea {
 
 /* Microformats */
 
-.vcard {
-	font-size: 85%;
-	margin: 1em 0 1em 0;
-}
-
-.vcard .type {
+.vcard .type, .h-card .type {
   display: none;
 }
 
 .vcard .n div,
-.vcard .postal-code {
+.vcard .postal-code,
+.h-card .postal-code {
 	display: inline;
 }
 
-/* Areas */
-
-#breadcrumbs {
-	font-size: 85%;
-	position: relative;
-	top: -3em;
-}

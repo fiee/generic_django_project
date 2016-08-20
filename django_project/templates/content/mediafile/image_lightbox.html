@@ -1,0 +1,3 @@
+{% load feincms_thumbnail %}<span class="lightbox-image">
+    <a href="{{ content.mediafile.file.url }}" rel="lightbox"><img src="{{ content.mediafile.file|thumbnail:"100x180" }}" class="gallery" alt="{{ content.mediafile.translation.caption }}" /></a>
+</span>

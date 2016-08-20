@@ -1,0 +1,4 @@
+{% load feincms_thumbnail %}
+<a href="{{ content.mediafile.file.url }}" rel="gallery" class="fancybox" title="{{ content.mediafile.translation.caption }}{% if content.mediafile.copyright %} © {{ content.mediafile.copyright }}{% endif %}" >
+  <img src="{{ content.mediafile.file|thumbnail:"100x180" }}" class="gallery" alt="{{ content.mediafile.translation.caption }}" />
+</a>
