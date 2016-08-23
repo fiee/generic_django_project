@@ -1,0 +1,2 @@
+# http://humanstxt.org
+This project was based on "generic_django_project" (https://github.com/fiee/generic_django_project)
