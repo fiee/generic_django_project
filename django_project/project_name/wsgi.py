@@ -13,7 +13,7 @@ middleware here, or combine a Django application with an application of another
 framework.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
+https://docs.djangoproject.com/en/1.10/howto/deployment/wsgi/
 """
 import os
 
