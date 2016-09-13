@@ -333,30 +333,7 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-# ==============================================================================
-# the secret key
-# ==============================================================================
-
-try:
-    x = SECRET_KEY
-except NameError:
-    if DEBUG:
-        SECRET_FILE = rel('secret.txt')
-    elif os.path.isdir(rootrel('run')):
-        SECRET_FILE = rootrel('run/secret.txt')
-    else:
-        SECRET_FILE = rootrel('secret.txt')
-    try:
-        SECRET_KEY = open(SECRET_FILE).read().strip()
-    except IOError:
-        try:
-            from random import choice
-            SECRET_KEY = ''.join([choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50)])
-            secret = file(SECRET_FILE, 'w')
-            secret.write(SECRET_KEY)
-            secret.close()
-        except IOError:
-            Exception(_(u'Please create a %s file with random characters to generate your secret key!' % SECRET_FILE))
+SECRET_KEY = get_env_variable('SECRET_KEY')
 
 # ==============================================================================
 # third party
