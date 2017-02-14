@@ -8,7 +8,6 @@ pytz
 PyYAML # for fixatures
 
 django
-django-secure
 #django-guardian
 #django-registration
 #django-tagging

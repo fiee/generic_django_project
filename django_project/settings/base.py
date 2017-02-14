@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
+https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 import os
 import sys
@@ -49,8 +49,6 @@ sys.path += [PROJECT_ROOT, os.path.join(PROJECT_ROOT, 'lib/python2.7/site-packag
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 INTERNAL_IPS = ('127.0.0.1',)
-if DEBUG:
-    TEMPLATE_STRING_IF_INVALID = _(u'STRING_NOT_SET')
 
 # logging: see
 # http://docs.djangoproject.com/en/dev/topics/logging/
@@ -172,11 +170,11 @@ SERVER_EMAIL = 'error-notify@%s' % YOUR_DOMAIN
 
 EMAIL_SUBJECT_PREFIX = '[%s] ' % PROJECT_NAME
 EMAIL_HOST = 'mail.%s' % YOUR_DOMAIN
-EMAIL_PORT = 25
+EMAIL_PORT = 587
 EMAIL_HOST_USER = '%s@%s' % (PROJECT_NAME, YOUR_DOMAIN)
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_PASSWORD')
-EMAIL_USE_TLS = False
+EMAIL_USE_TLS = True
 
 # ==============================================================================
 # database settings
@@ -191,6 +189,9 @@ DATABASES = {
         'HOST': 'localhost',  # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',  # Set to empty string for default. Not used with sqlite3.
         'ATOMIC_REQUESTS': True,  # Wrap everything in transactions.
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
 
@@ -274,7 +275,6 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
-    'djangosecure',
     # 'admin_tools',
     # 'admin_tools.theming',
     # 'admin_tools.menu',
@@ -297,7 +297,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE_CLASSES = [
     'django.middleware.cache.UpdateCacheMiddleware',  # first
     'django.middleware.gzip.GZipMiddleware',  # second after UpdateCache
-    'djangosecure.middleware.SecurityMiddleware',  # as first as possible
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -364,7 +364,7 @@ ADMIN_TOOLS_APP_INDEX_DASHBOARD = '%s.dashboard.CustomAppIndexDashboard' % PROJE
 
 # django-secure
 SECURE_SSL_REDIRECT = False  # if all non-SSL requests should be permanently redirected to SSL.
-SECURE_HSTS_SECONDS = 10  # integer number of seconds, if you want to use HTTP Strict Transport Security
+SECURE_HSTS_SECONDS = 60  # integer number of seconds, if you want to use HTTP Strict Transport Security
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # if you want to use HTTP Strict Transport Security
 SECURE_FRAME_DENY = True  # if you want to prevent framing of your pages and protect them from clickjacking.
 SECURE_CONTENT_TYPE_NOSNIFF = True  # if you want to prevent the browser from guessing asset content types.
