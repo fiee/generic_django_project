@@ -3,6 +3,8 @@
 import os
 import sys
 import dotenv
+import logging
+logging.captureWarnings(True)  # dotenv uses warnings
 
 current_dir = os.path.dirname(__file__)
 # try to load .env file from current directory (I use that in development); 
