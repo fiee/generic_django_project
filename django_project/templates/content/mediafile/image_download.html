@@ -1,4 +1,5 @@
-{% load feincms_tags %}<span class="download">
+{% load feincms_thumbnail %}
+<span class="download">
     <a href="{{ content.mediafile.file.url }}" target="_blank"><img src="{{ content.mediafile.file.url|thumbnail:"100x100" }}" alt="{{ content.mediafile.translation.caption }}" />
     <span class="caption hidden">{{ content.mediafile.translation.caption }}</span></a>
 </span>
