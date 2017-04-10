@@ -150,7 +150,7 @@ USE_ETAGS = True
 YOUR_DOMAIN = 'example.com' # since I'm getting error messages from stupid cloners...
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
-# See https://docs.djangoproject.com/en/1.6/ref/settings/#allowed-hosts
+# See https://docs.djangoproject.com/en/1.10/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
                  'localhost',
                  '.' + YOUR_DOMAIN,  # wildcard: all servers on your domain
@@ -194,11 +194,6 @@ DATABASES = {
         },
     }
 }
-
-#import dj_database_url
-#DATABASES = {}
-#DATABASES['default'] = dj_database_url.config()
-
 
 # ==============================================================================
 # i18n and url settings
@@ -311,27 +306,36 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.cache.FetchFromCacheMiddleware',  # last
 ]
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.request',
-    'django.core.context_processors.static',
-    'django.contrib.messages.context_processors.messages',
-)
 
-TEMPLATE_DIRS = (
-    os.path.join(PROJECT_ROOT, 'templates'),
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(PROJECT_ROOT, 'templates'), ],
+        # 'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                # 'feincms.context_processors.add_page_if_missing',
+                # uncomment to enable for FeinCMS navigation also in other views
+            ],
+            'loaders': [
+                ('django.template.loaders.cached.Loader', (
+                    'django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                    # 'django.template.loaders.eggs.Loader',
+                    # 'admin_tools.template_loaders.Loader',
+                )),
+            ],
+        },
+    },
+]
 
-TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-#       'django.template.loaders.eggs.Loader',
-    )),
-)
 
 SECRET_KEY = get_env_variable('SECRET_KEY')
 
