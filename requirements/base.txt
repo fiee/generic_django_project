@@ -26,7 +26,8 @@ Pillow # for feincms medialibrary
 
 #dj_database_url # see https://github.com/kennethreitz/dj-database-url
 
-git+http://github.com/tedtieken/django-dotenv-rw.git
+django-dotenv
+#git+http://github.com/tedtieken/django-dotenv-rw.git
 
 # for celery:
 #librabbitmq
