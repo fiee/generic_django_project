@@ -1,5 +1,5 @@
 {% load cache i18n %}{% load static from staticfiles %}{% get_current_language as LANGUAGE_CODE %}<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE|default:"en" }}">
+<html lang="{{ LANGUAGE_CODE|default:'en' }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,11 +8,11 @@
     <title>project_name :: {% block title %}{% trans "Home" %}{% endblock %}</title>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
-    <link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}">
     <!-- site specific -->
-    <link rel="stylesheet" media="screen,projection" href="{% static "css/style.css" %}">
-    <link rel="stylesheet" media="print" href="{% static "css/print.css" %}">
+    <link rel="stylesheet" media="screen,projection" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" media="print" href="{% static 'css/print.css' %}">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -21,11 +21,11 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <link rel="sitemap" href="/sitemap.xml" type="text/xml">
-    <!-- <link rel="alternate" type="application/rss+xml" title="{% trans "project_name events" %}" href="/calendar/feed/calendar/upcoming/1/"> -->
-    <link rel="shortcut icon" href="{% static "favicon_16.png" %}" type="image/x-icon">
-    <link rel="icon" href="{% static "favicon_16.png" %}" type="image/png">
+    <!-- <link rel="alternate" type="application/rss+xml" title="{% trans 'project_name events' %}" href="/calendar/feed/calendar/upcoming/1/"> -->
+    <link rel="shortcut icon" href="{% static 'favicon_16.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'favicon_16.png' %}" type="image/png">
   {{ feincms_page.content.media.css }}
-    <link rel="stylesheet" href="{% static "fancybox/jquery.fancybox.css" %}">
+    <link rel="stylesheet" href="{% static 'fancybox/jquery.fancybox.css' %}">
     <script type="text/javascript">
         var functions_to_call = [];
     </script>
@@ -48,13 +48,15 @@
           <!--<a class="navbar-brand" href="/"><img src="{% static "favicon_16.png" alt="E:KA"></a>-->
             {% block logo %}
             <div class="navbar-brand">
-                <a href="/"><img src="{% static "img/logo.png" %}" alt="Logo: project_name" id="logo"></a>
+                <a href="/"><img src="{% static 'img/logo.png' %}" alt="Logo: project_name" id="logo"></a>
             </div>
             {% endblock %}
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             {% block hd_menu_more %}
+            {# You can move this block from cms_base in here if you use FeinCMS
+               to get the page menu also in your own views #}
             {% endblock %}
           </ul>
         </div><!--/.nav-collapse -->
@@ -90,13 +92,13 @@
     </footer>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11/jquery.min.js"></script>-->
-    <script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
     {{ feincms_page.content.media.js }}
     {# mousewheel for fancybox #}
-    <script src="{% static "js/jquery.mousewheel-3.0.6.pack.js" %}"></script>
-    <script src="{% static "fancybox/jquery.fancybox.pack.js" %}"></script>
+    <script src="{% static 'js/jquery.mousewheel-3.0.6.pack.js' %}"></script>
+    <script src="{% static 'fancybox/jquery.fancybox.pack.js' %}"></script>
     {% block end_js %}
     {% endblock %}
     <script type="text/javascript">
