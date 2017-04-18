@@ -141,7 +141,8 @@ CACHES = {
     }
 }
 
-USE_ETAGS = True
+CACHE_MIDDLEWARE_SECONDS = CACHES['default']['TIMEOUT']
+CACHE_MIDDLEWARE_KEY_PREFIX = PROJECT_NAME
 
 # ==============================================================================
 # email and error-notify settings
@@ -191,6 +192,7 @@ DATABASES = {
         'ATOMIC_REQUESTS': True,  # Wrap everything in transactions.
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'isolation_level': 'read committed',
         },
     }
 }
