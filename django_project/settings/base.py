@@ -284,6 +284,12 @@ THIRD_PARTY_APPS = (
     'feincms.module.medialibrary',
 )
 
+MIGRATION_MODULES = {
+    'page': '%s.migrate.page' % PROJECT_NAME,
+    'medialibrary': '%s.migrate.medialibrary' % PROJECT_NAME,
+    # 'plata': '%s.migrate.plata' % PROJECT_NAME,
+}
+
 LOCAL_APPS = (
     PROJECT_NAME,
 )
