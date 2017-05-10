@@ -126,7 +126,7 @@ as environment variables to avoid to have them in version control.
 I suggest to go the *dotenv* route:
 
 Put your settings into a ``.env`` file in the ``django_project`` directory,
-to use with django-dotenv-rw_. Don’t forget to tell git to ignore .env files! ::
+to use with django-dotenv_. Don’t forget to tell git to ignore .env files! ::
 
       DJANGO_SETTINGS_MODULE=settings
       DATABASE_PASSWORD=secret123
@@ -144,7 +144,7 @@ server:
 
 * Create the user
 
-  I suggest to copy ``makeuser.sh``_ to your webserver’s root/admin account 
+  I suggest to copy makeuser.sh_ to your webserver’s root/admin account 
   and use it to create system and database accounts.
   
       scp makeuser.sh root@www.yourdomain.tld:/root/bin/
@@ -188,15 +188,11 @@ FeinCMS
 -------
 
 If you use FeinCMS’ Page, consider *first*, which extensions you’ll need – 
-see the docs__ – the migration is somewhat tricky.
-
-.. __: http://feincms-django-cms.readthedocs.io/en/latest/page.html#module-feincms.module.page.extension
+see `the docs <http://feincms-django-cms.readthedocs.io/en/latest/page.html#module-feincms.module.page.extension>`_ – the migration is somewhat tricky.
 
 Since the setup requires monkey patching FeinCMS’s models, you must pull their
-migrations into your app, as outlined in their docs__.
-The same is true for Plata__.
-
-.. __: http://feincms-django-cms.readthedocs.io/en/latest/migrations.html
+migrations into your app, as outlined in `the docs <http://feincms-django-cms.readthedocs.io/en/latest/migrations.html>`_.
+The same is true for Plata_.
 
 Have a look at Feinheit’s FeinCMS compatible apps, content types and plugins:
 ElephantBlog_, Plata_, form_designer_ etc.
@@ -265,20 +261,20 @@ Modules:
 .. _virtualenvs: http://virtualenv.readthedocs.org/
 .. _Redis: http://redis.io
 .. _`Two Scoops of Django`: http://twoscoopspress.org/products/two-scoops-of-django-1-6
-.. _django-dotenv-rw: http://github.com/tedtieken/django-dotenv-rw
+.. _django-dotenv: https://pypi.python.org/pypi/django-dotenv/
 .. _12-factor: http://12factor.net
 .. _`maintenance page`: http://www.djangocurrent.com/2015/12/automatic-maintenance-page-for.html
 
 .. _LICENSE: blob/master/reusable_app_project/LICENSE
 .. _makeuser.sh: blob/master/tools/makeuser.sh
 .. _manage.py: blob/master/django_project/manage.py
-.. _settings/base.py: blob/master/django_project/project_name/settings/base.py
-.. _settings/local.py: blob/master/django_project/project_name/settings/local.py
-.. _gunicorn-settings.py: blob/master/deploy/gunicorn-settings.py
+.. _base.py: blob/master/django_project/project_name/settings/base.py
+.. _local.py: blob/master/django_project/project_name/settings/local.py
+.. _gunicorn-settings.py: blob/master/server-setup/gunicorn-settings.py
 .. _fabfile.py: blob/master/fabfile.py
-.. _supervisor.ini: blob/master/deploy/supervisor.ini
-.. _service-run.sh: blob/master/deploy/service-run.sh
-.. _nginx.conf: blob/master/deploy/nginx.conf
+.. _supervisor.conf: blob/master/server-setup/supervisor.ini
+.. _service-run.sh: blob/master/server-setup/service-run.sh
+.. _nginx.conf: blob/master/server-setup/nginx.conf
 
 .. _SSLLabs: https://www.ssllabs.com/ssltest/
 
