@@ -51,6 +51,7 @@ starting new django projects, I’m always far behind.
   use at your own risk.
 * Since I update this template after experiences with my actual sites,
   the commits are often not atomic.
+* I handle migrations wrongly, will try to fix soon.
 * pip-installed requirements are not fixed on a version.
 * I could also support runit_, but I didn't want to replace init.
 * I’m not using daemontools_ any more, so its configuration is outdated.
@@ -115,8 +116,8 @@ local:
   The 2-clause BSD license is just a suggestion.
 * Set up an email account for your project’s error messages and configure it
   in settings/base.py_ and .env
-* ``git init``, always commit all changes
 * ``manage migrate`` (initialize migrations)
+* ``git init``, always commit all changes
 * ``fab webserver setup`` (once)
 * ``fab webserver deploy`` (publish new release - always last committed version!)
 
@@ -187,18 +188,21 @@ FeinCMS
 -------
 
 If you use FeinCMS’ Page, consider *first*, which extensions you’ll need – 
-see the docs__ and the FAQ__ –
-afterwards you would need to change the database table ``page_page`` by hand, 
-since the changes aren’t always detected by migration!
+see the docs__ – the migration is somewhat tricky.
 
-.. __: http://www.feinheit.ch/media/labs/feincms/page.html#module-feincms.module.page.extension
-.. __: http://www.feinheit.ch/media/labs/feincms/faq.html#i-run-syncdb-and-get-a-message-about-missing-columns-in-the-page-table
+.. __: http://feincms-django-cms.readthedocs.io/en/latest/page.html#module-feincms.module.page.extension
+
+Since the setup requires monkey patching FeinCMS’s models, you must pull their
+migrations into your app, as outlined in their docs__.
+The same is true for Plata__.
+
+.. __: http://feincms-django-cms.readthedocs.io/en/latest/migrations.html
 
 Have a look at Feinheit’s FeinCMS compatible apps, content types and plugins:
-ElephantBlog_, form_designer_, feincms_gallery_ etc.
+ElephantBlog_, Plata_, form_designer_ etc.
 
-At the moment (April 2016) the released version of FeinCMS isn’t yet compatible
-with Django 1.9; you must use the git checkout.
+Instead of FeinCMS’s medialibrary, consider to use django-filer_ instead,
+there’s some support for it in FeinCMS, but not yet here.
 
 
 ---------------
@@ -239,10 +243,11 @@ Modules:
 .. _Django: http://www.djangoproject.com/
 .. _Fabric: http://docs.fabfile.org
 .. _fabfile: http://docs.fabfile.org
-.. _South: http://south.aeracode.org/
+.. _django-filer: https://django-filer.readthedocs.io
 .. _MPTT: http://github.com/django-mptt/django-mptt
 .. _FeinCMS: http://github.com/feincms/feincms
-.. _medialibrary: http://www.feinheit.ch/media/labs/feincms/medialibrary.html
+.. _medialibrary: http://feincms-django-cms.readthedocs.io/en/latest/medialibrary.html
+.. _Plata: https://github.com/fiee/plata
 .. _ElephantBlog: https://github.com/feincms/feincms-elephantblog
 .. _form_designer: https://github.com/feincms/form_designer
 .. _feincms_gallery: https://github.com/feinheit/feincms_gallery
