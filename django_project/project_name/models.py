@@ -22,9 +22,9 @@ Page.register_templates({
 
 
 Page.register_extensions(
-    'feincms.module.extensions.changedate', # add creation and modification date to pages
-    'feincms.module.extensions.datepublisher', # define when pages get visible
-    'feincms.module.extensions.translations' # translations
+    'feincms.extensions.changedate', # add creation and modification date to pages
+    'feincms.extensions.datepublisher', # define when pages get visible
+    'feincms.extensions.translations' # translations
 ) # Example set of extensions
 # consider ct_tracker, if you use more than three content types
 
