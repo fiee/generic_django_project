@@ -19,7 +19,7 @@ Requirements
 * local OS: MacOS X (only some local settings are OSX specific)
 * web server: Nginx/gunicorn or Nginx/fcgi
 * Python_ version: 2.7 or 3.x
-* Django_ version: 1.9 (1.6+ should work)
+* Django_ version: 1.9+ (1.6+ should work)
 * FeinCMS_ version: 1.5+
 * version control: Git_
 * deployment tool: Fabric_
@@ -76,6 +76,7 @@ Ideas
   https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 * Include Sphinx template
 * Make ``django-admin.py startproject --template=https://github.com/fiee/generic_django_project/zipball/master --extension=py,rst,html,txt,ini,sh MY_PROJECT`` work
+* Maybe use cookiecutter. Investigate other deployment tools.
 * Finally learn proper testing
 * Split templates for simple site, cerebrale site, reusable app
 
@@ -116,7 +117,13 @@ local:
   The 2-clause BSD license is just a suggestion.
 * Set up an email account for your project’s error messages and configure it
   in settings/base.py_ and .env
-* ``manage migrate`` (initialize migrations)
+* cd into your project directory, ``virtualenv .``
+  (create virtual environment; make sure you use the right version)
+* ``. bin/activate`` (activate virtual environment)
+* ``bin/pip install -r requirements/local.txt`` (install requirements)
+* ``cd <project_name>``
+* ``vi .env`` (create .env file, see below)
+* ``./manage.py migrate`` (initialize migrations)
 * ``git init``, always commit all changes
 * ``fab webserver setup`` (once)
 * ``fab webserver deploy`` (publish new release - always last committed version!)
@@ -129,12 +136,14 @@ Put your settings into a ``.env`` file in the ``django_project`` directory,
 to use with django-dotenv_. Don’t forget to tell git to ignore .env files! ::
 
       DJANGO_SETTINGS_MODULE=settings
+      SECRET_KEY=secret123
       DATABASE_PASSWORD=secret123
       EMAIL_PASSWORD=secret123
 
 Alternatively add the settings to the end of your virtualenvs_ ``activate`` script: ::
 
       export DJANGO_SETTINGS_MODULE=settings
+      export SECRET_KEY=secret123
       export DATABASE_PASSWORD=secret123
       export EMAIL_PASSWORD=secret123
 
@@ -176,6 +185,8 @@ server:
 
 * Create your ``.env`` file at ``/var/www/project_name`` 
   (or use virtualenvs_’ ``activate`` script), see above.
+
+* publish your project (``fab webserver setup``)
 
 * Open your firewall for tcp 433 (not default on some systems).
 
