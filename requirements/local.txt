@@ -1,5 +1,3 @@
 -r base.txt
 
-Fabric
-django-debug-toolbar
-# see also http://procrastinatingdev.com/django/my-requirements-txt/
+fabric # pulls in invoke and paramiko
