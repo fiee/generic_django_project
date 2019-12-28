@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.10/ref/settings/
+https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import os
 import sys
@@ -63,7 +63,7 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'  # %(process)d %(thread)d 
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'  # %(process)d %(thread)d
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
@@ -119,6 +119,11 @@ LOGGING = {
         'django.request': {  # Log messages related to the handling of requests. 5XX responses are raised as ERROR messages; 4XX responses are raised as WARNING messages.
             'handlers': ['error_file', 'mail_admins'],
             'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.server': { # for "runserver" since 1.10
+            'handlers': ['django.server'],
+            'level': 'INFO',
             'propagate': False,
         },
         PROJECT_NAME: {
@@ -281,12 +286,12 @@ THIRD_PARTY_APPS = (
     # 'tagging',
     'feincms',
     'feincms.module.page',
-    'feincms.module.medialibrary',
+    #'feincms.module.medialibrary',
 )
 
 MIGRATION_MODULES = {
     'page': '%s.migrate.page' % PROJECT_NAME,
-    'medialibrary': '%s.migrate.medialibrary' % PROJECT_NAME,
+    # 'medialibrary': '%s.migrate.medialibrary' % PROJECT_NAME,
     # 'plata': '%s.migrate.plata' % PROJECT_NAME,
 }
 
@@ -373,13 +378,3 @@ FEINCMS_RICHTEXT_INIT_CONTEXT = {
 ADMIN_TOOLS_MENU = '%s.menu.CustomMenu' % PROJECT_NAME
 ADMIN_TOOLS_INDEX_DASHBOARD = '%s.dashboard.CustomIndexDashboard' % PROJECT_NAME
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = '%s.dashboard.CustomAppIndexDashboard' % PROJECT_NAME
-
-# django-secure
-SECURE_SSL_REDIRECT = False  # if all non-SSL requests should be permanently redirected to SSL.
-SECURE_HSTS_SECONDS = 60  # integer number of seconds, if you want to use HTTP Strict Transport Security
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # if you want to use HTTP Strict Transport Security
-SECURE_FRAME_DENY = True  # if you want to prevent framing of your pages and protect them from clickjacking.
-SECURE_CONTENT_TYPE_NOSNIFF = True  # if you want to prevent the browser from guessing asset content types.
-SECURE_BROWSER_XSS_FILTER = True  # if you want to enable the browser's XSS filtering protections.
-SESSION_COOKIE_SECURE = False  # if you are using django.contrib.sessions
-SESSION_COOKIE_HTTPONLY = True  # if you are using django.contrib.sessions
