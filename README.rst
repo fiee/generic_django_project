@@ -2,12 +2,12 @@
 generic django project
 ======================
 
-This is my starting point for a new Django_ site, mixed and stirred from several 
+This is my starting point for a new Django_ site, mixed and stirred from several
 public sources and spiced with my own enhancements.
 
 I normally work with FeinCMS_ and its medialibrary_, this is reflected in my setups.
 
-My webserver of choice is Nginx_ with gunicorn_, since my virtual server is 
+My webserver of choice is Nginx_ with gunicorn_, since my virtual server is
 always low on memory.
 
 
@@ -17,25 +17,28 @@ Requirements
 
 * server OS: Debian/Ubuntu based Linux
 * local OS: MacOS X (only some local settings are OSX specific)
-* web server: Nginx/gunicorn or Nginx/fcgi
-* Python_ version: 2.7 or 3.x
-* Django_ version: 1.9+ (1.6+ should work)
-* FeinCMS_ version: 1.5+
+* web server: Nginx/gunicorn
+* Python_ version: 3.7+
+* Django_ version: 3.0+
+* FeinCMS_ version: 1.17+
 * version control: Git_
 * deployment tool: Fabric_
 * local development database: SQLite3_
-* server database: MySQL_ or PostgreSQL_
-* process control (optional): supervisord_ or daemontools_ 
+* server database: MySQL_ / MariaDb
+* process control (optional): supervisord_
 
 
 ---------
 Rationale
 ---------
 
-Django’s `startproject` doesn’t do enough. I’m a programmer, thus lazy, 
+I don’t know if this still makes sense, but while I update some sites
+from Django 1.9 to 3.0 I also update this.
+
+Django’s `startproject` doesn’t do enough. I’m a programmer, thus lazy,
 and try to reduce redundant work like repeating the same setup steps over and over. (DRY)
 
-Just copying/cloning this generic project to a new site isn’t ideal either, 
+Just copying/cloning this generic project to a new site isn’t ideal either,
 since general changes don’t affect all dependent sites, but I got no idea how to do that.
 
 
@@ -43,25 +46,24 @@ since general changes don’t affect all dependent sites, but I got no idea how 
 Issues
 ------
 
-I’m trying to keep this current and to implement what I learn from my actual 
-projects and best practice advise. But since I mostly do other things than 
+I’m trying to keep this current and to implement what I learn from my actual
+projects and best practice advise. But since I mostly do other things than
 starting new django projects, I’m always far behind.
 
-* While I try to adhere to best practices, there are probably security holes - 
+* While I try to adhere to best practices, there are probably security holes -
   use at your own risk.
 * Since I update this template after experiences with my actual sites,
   the commits are often not atomic.
 * I handle migrations wrongly, will try to fix soon.
 * pip-installed requirements are not fixed on a version.
 * I could also support runit_, but I didn't want to replace init.
-* I’m not using daemontools_ any more, so its configuration is outdated.
 
 
 -------
 Details
 -------
 
-* gunicorn runs internally on an unix socket, because I find file locations 
+* gunicorn runs internally on an unix socket, because I find file locations
   easier to control than server ports.
 * I’m integrating Let’s Encrypt certificates and automating their renewal.
 * My nginx settings get an A+ rating at SSLLabs_
@@ -73,12 +75,12 @@ Ideas
 
 * Learn more from `Two Scoops of Django`_, http://agiliq.com/books/djangodesignpatterns/,
   https://github.com/callowayproject/django-app-skeleton,
-  https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
+  https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 * Include Sphinx template
 * Make ``django-admin.py startproject --template=https://github.com/fiee/generic_django_project/zipball/master --extension=py,rst,html,txt,ini,sh MY_PROJECT`` work
 * Maybe use cookiecutter. Investigate other deployment tools.
 * Finally learn proper testing
-* Split templates for simple site, cerebrale site, reusable app
+* Split templates for simple site, celery site, reusable app
 
 
 -------
@@ -104,7 +106,7 @@ local:
 ------
 
 * Copy ``generic_django_project``
-* Rename "django_project" (this would be the project root as created by 
+* Rename "django_project" (this would be the project root as created by
   ``django-admin.py startproject``)
 * Replace all occurrences of lowercase "project_name" with your project name.
   This is also the webserver and database server username!
@@ -153,37 +155,37 @@ server:
 
 * Create the user
 
-  I suggest to copy makeuser.sh_ to your webserver’s root/admin account 
+  I suggest to copy makeuser.sh_ to your webserver’s root/admin account
   and use it to create system and database accounts.
-  
+
       scp makeuser.sh root@www.yourdomain.tld:/root/bin/
-  
+
   Otherwise look into that script. This is just a part of the necessary setup:
 
-  * create user and sudo-enable it (I suggest via a ``admin`` group, 
+  * create user and sudo-enable it (I suggest via a ``admin`` group,
     but you can also add the user to ``sudoers``): ::
 
       adduser project_name --disabled-password --gecos ""
       adduser project_name admin
 
   * create database user and database (schema): ::
-    
+
       mysql -u root -p
-    
-      # at first setup only: we installed MySQL without user interaction, 
+
+      # at first setup only: we installed MySQL without user interaction,
       # so there’s no root password. Set it!
       use mysql;
       update user set password=password('...') where user='root';
-    
+
       # create user and database for our project:
       create user 'project_name'@'localhost' identified by '...';
       create database project_name character set 'utf8';
       grant all privileges on project_name.* to 'project_name'@'localhost';
-    
+
       flush privileges;
       quit;
 
-* Create your ``.env`` file at ``/var/www/project_name`` 
+* Create your ``.env`` file at ``/var/www/project_name``
   (or use virtualenvs_’ ``activate`` script), see above.
 
 * publish your project (``fab webserver setup``)
@@ -198,7 +200,7 @@ server:
 FeinCMS
 -------
 
-If you use FeinCMS’ Page, consider *first*, which extensions you’ll need – 
+If you use FeinCMS’ Page, consider *first*, which extensions you’ll need –
 see `the docs <http://feincms-django-cms.readthedocs.io/en/latest/page.html#module-feincms.module.page.extension>`_ – the migration is somewhat tricky.
 
 Since the setup requires monkey patching FeinCMS’s models, you must pull their
@@ -288,4 +290,3 @@ Modules:
 .. _nginx.conf: blob/master/server-setup/nginx.conf
 
 .. _SSLLabs: https://www.ssllabs.com/ssltest/
-

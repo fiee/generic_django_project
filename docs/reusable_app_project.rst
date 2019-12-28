@@ -2,7 +2,7 @@
 Reusable App
 ============
 
-see https://docs.djangoproject.com/en/1.9/intro/reusable-apps/
+see https://docs.djangoproject.com/en/3.0/intro/reusable-apps/
 
 The directory `reusable_app_project` is like `django-polls` (package); `project_name` below is like `polls` (app).
 
@@ -11,7 +11,7 @@ The directory `reusable_app_project` is like `django-polls` (package); `project_
 Migrations
 ----------
 
-see https://docs.djangoproject.com/en/1.9/topics/migrations/
+see https://docs.djangoproject.com/en/3.0/topics/migrations/
 
 
 -------
