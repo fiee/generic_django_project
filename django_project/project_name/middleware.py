@@ -1,18 +1,20 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 ##
 # A simple middleware component that lets you use a single Django
 # instance to server multiple distinct hosts.
 # inspired by http://effbot.org/zone/django-multihost.htm
 ##
-from __future__ import unicode_literals
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.cache import patch_vary_headers
 # from django.contrib.sites.models import Site
+from django.utils.deprecation import MiddlewareMixin
 import logging
 logger = logging.getLogger(__name__)
 
 
-class MultiHostMiddleware:
+class MultiHostMiddleware(MiddlewareMixin):
     """
     Changes SITE_ID according to the calling host.
 
