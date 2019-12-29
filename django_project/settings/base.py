@@ -258,7 +258,8 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# ADMIN_MEDIA_PREFIX = '%sadmin/' % STATIC_URL  # Don’t know if that’s still used
+APPEND_SLASH = True
+PREPEND_WWW = False
 
 # ==============================================================================
 # application and middleware settings
@@ -302,20 +303,22 @@ LOCAL_APPS = (
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 
-MIDDLEWARE_CLASSES = [
-    'django.middleware.cache.UpdateCacheMiddleware',  # first
-    'django.middleware.gzip.GZipMiddleware',  # second after UpdateCache
-    'django.middleware.security.SecurityMiddleware',
+MIDDLEWARE = [
+    # see https://docs.djangoproject.com/en/dev/ref/middleware/
+    'django.middleware.security.SecurityMiddleware', # first makes sense
+    'django.middleware.cache.UpdateCacheMiddleware',  # before SessionMiddleware, GZipMiddleware, LocaleMiddleware
+    #'django.middleware.gzip.GZipMiddleware',  # second after UpdateCache
+    # only enable GZip compression if your site doesn't accept any user input,
+    # see http://breachattack.com/
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.http.ConditionalGetMiddleware', # allow "unchanged" responses
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.http.ConditionalGetMiddleware',
-    'django.contrib.admindocs.middleware.XViewMiddleware',  # for local IPs
-    # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'django.contrib.admindocs.middleware.XViewMiddleware',  # only for admindocs
     'django.middleware.cache.FetchFromCacheMiddleware',  # last
 ]
 
@@ -378,3 +381,15 @@ FEINCMS_RICHTEXT_INIT_CONTEXT = {
 ADMIN_TOOLS_MENU = '%s.menu.CustomMenu' % PROJECT_NAME
 ADMIN_TOOLS_INDEX_DASHBOARD = '%s.dashboard.CustomIndexDashboard' % PROJECT_NAME
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = '%s.dashboard.CustomAppIndexDashboard' % PROJECT_NAME
+
+# SecurityMiddleware
+# SECURE_BROWSER_XSS_FILTER = True # only to support old browsers
+# SECURE_CONTENT_TYPE_NOSNIFF = True # don't guess Content-Type; makes only sense if you serve media through Django
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
+# SECURE_HSTS_SECONDS = 3600 # set higher if everything works
+# SECURE_REDIRECT_EXEMPT = [] # regexes for stuff that should be served insecurely
+# SECURE_REFERRER_POLICY = 'same-origin' # don't ask for external referers (privacy!)
+# SECURE_SSL_HOST = '' # Hostname for secure requests, if ...REDIRECT
+# SECURE_SSL_REDIRECT = True # only if Nginx can't do this for you (and it mostly can)
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https') # see https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-SECURE_PROXY_SSL_HEADER
