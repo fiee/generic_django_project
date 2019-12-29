@@ -1,10 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 fabfile for Django:
-derived from http://morethanseven.net/2009/07/27/fabric-django-git-apache-mod_wsgi-virtualenv-and-p/
+originally derived from http://morethanseven.net/2009/07/27/fabric-django-git-apache-mod_wsgi-virtualenv-and-p/
+
+TODO: adapt to current Invoke/Fabric!
+TODO: change workflow from local git + remote "releases" to checkout from remote git
 """
-from __future__ import unicode_literals, print_function
+#from __future__ import unicode_literals, print_function
 import os
 import time
 from fabric.api import env, sudo, local, require, settings, run, prompt, cd, put
@@ -15,10 +18,9 @@ env.colorize_errors = True
 # globals
 env.prj_name = 'project_name'  # no spaces!
 env.prj_dir = 'django_project'  # subdir under git root that contains the deployable part
-env.sudoers_group = 'admin'
+env.sudoers_group = 'admin' # we don't use sudo any more, just certificate login as root!
 env.use_feincms = True
 env.use_medialibrary = True  # feincms.medialibrary or similar
-env.use_daemontools = False
 env.use_supervisor = True
 env.use_celery = False
 env.use_memcached = False
@@ -34,11 +36,11 @@ def localhost():
     env.hosts = ['localhost']
     env.requirements = 'local'
     env.user = env.prj_name  # used by ssh
-    env.adminuser = 'you'
+    # env.adminuser = 'you'
     env.homepath = '/Users/%(adminuser)s' % env  # User home on OSX, TODO: check local OS
     env.prj_path = '%(homepath)s/workspace/%(prj_name)s' % env
     env.virtualhost_path = env.prj_path
-    env.pysp = '%(virtualhost_path)s/lib/python2.7/site-packages' % env
+    env.pysp = '%(virtualhost_path)s/lib/python3.7/site-packages' % env
     env.tmppath = '/var/tmp/django_cache/%(prj_name)s' % env
 
 
@@ -47,11 +49,11 @@ def webserver():
     env.hosts = ['webserver.example.com']  # Change to your server name!
     env.requirements = 'webserver'
     env.user = env.prj_name  # You must create and sudo-enable the user first!
-    env.adminuser = 'root'  # This user is used to create the other user on first setup
+    # env.adminuser = 'root'  # This user is used to create the other user on first setup
     env.homepath = '/home/%(user)s' % env  # User home on Linux
     env.prj_path = '/var/www/%(prj_name)s' % env
     env.virtualhost_path = env.prj_path
-    env.pysp = '%(virtualhost_path)s/lib/python2.7/site-packages' % env
+    env.pysp = '%(virtualhost_path)s/lib/python3.6/site-packages' % env
     env.tmppath = '/var/tmp/django_cache/%(prj_name)s' % env
     env.cryptdomain = 'www.project_name.de'
     if not _is_host_up(env.hosts[0], 22):
@@ -101,7 +103,7 @@ def setup():
 
     with settings(user=env.adminuser):
         # install Python environment and version control
-        sudo('apt-get install -y build-essential python-dev python-setuptools python-imaging python-virtualenv libyaml-dev python-yaml git-core')
+        sudo('apt-get install -y build-essential python3-dev python3-setuptools python3-imaging python3-virtualenv libyaml-dev python3-yaml git-core certbot')
         # If you need Django modules in development, install more version control systems
         # sudo('apt-get install -y subversion git-core mercurial', pty=False)
 
@@ -109,39 +111,34 @@ def setup():
         # Don't install setuptools or virtualenv on Ubuntu with easy_install or pip! Only Ubuntu packages work!
         # sudo('easy_install pip')  # maybe broken
 
-        if env.use_daemontools:
-            sudo('apt-get install -y daemontools daemontools-run')
-            sudo('mkdir -p /etc/service/%(prj_name)s' % env, pty=True)
         if env.use_supervisor:
             sudo('pip install supervisor')
             # sudo('echo; if [ ! -f /etc/supervisord.conf ]; then echo_supervisord_conf > /etc/supervisord.conf; fi', pty=True) # configure that!
             sudo('echo; if [ ! -d /etc/supervisor ]; then mkdir /etc/supervisor; fi', pty=True)
         if env.use_celery:
             sudo('apt-get install -y rabbitmq-server')  # needs additional deb-repository, see tools/README.rst!
-            if env.use_daemontools:
-                sudo('mkdir -p /etc/service/%(prj_name)s-celery' % env, pty=True)
-            elif env.use_supervisor:
+            if env.use_supervisor:
                 local('echo "CHECK: You want to use celery under supervisor. Please check your celery configuration in supervisor-celery.conf!"', pty=True)
         if env.use_memcached:
-            sudo('apt-get install -y memcached python-memcache')
+            sudo('apt-get install -y memcached python3-memcache')
 
         # install webserver and database server
         if env.webserver == 'nginx':
             sudo('apt-get remove -y apache2 apache2-mpm-prefork apache2-utils')  # is mostly pre-installed
-            sudo('apt-get install -y nginx-full')
+            sudo('apt-get install -y nginx-full python3-certbot-nginx')
         else:
             local('echo "WARNING: Your webserver «%s» is not supported!"' % env.webserver, pty=True)  # other webservers?
         if env.dbserver == 'mysql':
-            sudo('apt-get install -y mysql-server python-mysqldb libmysqlclient-dev')
+            sudo('apt-get install -y mysql-server python3-mysqldb libmysqlclient-dev')
         elif env.dbserver == 'postgresql':
-            sudo('apt-get install -y postgresql python-psycopg2')
+            sudo('apt-get install -y postgresql python3-psycopg2') # is psycopg2 still the way to go?
 
         with settings(warn_only=True, pty=True):
             # disable default site
             sudo('cd /etc/%(webserver)s/sites-enabled/; rm default;' % env)
             # install certbot scripts
-            sudo('git clone https://github.com/certbot/certbot /opt/letsencrypt; cd /opt/letsencrypt; ./certbot-auto')
-            sudo('cp tools/renew-letsencrypt.sh /etc/cron-monthly/')
+            #sudo('git clone https://github.com/certbot/certbot /opt/letsencrypt; cd /opt/letsencrypt; ./certbot-auto')
+            #sudo('cp tools/renew-letsencrypt.sh /etc/cron-monthly/')
 
     # new project setup
     setup_user()
@@ -158,7 +155,8 @@ def setup_user():
     env.new_user = env.user
     with settings(user=env.adminuser, pty=True):
         # create user and add it to admin group
-        sudo('adduser "%(new_user)s" --disabled-password --gecos "" && adduser "%(new_user)s" %(sudoers_group)s' % env)
+        sudo('adduser "%(new_user)s" --disabled-password --gecos ""' % env)
+        #' && adduser "%(new_user)s" %(sudoers_group)s' % env)
         # copy authorized_keys from root for certificate login
         sudo('mkdir %(homepath)s/.ssh && cp /root/.ssh/authorized_keys %(homepath)s/.ssh/' % env)
         # Now we should be able to login with that new user
@@ -193,7 +191,11 @@ def setup_passwords():
 
     with settings(user=env.adminuser, pty=True):
         # create .env and set database and email passwords
-        run('echo; if [ ! -f %(prj_path)s/.env ]; then echo "DJANGO_SETTINGS_MODULE=settings\nDATABASE_PASSWORD=%(database_password)s\nEMAIL_PASSWORD=%(email_password)s\n" > %(prj_path)s/.env; fi' % env)
+        from django.utils.crypto import get_random_string
+        chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#^&*(-_=+)'  # without % and $
+        env.secret_key = get_random_string(50, chars)
+
+        run('echo; if [ ! -f %(prj_path)s/.env ]; then echo "DJANGO_SETTINGS_MODULE=settings\nDATABASE_PASSWORD=%(database_password)s\nEMAIL_PASSWORD=%(email_password)s\nSECRET_KEY='%s'\n" > %(prj_path)s/.env; fi' % env)
 
         # create MySQL user
         if env.dbserver == 'mysql' and env.database_password:
@@ -283,7 +285,8 @@ def local_setup():
                 os.path.isdir(os.path.join(env.prj_path, 'lib')) and
                 os.path.isdir(os.path.join(env.prj_path, 'include'))):
             with settings(warn_only=True):
-                local('/Library/Frameworks/Python.framework/Versions/2.7/bin/virtualenv . && source bin/activate')
+                # TODO: add Python version
+                local('virtualenv . && source bin/activate')
         local('source bin/activate && pip install -U -r ./requirements/%(requirements)s.txt' % env)
 
     check_dotenv(local=True)
@@ -320,7 +323,7 @@ flush privileges;\n''' % env)
 def deploy(param=''):
     """
     Deploy the latest version of the site to the servers, install any
-    required third party modules, install the virtual host and 
+    required third party modules, install the virtual host and
     then restart the webserver
     """
     require('hosts', provided_by=[localhost, webserver])

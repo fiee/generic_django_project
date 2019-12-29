@@ -7,8 +7,7 @@ public sources and spiced with my own enhancements.
 
 I normally work with FeinCMS_ and its medialibrary_, this is reflected in my setups.
 
-My webserver of choice is Nginx_ with gunicorn_, since my virtual server is
-always low on memory.
+My webserver of choice is Nginx_ with gunicorn_.
 
 
 ------------
@@ -21,7 +20,7 @@ Requirements
 * Python_ version: 3.7+
 * Django_ version: 3.0+
 * FeinCMS_ version: 1.17+
-* version control: Git_
+* version control: Git_ (with a remote git host)
 * deployment tool: Fabric_
 * local development database: SQLite3_
 * server database: MySQL_ / MariaDb
@@ -66,14 +65,14 @@ Details
 * gunicorn runs internally on an unix socket, because I find file locations
   easier to control than server ports.
 * I’m integrating Let’s Encrypt certificates and automating their renewal.
-* My nginx settings get an A+ rating at SSLLabs_
+* My nginx settings get an A+ rating at SSLLabs_ (still?)
 
 
 -----
 Ideas
 -----
 
-* Learn more from `Two Scoops of Django`_, http://agiliq.com/books/djangodesignpatterns/,
+* Learn more from e.g. `Two Scoops of Django`_, http://agiliq.com/books/djangodesignpatterns/,
   https://github.com/callowayproject/django-app-skeleton,
   https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 * Include Sphinx template
@@ -81,6 +80,8 @@ Ideas
 * Maybe use cookiecutter. Investigate other deployment tools.
 * Finally learn proper testing
 * Split templates for simple site, celery site, reusable app
+* Change workflow from local git plus website releases to local+remote git
+* Add setup for Wagtail (and Longclaw)
 
 
 -------
@@ -130,7 +131,7 @@ local:
 * ``fab webserver setup`` (once)
 * ``fab webserver deploy`` (publish new release - always last committed version!)
 
-Following 12-factor_ design, we now set our passwords and other secret settings 
+Following 12-factor_ design, we now set our passwords and other secret settings
 as environment variables to avoid to have them in version control.
 I suggest to go the *dotenv* route:
 
@@ -229,13 +230,11 @@ Setup:
 ------
 
 * Nginx configuration: http://wiki.nginx.org/NginxConfiguration
-* Secure Nginx TLS configuration: https://www.sherbers.de/howto/nginx/ (German)
+* Secure Nginx configuration: https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html
+  or https://www.sherbers.de/howto/nginx/ (German)
 * Gunicorn configuration: http://gunicorn.org/configure.html
 * logrotate: e.g. http://www.linux-praxis.de/lpic1/manpages/logrotate.html
-* daemontools: http://cr.yp.to/daemontools.html
 * supervisord: http://supervisord.org
-* Let’s Encrypt certificates with Nginx: https://www.nginx.com/blog/free-certificates-lets-encrypt-and-nginx/
-* Let’s Encrypt certificates with Nginx: https://gist.github.com/xrstf/581981008b6be0d2224f
 
 
 Modules:
@@ -244,7 +243,6 @@ Modules:
 * Fabric: http://docs.fabfile.org
 * MPTT: http://github.com/django-mptt/django-mptt
 * FeinCMS: http://github.com/feincms/feincms
-.. * Schedule: http://wiki.github.com/thauber/django-schedule/ or http://github.com/fiee/django-schedule
 
 .. _Python: http://www.python.org
 .. _Git: http://git-scm.com/
