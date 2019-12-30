@@ -57,7 +57,6 @@ INTERNAL_IPS = ('127.0.0.1',)
 # import logging
 # logger = logging.getLogger(__name__)
 
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -68,6 +67,10 @@ LOGGING = {
         'simple': {
             'format': '%(levelname)s %(message)s'
         },
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[%(server_time)s] %(message)s',
+        }
     },
     'filters': {
          'require_debug_false': {
@@ -108,7 +111,12 @@ LOGGING = {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
             'filters': ['require_debug_false'],
-        }
+        },
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.server',
+        },
     },
     'loggers': {
         'django': {  # django is the catch-all logger. No messages are posted directly to this logger.
