@@ -1,4 +1,4 @@
-{% load cache i18n %}{% load static from staticfiles %}{% get_current_language as LANGUAGE_CODE %}<!DOCTYPE html>
+{% load cache i18n static %}{% get_current_language as LANGUAGE_CODE %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|default:'en' }}">
   <head>
     <meta charset="utf-8">
@@ -21,6 +21,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <link rel="sitemap" href="/sitemap.xml" type="text/xml">
+    <link rel="author" href="humans.txt" />
     <!-- <link rel="alternate" type="application/rss+xml" title="{% trans 'project_name events' %}" href="/calendar/feed/calendar/upcoming/1/"> -->
     <link rel="shortcut icon" href="{% static 'favicon_16.png' %}" type="image/x-icon">
     <link rel="icon" href="{% static 'favicon_16.png' %}" type="image/png">
