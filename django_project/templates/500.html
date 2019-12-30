@@ -5,5 +5,6 @@
 
 {% block main_content %}
 <h2>{% trans "Error 500: Server Error" %}</h2>
-<p>{% trans "Sorry, this page is temporalily unavailable due to a server misconfiguration." %}</p>
+<p>{% trans "Sorry, this page is temporalily unavailable due to a server misconfiguration or programming error. Maybe a form was not prepared to handle your input." %}</p>
+<p>{% trans "Don’t wait for this page to disappear (it won’t), but try going back to the main page. Please contact someone who’s responsible for this site if this happens again and tell them what you did so that they can try to reproduce the error." %}</p>
 {% endblock %}

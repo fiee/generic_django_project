@@ -1,0 +1,10 @@
+{% extends "root.html" %}
+{% load cache i18n %}
+
+{% block title %}{% trans "Error 403: CSRF token invalid" %}{% endblock %}
+
+{% block main_content %}
+<h2>{% trans "Error 403: CSRF token invalid" %}</h2>
+<p>{% trans "The authentication for a form failed. This is either a programming error or a security breach." %}</p>
+<p>{{ request.path|escape }}</p>
+{% endblock %}
