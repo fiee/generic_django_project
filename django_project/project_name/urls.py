@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -10,18 +12,18 @@ from django.views.generic import TemplateView, ListView
 
 admin.autodiscover()
 
-#mysitemaps = {
+# mysitemaps = {
 #    'page' : GenericSitemap({
 #        'queryset': Page.objects.all(),
 #        'changefreq' : 'monthly',
 #        'date_field': 'modification_date',
 #    }, priority=0.6),
-#}
-## OR
+# }
+# OR
 # mysitemaps = {'pages' : PageSitemap}
 
 urlpatterns = [
-        (r'', TemplateView.as_view(template_name="root.html")),
+    (r'', TemplateView.as_view(template_name="root.html")),
 ]
 
 # serve static content in debug mode
@@ -30,14 +32,14 @@ if settings.DEBUG:
     urlpatterns += [
         url(r'^media/(?P<path>.*)$',
             'django.views.static.serve', {
-            'document_root': settings.STATIC_ROOT,
-            'show_indexes': True
-        }),
+                'document_root': settings.STATIC_ROOT,
+                'show_indexes': True
+            }),
         url(r'^(media/|static/)?medialibrary/(?P<path>.*)$',
             'django.views.static.serve', {
-            'document_root': '%s/medialibrary/' % settings.MEDIA_ROOT,
-            'show_indexes': True
-        }),
+                'document_root': '%s/medialibrary/' % settings.MEDIA_ROOT,
+                'show_indexes': True
+            }),
         url(r'^(?P<path>favicon.*)$', 'django.views.static.serve', {
             'document_root': settings.MEDIA_ROOT,
         }),
@@ -47,7 +49,7 @@ if settings.DEBUG:
 
 urlpatterns += [
     # (r'^admin_tools/', include('admin_tools.urls')),
-    url(r'^admin/', admin.site.urls),    
+    url(r'^admin/', admin.site.urls),
     # url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': mysitemaps}),
     # FeinCMS 1.12- sitemaps don’t work with Django 1.10+
     # url(r'', include('feincms.urls')),
