@@ -270,7 +270,7 @@ DJANGO_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
+    'django.contrib.messages', # see https://docs.djangoproject.com/en/dev/ref/contrib/messages/
     'django.contrib.staticfiles',
     # 'django.contrib.sites',
     # 'django.contrib.sitemaps',

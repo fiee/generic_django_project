@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 verbose_name = _(u'project_name')
 verbose_name_plural = _(u'project_names')
@@ -16,7 +16,7 @@ __version_info__ = {
 
 def get_version(short=False):
     vers = ["%(major)i.%(minor)i" % __version_info__, ]
-    
+
     if __version_info__['micro']:
         vers.append(".%(micro)i" % __version_info__)
     if __version_info__['releaselevel'] != 'final' and not short:

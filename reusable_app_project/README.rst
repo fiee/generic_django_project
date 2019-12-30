@@ -9,8 +9,8 @@ This is the start for your own documentation.
 Requirements
 ------------
 
-* Python_ 2.7 or 3.x
-* Django_ >= 1.9
+* Python_ 3.7+
+* Django_ 3.0+
 
 
 ------

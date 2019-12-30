@@ -13,7 +13,7 @@ middleware here, or combine a Django application with an application of another
 framework.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
+https://docs.djangoproject.com/en/dev/howto/deployment/wsgi/
 """
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
@@ -21,17 +21,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 import dotenv
 current_dir = os.path.dirname(__file__)
 try:
-    # django-dotenv-rw (Python 2.7)
-    try:
-        dotenv.load_dotenv(os.path.join(current_dir, '.env'))
-    except UserWarning:
-        dotenv.load_dotenv(os.path.abspath(os.path.join(current_dir, '../../..', '.env')))
-except AttributeError:
-    # django-dotenv (Python 3)
-    try:
-        dotenv.read_dotenv(os.path.join(current_dir, '.env'))
-    except UserWarning:
-        dotenv.read_dotenv(os.path.abspath(os.path.join(current_dir, '../../..', '.env')))
+    dotenv.read_dotenv(os.path.join(current_dir, '.env'))
+except UserWarning:
+    dotenv.read_dotenv(os.path.abspath(os.path.join(current_dir, '../../..', '.env')))
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION

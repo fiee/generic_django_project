@@ -22,8 +22,8 @@ Requirements
 * FeinCMS_ version: 1.17+
 * version control: Git_ (with a remote git host)
 * deployment tool: Fabric_
-* local development database: SQLite3_
-* server database: MySQL_ / MariaDb
+* local development database: SQLite3_ or MariaDb/MySQL_
+* server database: MariaDb/MySQL_
 * process control (optional): supervisord_
 
 
@@ -56,6 +56,7 @@ starting new django projects, I’m always far behind.
 * I handle migrations wrongly, will try to fix soon.
 * pip-installed requirements are not fixed on a version.
 * I could also support runit_, but I didn't want to replace init.
+* PostgreSQL would make sense, but I don’t need it.
 
 
 -------

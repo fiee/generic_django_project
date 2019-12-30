@@ -31,4 +31,3 @@ for WS in $WEBSITES
 do
 	$PROG $WS $PARAM
 done
-

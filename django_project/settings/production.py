@@ -1,10 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from .base import *
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.postgresql', # Add 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': PROJECT_NAME,                      # Or path to database file if using sqlite3.
         'USER': PROJECT_NAME,                      # Not used with sqlite3.
         'PASSWORD': get_env_variable('DATABASE_PASSWORD'),                  # Not used with sqlite3.

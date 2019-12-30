@@ -17,8 +17,8 @@ if [ ! -d "/home/${USER}" ]; then
   adduser "${USER}" --disabled-password --gecos ""
 fi
 
-echo "Adding ${USER} to group admin"
-adduser "${USER}" admin
+# echo "Adding ${USER} to group admin"
+# adduser "${USER}" admin
 
 echo "Enabling certificate login"
 mkdir /home/${USER}/.ssh
@@ -44,6 +44,7 @@ echo "
 DJANGO_SETTINGS_MODULE=settings
 DATABASE_PASSWORD=${PASS}
 EMAIL_PASSWORD=${PASS}
+SECRET_KEY="(still missing)"
 " > ${WEBDIR}/${USER}/.env
 
 echo "
