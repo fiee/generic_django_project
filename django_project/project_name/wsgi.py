@@ -18,6 +18,9 @@ https://docs.djangoproject.com/en/dev/howto/deployment/wsgi/
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 
+import logging
+logging.captureWarnings(True)
+
 import dotenv
 current_dir = os.path.dirname(__file__)
 try:
