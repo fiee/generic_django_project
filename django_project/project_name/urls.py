@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.conf.urls import include, url
+from django.urls import include, path
 from django.contrib import admin
 from django.contrib.sitemaps import GenericSitemap
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -30,27 +30,18 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += [
-        url(r'^media/(?P<path>.*)$',
-            'django.views.static.serve', {
-                'document_root': settings.STATIC_ROOT,
-                'show_indexes': True
-            }),
-        url(r'^(media/|static/)?medialibrary/(?P<path>.*)$',
-            'django.views.static.serve', {
-                'document_root': '%s/medialibrary/' % settings.MEDIA_ROOT,
-                'show_indexes': True
-            }),
-        url(r'^(?P<path>favicon.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT,
-        }),
-        url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    ]
+        path('admin/doc/', include('django.contrib.admindocs.urls')),
+    ] + \
+    #static(settings.STATIC_URL, document_root=settings.MEDIA_ROOT) + \
+    static('/medialibrary/', document_root=settings.MEDIA_ROOT) + \
+    static('/favicon.ico', document_root=settings.MEDIA_ROOT) + \
+    static(settings.FEINCMS_ADMIN_MEDIA, document_root=settings.MEDIA_ROOT + '/feincms')
 
 
 urlpatterns += [
-    # (r'^admin_tools/', include('admin_tools.urls')),
-    url(r'^admin/', admin.site.urls),
-    # url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': mysitemaps}),
+    # path('admin_tools/', include('admin_tools.urls')),
+    path('admin/', admin.site.urls),
+    # path('sitemap.xml', 'django.contrib.sitemaps.views.sitemap', kwargs={'sitemaps': mysitemaps}, name='sitemap'),
     # FeinCMS 1.12- sitemaps don’t work with Django 1.10+
-    # url(r'', include('feincms.urls')),
+    # path('', include('feincms.urls')),
 ]
