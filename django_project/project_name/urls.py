@@ -43,5 +43,5 @@ urlpatterns += [
     path('admin/', admin.site.urls),
     # path('sitemap.xml', 'django.contrib.sitemaps.views.sitemap', kwargs={'sitemaps': mysitemaps}, name='sitemap'),
     # FeinCMS 1.12- sitemaps don’t work with Django 1.10+
-    # path('', include('feincms.urls')),
+    path('', include('feincms.urls')),
 ]

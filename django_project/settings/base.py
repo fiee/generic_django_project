@@ -335,7 +335,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [ os.path.join(PROJECT_ROOT, 'templates'), ],
-        'APP_DIRS': True,
+        'APP_DIRS': True, # XOR loaders
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -345,8 +345,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
-                #'django.template.context_processors.request',
-                #'django.template.context_processors.tz'
+                'django.template.context_processors.request', # required by FeinCMS Admin
+                'django.template.context_processors.tz'
                 # 'feincms.context_processors.add_page_if_missing',
                 # uncomment to enable for FeinCMS navigation also in other views
             ],
