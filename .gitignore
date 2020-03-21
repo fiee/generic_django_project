@@ -2,16 +2,25 @@
 *.pyc
 *.pyo
 .settings
+.project
 .pydevproject
 .svn
 .env
 secret.txt
+settings_local.py
 dev.db
 dev_db.sqlite3
 .tmp*
 build
 *.tar.gz
+*.tgz
+*.zip
 *.bak
 *.log
 migrations/
 */static_collection/
+
+# virtualenv
+bin/
+include/
+lib/
