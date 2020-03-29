@@ -1,13 +1,12 @@
-#MySQL-python # or mysqlclient
-#psycopg2 # for PostgreSQL
+mysqlclient
 pyOpenSSL
 pycrypto
 #python-dateutil
 pytz
 #reportlab
-PyYAML # for fixatures
+PyYAML # for fixtures
 
-django
+django==2.2
 #django-guardian
 #django-registration
 #django-tagging
@@ -19,15 +18,9 @@ setproctitle # for gunicorn
 #python-memcached # for memcached cache (you must install that separately)
 
 Pillow # for feincms medialibrary
-#django-mptt  # for feincms
 #feincms # see also http://github.com/feincms/feincms
-#django-tinymce
-#git+https://github.com/feinheit/feincms_gallery.git
-
-#dj_database_url # see https://github.com/kennethreitz/dj-database-url
 
 django-dotenv
-#git+http://github.com/tedtieken/django-dotenv-rw.git
 
 # for celery:
 #librabbitmq

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
 import sys
@@ -7,7 +7,7 @@ import logging
 logging.captureWarnings(True)  # dotenv uses warnings
 
 current_dir = os.path.dirname(__file__)
-# try to load .env file from current directory (I use that in development); 
+# try to load .env file from current directory (I use that in development);
 # if that fails (you’ll get a harmless warning), try the project’s base path.
 if not dotenv.read_dotenv(os.path.join(current_dir, '.env')):
     dotenv.read_dotenv(os.path.abspath(os.path.join(current_dir, '../../..', '.env'))) # '/var/www/project_name/.env'

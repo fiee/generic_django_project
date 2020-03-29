@@ -2,13 +2,14 @@
 generic django project
 ======================
 
-This is my starting point for a new Django_ site, mixed and stirred from several 
-public sources and spiced with my own enhancements.
+This is my starting point for a new Django_ site, mixed and stirred
+from several public sources and spiced with my own enhancements.
 
-I normally work with FeinCMS_ and its medialibrary_, this is reflected in my setups.
+I usually work with FeinCMS_ and its medialibrary_, this is reflected
+in my setups.
 
-My webserver of choice is Nginx_ with gunicorn_, since my virtual server is 
-always low on memory.
+My webserver of choice is Nginx_ with gunicorn_, since my virtual server
+is always low on memory.
 
 
 ------------
@@ -16,38 +17,39 @@ Requirements
 ------------
 
 * server OS: Debian/Ubuntu based Linux
-* local OS: MacOS X (only some local settings are OSX specific)
+* local OS: macOS (only some local settings are OSX specific)
 * web server: Nginx/gunicorn or Nginx/fcgi
-* Python_ version: 2.7 or 3.x
-* Django_ version: 1.9+ (1.6+ should work)
-* FeinCMS_ version: 1.5+
+* Python_ version: 3.6+
+* Django_ version: 2.2
+* FeinCMS_ version: 1.10+
 * version control: Git_
 * deployment tool: Fabric_
 * local development database: SQLite3_
 * server database: MySQL_ or PostgreSQL_
-* process control (optional): supervisord_ or daemontools_ 
+* process control: supervisord_
 
 
 ---------
 Rationale
 ---------
 
-Django’s `startproject` doesn’t do enough. I’m a programmer, thus lazy, 
+Django’s `startproject` doesn’t do enough. I’m a programmer, thus lazy,
 and try to reduce redundant work like repeating the same setup steps over and over. (DRY)
 
-Just copying/cloning this generic project to a new site isn’t ideal either, 
-since general changes don’t affect all dependent sites, but I got no idea how to do that.
+Just copying/cloning this generic project to a new site isn’t ideal either,
+since general changes don’t affect all dependent sites, but I got no idea
+how to do that.
 
 
 ------
 Issues
 ------
 
-I’m trying to keep this current and to implement what I learn from my actual 
-projects and best practice advise. But since I mostly do other things than 
+I’m trying to keep this current and to implement what I learn from my actual
+projects and best practice advise. But since I mostly do other things than
 starting new django projects, I’m always far behind.
 
-* While I try to adhere to best practices, there are probably security holes - 
+* While I try to adhere to best practices, there are probably security holes -
   use at your own risk.
 * Since I update this template after experiences with my actual sites,
   the commits are often not atomic.
@@ -61,9 +63,13 @@ starting new django projects, I’m always far behind.
 Details
 -------
 
-* gunicorn runs internally on an unix socket, because I find file locations 
+* gunicorn runs internally on an unix socket, because I find file locations
   easier to control than server ports.
-* I’m integrating Let’s Encrypt certificates and automating their renewal.
+* My earlier Fabric workflow used only local git and pushed a package to the
+  web server. Now I’m relying on my private git server (gitolite) and doing
+  away with different releases on the web server. This might also fit some
+  shared hosting providers with git-enabled Plesk.
+* I’m using Let’s Encrypt certificates with certbot.
 * My nginx settings get an A+ rating at SSLLabs_
 
 
@@ -73,12 +79,12 @@ Ideas
 
 * Learn more from `Two Scoops of Django`_, http://agiliq.com/books/djangodesignpatterns/,
   https://github.com/callowayproject/django-app-skeleton,
-  https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
+  https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 * Include Sphinx template
 * Make ``django-admin.py startproject --template=https://github.com/fiee/generic_django_project/zipball/master --extension=py,rst,html,txt,ini,sh MY_PROJECT`` work
 * Maybe use cookiecutter. Investigate other deployment tools.
 * Finally learn proper testing
-* Split templates for simple site, cerebrale site, reusable app
+* Split templates for simple site, cerebrale site, reusable app (WIP)
 
 
 -------
@@ -93,7 +99,7 @@ Since it’s a collection of (modified) snippets from different sources that may
 have different licenses, it would be impossible to untangle.
 
 Following Django’s documentation I suggest to use a 2-clause BSD license for
-your own projects.
+your own reusable projects.
 
 
 ------
@@ -104,7 +110,7 @@ local:
 ------
 
 * Copy ``generic_django_project``
-* Rename "django_project" (this would be the project root as created by 
+* Rename "django_project" (this would be the project root as created by
   ``django-admin.py startproject``)
 * Replace all occurrences of lowercase "project_name" with your project name.
   This is also the webserver and database server username!
@@ -128,7 +134,7 @@ local:
 * ``fab webserver setup`` (once)
 * ``fab webserver deploy`` (publish new release - always last committed version!)
 
-Following 12-factor_ design, we now set our passwords and other secret settings 
+Following 12-factor_ design, we now set our passwords and other secret settings
 as environment variables to avoid to have them in version control.
 I suggest to go the *dotenv* route:
 
@@ -153,52 +159,69 @@ server:
 
 * Create the user
 
-  I suggest to copy makeuser.sh_ to your webserver’s root/admin account 
+  I suggest to copy makeuser.sh_ to your webserver’s root/admin account
   and use it to create system and database accounts.
-  
+
       scp makeuser.sh root@www.yourdomain.tld:/root/bin/
-  
+
   Otherwise look into that script. This is just a part of the necessary setup:
 
-  * create user and sudo-enable it (I suggest via a ``admin`` group, 
+  * create user and sudo-enable it (I suggest via a ``admin`` group,
     but you can also add the user to ``sudoers``): ::
 
       adduser project_name --disabled-password --gecos ""
       adduser project_name admin
 
+    REM: It’s be possible to avoid sudo rights for each website user, but
+    then you need to run some commands as root or as an other sudo-enabled user.
+
   * create database user and database (schema): ::
-    
+
       mysql -u root -p
-    
-      # at first setup only: we installed MySQL without user interaction, 
+
+      # at first setup only: we installed MySQL without user interaction,
       # so there’s no root password. Set it!
       use mysql;
       update user set password=password('...') where user='root';
-    
+
       # create user and database for our project:
       create user 'project_name'@'localhost' identified by '...';
       create database project_name character set 'utf8';
       grant all privileges on project_name.* to 'project_name'@'localhost';
-    
+
       flush privileges;
       quit;
 
-* Create your ``.env`` file at ``/var/www/project_name`` 
+* Create your ``.env`` file at ``/var/www/project_name``
   (or use virtualenvs_’ ``activate`` script), see above.
-
-* publish your project (``fab webserver setup``)
 
 * Open your firewall for tcp 433 (not default on some systems).
 
-* Request a SSL certificate, see e.g. https://www.nginx.com/blog/free-certificates-lets-encrypt-and-nginx/ ::
+* Create a ssh key for the new user: ::
 
-      sudo /opt/letsencrypt/certbot-auto --config /etc/letsencrypt/configs/www.project_name.de.conf certonly
+    ssh-keygen -b 4096
 
+* Add this key to your git server’s access configuration, e.g. like ::
+
+    scp project_name@webserver.tld:/home/project_name/.ssh/id_rsa.pub gitolite-admin/keydir/project_name@webserver.pub
+
+  You need read access for ``project_name`` on the web server
+  and write access for your development user.
+
+* Publish your project to your git server and
+  clone the project on your web server, e.g. as
+  ``/var/www/project_name/project_name``.
+
+* Activate the project in supervisor.
+
+* Run certbot to acquire a SSL certificate for your project.
+
+* (This is WIP)
 
 FeinCMS
 -------
 
-If you use FeinCMS’ Page, consider *first*, which extensions you’ll need – 
+If you use FeinCMS’ Page, consider *first*, which extensions you’ll need –
 see `the docs <http://feincms-django-cms.readthedocs.io/en/latest/page.html#module-feincms.module.page.extension>`_ – the migration is somewhat tricky.
 
 Since the setup requires monkey patching FeinCMS’s models, you must pull their
@@ -206,7 +229,7 @@ migrations into your app, as outlined in `the docs <http://feincms-django-cms.re
 The same is true for Plata_.
 
 Have a look at Feinheit’s FeinCMS compatible apps, content types and plugins:
-ElephantBlog_, Plata_, form_designer_ etc.
+ElephantBlog_, Plata_, form_designer_ etc. (REM: They’re mostly outdated.)
 
 Instead of FeinCMS’s medialibrary, consider to use django-filer_ instead,
 there’s some support for it in FeinCMS, but not yet here.
@@ -288,4 +311,3 @@ Modules:
 .. _nginx.conf: blob/master/server-setup/nginx.conf
 
 .. _SSLLabs: https://www.ssllabs.com/ssltest/
-
