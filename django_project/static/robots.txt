@@ -1,4 +1,4 @@
 # see http://www.robotstxt.org
 User-agent: *
 Disallow: /admin/
-Sitemap: /sitemap.xml
+Sitemap: https://www.example.com/sitemap.xml

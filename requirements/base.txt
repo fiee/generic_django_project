@@ -6,7 +6,7 @@ pytz
 #reportlab
 PyYAML # for fixtures
 
-django
+django==2.2
 #django-guardian
 #django-registration
 #django-tagging
@@ -18,9 +18,7 @@ setproctitle # for gunicorn
 #python-memcached # for memcached cache (you must install that separately)
 
 Pillow # for feincms medialibrary
-#django-mptt  # for feincms
 #feincms # see also http://github.com/feincms/feincms
-#django-tinymce
 
 django-dotenv
 
