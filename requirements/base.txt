@@ -6,7 +6,7 @@ pytz
 #reportlab
 PyYAML # for fixtures
 
-django==2.2
+django==2.2.13
 #django-guardian
 #django-registration
 #django-tagging
